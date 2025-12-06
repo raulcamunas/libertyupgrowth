@@ -850,6 +850,7 @@
             flex: 0 0 24px;
             flex-shrink: 0;
             position: relative;
+            transition: transform 0.2s ease;
         }
         .faq-toggle-icon-mobile::before,
         .faq-toggle-icon-mobile::after {
@@ -880,10 +881,11 @@
             max-height: 0;
             overflow: hidden;
             opacity: 0;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, padding 0.3s ease;
         }
         .faq-item-mobile.active-mobile .faq-answer-mobile {
             padding: 0 20px 20px 20px;
-            max-height: none;
+            max-height: 2000px;
             opacity: 1;
         }
         .faq-answer-mobile p {
@@ -2348,7 +2350,7 @@
             }, { passive: false });
         });
 
-        // --- FAQ LOGIC MOBILE (ULTRA OPTIMIZADO - SIN ANIMACIONES) ---
+        // --- FAQ LOGIC MOBILE (OPTIMIZADO CON ANIMACIÓN SUAVE) ---
         const faqItemsMobile = document.querySelectorAll('.faq-item-mobile');
         faqItemsMobile.forEach(item => {
             const question = item.querySelector('.faq-question-mobile');
@@ -2357,15 +2359,38 @@
             question.addEventListener('click', (e) => {
                 e.preventDefault();
                 
-                // Cerrar otros items (sin animación, instantáneo)
+                const wasActive = item.classList.contains('active-mobile');
+                
+                // Cerrar otros items
                 faqItemsMobile.forEach(other => { 
                     if(other !== item && other.classList.contains('active-mobile')) { 
                         other.classList.remove('active-mobile');
                     } 
                 });
                 
-                // Toggle instantáneo (sin transiciones, sin animaciones)
+                // Toggle del item actual
                 item.classList.toggle('active-mobile');
+                
+                // Calcular altura real para animación suave
+                if (!wasActive && answer) {
+                    // Abrir: calcular altura real
+                    answer.style.maxHeight = 'none';
+                    const realHeight = answer.scrollHeight;
+                    answer.style.maxHeight = '0px';
+                    // Forzar reflow
+                    void answer.offsetHeight;
+                    // Aplicar altura real para animación
+                    requestAnimationFrame(() => {
+                        answer.style.maxHeight = realHeight + 'px';
+                    });
+                } else if (wasActive && answer) {
+                    // Cerrar: animar a 0
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    void answer.offsetHeight;
+                    requestAnimationFrame(() => {
+                        answer.style.maxHeight = '0px';
+                    });
+                }
             }, { passive: true });
         });
 
