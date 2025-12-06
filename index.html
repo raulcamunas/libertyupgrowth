@@ -609,7 +609,7 @@
             overflow: visible;
             padding: 10px 0;
         }
-        
+
         .popup-logo-img {
             max-width: 100%;
             max-height: 90px;
@@ -838,17 +838,38 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
+            gap: 20px;
             cursor: pointer; 
             font-weight: 600; 
             font-size: 18px; 
             color: #eee;
             transition: color 0.3s ease;
+            position: relative;
+        }
+        .faq-question span {
+            flex: 1 1 0%;
+            min-width: 0;
+            max-width: calc(100% - 50px);
+            padding-right: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            display: block;
         }
         .faq-item:hover .faq-question,
         .faq-item.active .faq-question {
             color: #fff;
         }
-        .faq-toggle-icon { width: 24px; height: 24px; position: relative; transition: transform 0.15s linear; }
+        .faq-toggle-icon { 
+            width: 24px; 
+            height: 24px; 
+            min-width: 24px; 
+            max-width: 24px;
+            flex: 0 0 24px;
+            flex-shrink: 0; 
+            position: relative; 
+            transition: transform 0.15s linear;
+        }
         .faq-toggle-icon::before, .faq-toggle-icon::after { content: ""; position: absolute; background-color: var(--brand-color); top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 2px; }
         .faq-toggle-icon::before { width: 100%; height: 2px; } .faq-toggle-icon::after { width: 2px; height: 100%; transition: transform 0.3s ease; }
         .faq-item.active .faq-toggle-icon { transform: rotate(180deg); } .faq-item.active .faq-toggle-icon::after { opacity: 0; }
@@ -1243,20 +1264,9 @@
                 overflow: hidden; /* Mantenemos hidden por si acaso */
             } 
 
-            .process-wrapper { flex-direction: column; align-items: flex-start; padding-left: 30px; gap: 40px; min-height: auto; position: relative; }
-            .process-line-container { 
-                position: fixed; 
-                left: 15px; 
-                top: 0; 
-                width: 2px; 
-                height: 100vh; 
-                z-index: 0; 
-                pointer-events: none;
-                transform: translateY(0);
-                display: none; /* Se mostrará con JS cuando la sección esté visible */
-            }
-            .process-line-bg { width: 2px; height: 100%; top: 0; left: 0; transform: none; position: absolute; }
-            .process-line-fill { width: 2px; height: 0%; top: 50%; left: 0; transform: translateY(-50%); transform-origin: center; transition: height 0.2s ease-out; position: absolute; }
+            .process-wrapper { flex-direction: column; align-items: flex-start; padding-left: 30px; gap: 40px; min-height: auto; }
+            .process-line-bg { width: 2px; height: 100%; top: 0; left: 0; transform: none; }
+            .process-line-fill { width: 2px; height: 0%; top: 0; left: 0; transform: none; transition: height 0.2s ease-out; }
             .process-step { width: 100%; text-align: left; align-items: flex-start; flex-direction: row; gap: 20px; transform: none; opacity: 0.3; filter: none; transition: opacity 0.3s; position: relative; z-index: 1; }
             .process-step.active { opacity: 1; transform: none; }
             .step-node { margin-bottom: 0; position: absolute; left: -40px; top: 20px; z-index: 2; }
@@ -1383,13 +1393,40 @@
             .cta-title { font-size: 32px; }
             .cta-btn-big { width: 100%; justify-content: center; }
             
-            /* FAQ Mobile - Single Column */
+            /* FAQ Mobile - Single Column - OPTIMIZADO PARA RENDIMIENTO */
             .faq-list { grid-template-columns: 1fr; gap: 15px; }
-            .faq-item { margin-bottom: 0; }
+            .faq-item { 
+                margin-bottom: 0; 
+                display: block !important; /* Cambiar de grid a block en móvil */
+                overflow: hidden;
+            }
             .faq-item:hover { transform: none; }
             .faq-item.active { transform: none; }
-            .faq-question { padding: 20px; font-size: 16px; }
-            .faq-answer { padding: 0 20px; }
+            .faq-question { padding: 20px; font-size: 16px; gap: 15px; }
+            .faq-question span {
+                flex: 1 1 auto;
+                min-width: 0;
+                padding-right: 12px;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            .faq-toggle-icon { 
+                min-width: 24px; 
+                max-width: 24px;
+                flex: 0 0 24px;
+                flex-shrink: 0; 
+            }
+            .faq-answer { 
+                padding: 0 20px; 
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+                opacity: 0;
+            }
+            .faq-item.active .faq-answer {
+                opacity: 1;
+                max-height: 1000px; /* Valor alto suficiente, se ajustará con JS */
+            }
             .faq-answer p { padding-bottom: 20px; }
             .faq-section { padding: 60px 20px 40px 20px; }
             .faq-header-text { margin-bottom: 40px; }
@@ -1837,11 +1874,11 @@
                         <div class="faq-item">
                             <div class="faq-question"><span>¿Tenéis algún contrato de permanencia?</span><div class="faq-toggle-icon"></div></div>
                             <div class="faq-answer"><p>No. En Liberty Seller no atamos a ningún cliente con contratos blindados. Creemos que la única razón para que te quedes con nosotros es que veas resultados mes a mes. Si no aportamos valor, eres libre de irte; no tiene sentido retenerte a la fuerza.</p></div>
-                        </div>
+                    </div>
                         <div class="faq-item">
                             <div class="faq-question"><span>¿Garantizáis resultados de venta?</span><div class="faq-toggle-icon"></div></div>
                             <div class="faq-answer"><p>Si alguien te garantiza ventas fijas en Amazon, <strong>huye</strong>. Nosotros somos honestos: el mercado fluctúa. Lo que sí garantizamos es una gestión profesional basada en datos y estrategias testadas en nuestras propias cuentas. No somos una agencia que "prueba suerte" con tu dinero, gestionamos tu capital con el mismo cuidado que el nuestro.</p></div>
-                        </div>
+                </div>
                         <div class="faq-item">
                             <div class="faq-question"><span>¿Cómo estructuráis el precio?</span><div class="faq-toggle-icon"></div></div>
                             <div class="faq-answer"><p>Huimos de las tarifas estándar. Nuestro modelo se basa en el éxito compartido: cobramos un fijo ajustado para la operativa y un variable (generalmente un 5%) que se aplica <strong>exclusivamente sobre la facturación que supere</strong> lo que hiciste el año anterior en ese mismo mes. Si no mejoramos tus números históricos, no cobramos ese variable.</p></div>
@@ -1899,8 +1936,8 @@
                         </a>
                     </div>
                 </div>
-            </div>
-            <div class="footer-bottom">
+        </div>
+        <div class="footer-bottom">
                 <div class="copyright">© 2025 LibertySeller. Todos los derechos reservados.</div>
                 <div class="social-icons">
                     <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
@@ -2023,7 +2060,7 @@
                 closePopup();
             }
         });
-        
+
         // ===== ZOOM PARA IMÁGENES DE RESULTADOS MÓVILES =====
         let mobileCurrentZoom = 1;
         let mobileIsDragging = false;
@@ -2185,20 +2222,80 @@
             }
         });
 
-        // --- FAQ LOGIC (MÁXIMA VELOCIDAD) ---
+        // --- FAQ LOGIC (OPTIMIZADO PARA MÓVIL) ---
         const faqItems = document.querySelectorAll('.faq-item');
+        const isMobile = window.innerWidth <= 767;
+        
         faqItems.forEach(item => {
             const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+            
+            // En móvil, calcular altura real y usar max-height
+            if (isMobile && answer) {
+                // Calcular altura real cuando se abre
+                const calculateHeight = () => {
+                    if (item.classList.contains('active')) {
+                        // Forzar display para medir
+                        answer.style.maxHeight = 'none';
+                        const realHeight = answer.scrollHeight;
+                        answer.style.maxHeight = realHeight + 'px';
+                    }
+                };
+                
+                // Observar cambios en el contenido
+                const resizeObserver = new ResizeObserver(() => {
+                    if (item.classList.contains('active')) {
+                        calculateHeight();
+                    }
+                });
+                resizeObserver.observe(answer);
+            }
+            
             question.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Cerrar otros items activos (sin animación para velocidad)
+                
+                // Cerrar otros items activos
                 faqItems.forEach(other => { 
                     if(other !== item && other.classList.contains('active')) { 
                         other.classList.remove('active');
+                        // En móvil, resetear max-height
+                        if (isMobile) {
+                            const otherAnswer = other.querySelector('.faq-answer');
+                            if (otherAnswer) {
+                                otherAnswer.style.maxHeight = '0px';
+                            }
+                        }
                     } 
                 });
+                
                 // Toggle del item actual
+                const wasActive = item.classList.contains('active');
                 item.classList.toggle('active');
+                
+                // En móvil, ajustar max-height con la altura real
+                if (isMobile && answer) {
+                    if (!wasActive) {
+                        // Abrir: calcular altura real
+                        requestAnimationFrame(() => {
+                            answer.style.maxHeight = 'none';
+                            const realHeight = answer.scrollHeight;
+                            answer.style.maxHeight = '0px';
+                            // Forzar reflow
+                            void answer.offsetHeight;
+                            // Aplicar altura real
+                            requestAnimationFrame(() => {
+                                answer.style.maxHeight = realHeight + 'px';
+                            });
+                        });
+                    } else {
+                        // Cerrar: animar a 0
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                        void answer.offsetHeight; // Force reflow
+                        requestAnimationFrame(() => {
+                            answer.style.maxHeight = '0px';
+                        });
+                    }
+                }
             }, { passive: false });
         });
 
@@ -2379,66 +2476,37 @@
                     });
                 } 
                 else {
-                    // Mobile: Línea fija en el centro de la pantalla
+                    // Fallback for Mobile (Vertical Scroll normal)
                     const rect = processSection.getBoundingClientRect();
                     const windowHeight = window.innerHeight;
-                    const sectionTop = rect.top;
-                    const sectionBottom = rect.bottom;
-                    const lineContainer = document.querySelector('.process-line-container');
-                    
-                    // Solo animar si la sección está visible
-                    if (sectionTop < windowHeight && sectionBottom > 0 && lineContainer) {
-                        // Mantener la línea siempre en el centro de la pantalla
-                        lineContainer.style.display = 'block';
+                    const triggerPoint = windowHeight * 0.5; // Start at middle of screen
+
+                    // Only animate if section is somewhat in view starting from middle
+                    if (rect.top < triggerPoint) {
+                        // Progress calculation relative to when top hits middle screen
+                        // We assume height of section roughly matches duration we want
+                        const totalDistance = rect.height; 
+                        const scrolledDistance = triggerPoint - rect.top;
                         
-                        // Calcular progreso basado en cuánto de la sección ha pasado por el centro de la pantalla
-                        const centerY = windowHeight * 0.5;
-                        const sectionStart = sectionTop;
-                        const sectionEnd = sectionBottom;
-                        const totalHeight = sectionEnd - sectionStart;
-                        
-                        // Progreso: 0 cuando el inicio de la sección está en el centro, 1 cuando el final está en el centro
-                        let progress = 0;
-                        if (centerY >= sectionStart && centerY <= sectionEnd) {
-                            progress = (centerY - sectionStart) / totalHeight;
-                        } else if (centerY < sectionStart) {
-                            progress = 0;
-                        } else {
-                            progress = 1;
-                        }
-                        
+                        let progress = scrolledDistance / totalDistance;
                         progress = Math.max(0, Math.min(1, progress));
                         
-                        // La línea crece desde el centro hacia arriba y abajo
-                        const fillHeight = progress * 100;
-                        processFill.style.height = fillHeight + "%";
+                        processFill.style.height = (progress * 100) + "%";
                         processFill.style.width = "2px";
-                        processFill.style.top = "50%";
-                        processFill.style.transform = "translateY(-50%)";
                         
-                        // Activar pasos según el progreso
+                        // New logic: Check if progress exceeds step's visual threshold with a buffer
                         processSteps.forEach((step, index) => {
-                            const stepThreshold = index / (processSteps.length - 1);
+                            const stepThreshold = (index * 0.20) + 0.05; // 5% buffer past the start of the section
                             
-                            if (progress >= stepThreshold - 0.1) {
+                            if (progress > stepThreshold) {
                                 step.classList.add('current-step');
                                 step.classList.add('active-node');
                                 step.classList.add('active');
                             } else {
                                 step.classList.remove('current-step');
                                 step.classList.remove('active-node');
+                                // Keep dim visibility if past index 0, or reset
                                 if(index > 0) step.classList.remove('active');
-                            }
-                        });
-                    } else {
-                        // Si la sección no está visible, ocultar la línea
-                        if (lineContainer) lineContainer.style.display = 'none';
-                        processFill.style.height = "0%";
-                        processSteps.forEach((step, index) => {
-                            if(index > 0) {
-                                step.classList.remove('current-step');
-                                step.classList.remove('active-node');
-                                step.classList.remove('active');
                             }
                         });
                     }
