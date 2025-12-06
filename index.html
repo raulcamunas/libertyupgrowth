@@ -1,0 +1,2500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#FF6600">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>Agencia Amazon FBA - Escala tus Ventas | Liberty Seller</title>
+    <meta name="description" content="Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.">
+
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="Amazon FBA, agencia Amazon, gestión Amazon, Amazon Seller, Amazon PPC, optimización Amazon, Amazon marketing">
+    <meta name="author" content="LibertySeller">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Spanish">
+    <link rel="canonical" href="https://libertyseller.com">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://libertyseller.es">
+    <meta property="og:title" content="Agencia Amazon FBA - Escala tus Ventas | LibertySeller">
+    <meta property="og:description" content="Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.">
+    <meta property="og:image" content="https://libertyseller.es/logo.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://libertyseller.es">
+    <meta property="twitter:title" content="Agencia Amazon FBA - Escala tus Ventas | LibertySeller">
+    <meta property="twitter:description" content="Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.">
+    <meta property="twitter:image" content="https://libertyseller.es/logo.png">
+    
+    <!-- Performance & Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://www.youtube.com">
+    <link rel="dns-prefetch" href="https://n8n-n8n.hyonwd.easypanel.host">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"></noscript>
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="logo.png" as="image" type="image/png">
+
+    <style>
+        /* RESET */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #080808; color: white; scroll-behavior: smooth; width: 100%; overflow-x: clip; overflow-y: visible; }
+
+        /* VARIABLES */
+        :root {
+            --brand-color: #FF6600; 
+            --bg-color: #080808;
+            --border-color: rgba(255,255,255,0.1);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        /* ANIMACIÓN NEBLINA */
+        @keyframes mistFlow {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-30px, 20px) scale(1.1); }
+            66% { transform: translate(20px, -20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* --- NAV LOGO --- */
+        .top-nav {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 40px; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center; pointer-events: none;
+        }
+        .site-logo img { height: 35px; width: auto; pointer-events: auto; opacity: 0; /* Oculto para dar protagonismo al central */ }
+
+        /* --- HERO SECTION (FIXED) --- */
+        .hero-section {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: var(--bg-color); z-index: 0; 
+            will-change: opacity, transform; overflow: hidden; pointer-events: auto;
+            perspective: 1000px; /* Necesario para el efecto 3D */
+        }
+        .hero-mist {
+            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(255, 102, 0, 0.12), transparent 40%), radial-gradient(circle at 70% 60%, rgba(0, 115, 255, 0.08), transparent 40%);
+            filter: blur(80px); animation: mistFlow 25s infinite alternate ease-in-out; z-index: 0;
+        }
+        #hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.5; }
+        
+        .hero-container { position: relative; z-index: 10; width: 100%; max-width: 1200px; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin: 0 auto; }
+        .hero-text-col { text-align: left; display: flex; flex-direction: column; align-items: flex-start; }
+
+        /* LOGO PRINCIPAL CON EFECTO BLUR */
+        .logo-wrapper {
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+        .tilt-logo {
+            display: block;
+        }
+        .hero-main-logo {
+            height: 30px; width: auto; display: block;
+            opacity: 0;
+            animation: textBlurIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
+        }
+        .hero-main-logo-text { 
+            font-weight: 800; font-size: 24px; color: white; display: block; letter-spacing: 2px;
+            opacity: 0;
+            animation: textBlurIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
+        }
+
+        /* HERO TITLE - BLANCO PURO + BLUR IN */
+        .hero-title { 
+            font-size: 64px; 
+            line-height: 1.1; 
+            font-weight: 800; 
+            margin-bottom: 25px; 
+            letter-spacing: -2px; 
+            color: white; 
+            opacity: 0; /* Start invisible */
+            animation: textBlurIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+        }
+
+        /* CLASE PARA ANIMACIÓN DE TEXTOS AL HACER SCROLL */
+        .scroll-trigger {
+            opacity: 0;
+            transform: translateY(20px);
+            filter: blur(10px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        filter 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .scroll-trigger.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        @keyframes textBlurIn {
+            0% { opacity: 0; filter: blur(20px); transform: translateY(10px); }
+            100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+        }
+
+        .hero-subtitle { font-size: 20px; color: #a0a0b0; margin-bottom: 30px; line-height: 1.6; max-width: 550px; opacity: 0; animation: textBlurIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards; }
+        
+        /* HERO STATS TICKER */
+        .hero-stats-wrapper {
+            width: 100%;
+            max-width: 550px;
+            margin-bottom: 35px;
+            overflow: hidden;
+            position: relative;
+            /* Fade masks on sides */
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            opacity: 0;
+            animation: fadeIn 1s ease 0.6s forwards;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .stats-track {
+            display: flex;
+            width: max-content;
+            gap: 15px;
+            animation: scrollStats 25s linear infinite;
+        }
+        
+        .hero-stats-wrapper:hover .stats-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollStats {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ddd;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-badge:hover {
+            border-color: var(--brand-color);
+            background: rgba(255, 102, 0, 0.1);
+            color: white;
+        }
+
+        .stat-badge i { color: var(--brand-color); }
+
+        .hero-text-actions { margin-top: 0px; display: flex; align-items: center; gap: 20px; opacity: 0; animation: fadeIn 1s ease 0.8s forwards; }
+        
+        .btn-watch-video {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 12px 24px; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);
+        }
+        .btn-watch-video i { color: var(--brand-color); font-size: 16px; }
+        .btn-watch-video:hover { border-color: var(--brand-color); background: rgba(255, 102, 0, 0.1); transform: translateX(5px); }
+
+        .hero-form-col { display: flex; justify-content: flex-end; /* Perspective removed from here */ }
+        
+        /* FORMULARIO - LIQUID GLASS ELEGANTE Y TRANSPARENTE */
+        .form-card { 
+            background: rgba(255, 255, 255, 0.02); /* Fondo más transparente */
+            backdrop-filter: blur(50px) saturate(180%) brightness(1.1); /* Blur más intenso y saturación premium */
+            -webkit-backdrop-filter: blur(50px) saturate(180%) brightness(1.1);
+            border: 1px solid rgba(255, 255, 255, 0.15); /* Borde más visible */
+            border-radius: 24px; 
+            padding: 40px; 
+            width: 100%; 
+            max-width: 480px; 
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 60px rgba(255, 102, 0, 0.1); /* Sombra naranja sutil */
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        /* Reflejo superior y gradiente para efecto glass premium */
+        .form-card::before { 
+            content: ""; 
+            position: absolute; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+            pointer-events: none;
+            border-radius: 24px;
+            opacity: 0.6;
+        }
+        
+        /* Efecto de brillo animado sutil */
+        .form-card::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 102, 0, 0.1) 0%, transparent 70%);
+            animation: mistFlow 20s infinite alternate ease-in-out;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .form-title { font-size: 24px; font-weight: 700; margin-bottom: 25px; color: white; text-align: center; }
+        .input-group { margin-bottom: 20px; position: relative; }
+        .form-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px 20px; color: white; font-size: 15px; outline: none; transition: all 0.3s ease; }
+        .form-input:focus { background: rgba(255,255,255,0.08); border-color: var(--brand-color); box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.1); }
+        .form-input::placeholder { color: #666; }
+        
+        .amazon-switch-group { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .switch-label-text { font-size: 15px; color: #ccc; font-weight: 500; }
+        .toggle-switch { position: relative; width: 60px; height: 30px; display: inline-block; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 2; }
+        .slider .txt-no { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 10px; font-weight: 800; color: #888; opacity: 1; transition: opacity 0.3s; }
+        .slider .txt-si { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 10px; font-weight: 800; color: white; opacity: 0; transition: opacity 0.3s; }
+        input:checked + .slider { background-color: var(--brand-color); }
+        input:checked + .slider:before { transform: translateX(30px); }
+        input:checked + .slider .txt-no { opacity: 0; }
+        input:checked + .slider .txt-si { opacity: 1; }
+        
+        /* NUEVO ESTILO: Campos Expandibles (Botones Pastilla) */
+        .expandable-fields {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease;
+            opacity: 0;
+        }
+        .expandable-fields.open {
+            max-height: 500px; /* Suficiente para el contenido */
+            opacity: 1;
+            padding-bottom: 20px;
+        }
+        
+        .pill-label { font-size: 12px; color: #888; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-top: 15px; }
+        
+        .pill-grid { display: grid; gap: 8px; }
+        .pill-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .pill-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        .pill-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+            padding: 10px 5px;
+            font-size: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+        .pill-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+        .pill-btn.active {
+            background: var(--brand-color);
+            border-color: var(--brand-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+        }
+
+        .submit-btn { width: 100%; background: var(--brand-color); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(255, 102, 0, 0.2); margin-top: 10px; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(255, 102, 0, 0.3); filter: brightness(1.1); }
+        .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        /* --- VIDEO MODAL --- */
+        .video-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .video-modal.active { opacity: 1; pointer-events: all; }
+        .video-modal-content { width: 90%; max-width: 900px; aspect-ratio: 16/9; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; box-shadow: 0 50px 100px rgba(0,0,0,0.5); position: relative; transform: scale(0.95); transition: transform 0.3s ease; overflow: hidden; }
+        .video-modal.active .video-modal-content { transform: scale(1); }
+        .close-modal-btn { position: absolute; top: -50px; right: 0; background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; opacity: 0.7; }
+        .video-iframe { width: 100%; height: 100%; border: none; }
+        
+
+        /* --- WRAPPER PRINCIPAL --- */
+        .main-content-wrapper { position: relative; z-index: 20; margin-top: 100vh; background-color: var(--bg-color); box-shadow: 0 -50px 100px rgba(0,0,0,1); overflow: visible; padding-top: 0; }
+
+        /* --- FEATURES SECTION --- */
+        .features-section { padding: 60px 20px; display: flex; justify-content: center; border-top: 1px solid var(--border-color); position: relative; z-index: 1; background-color: #080808; overflow: hidden; }
+        .features-section::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 50% 50%, rgba(255, 102, 0, 0.08), transparent 40%), radial-gradient(circle at 20% 80%, rgba(0, 115, 255, 0.05), transparent 40%); filter: blur(80px); animation: mistFlow 30s linear infinite; z-index: 0; pointer-events: none; }
+        .features-section.theme-blue::before { background: radial-gradient(circle at 50% 50%, rgba(0, 115, 255, 0.12), transparent 40%), radial-gradient(circle at 20% 80%, rgba(255, 102, 0, 0.05), transparent 40%); }
+        .features-container { max-width: 1200px; width: 100%; position: relative; z-index: 1; margin: 0 auto; }
+        
+        /* HEADER (DESKTOP) */
+        .features-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 60px; 
+            flex-wrap: wrap; 
+            gap: 40px; 
+        }
+        
+        .header-text { max-width: 600px; }
+        .features-label { font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; transition: color 0.3s; }
+        .features-label::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; }
+        .features-title { font-size: 42px; font-weight: 600; line-height: 1.1; margin-bottom: 30px; letter-spacing: -1px; }
+        .features-desc { font-size: 16px; color: #a0a0b0; line-height: 1.6; margin-bottom: 30px; }
+        .btn-demo-small { background-color: white; color: black; padding: 12px 25px; font-weight: 700; font-size: 12px; text-transform: uppercase; text-decoration: none; border-radius: 2px; display: inline-block; transition: transform 0.2s, background-color 0.3s; cursor: pointer; border: none; }
+        
+        .switch-container { display: flex; align-items: center; gap: 15px; background-color: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); align-self: flex-start; margin-top: -10px; }
+        .switch-labels { display: flex; flex-direction: column; gap: 15px; text-align: right; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+        .switch-label { cursor: pointer; color: #888; transition: color 0.3s; }
+        .switch-track { width: 30px; height: 60px; background-color: rgba(255,255,255,0.1); border-radius: 15px; position: relative; cursor: pointer; transition: background-color 0.3s; }
+        .switch-knob { width: 22px; height: 22px; border-radius: 50%; background-color: white; position: absolute; left: 4px; transition: top 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), background-color 0.3s; }
+        .theme-orange .features-label, .theme-orange .feature-icon { color: var(--brand-color); } .theme-orange .switch-knob { top: 4px; background-color: var(--brand-color); } .theme-orange .switch-label.brand { color: white; }
+        .theme-blue .features-label, .theme-blue .feature-icon { color: #0073FF; } .theme-blue .switch-knob { top: 34px; background-color: #0073FF; } .theme-blue .switch-label.seller { color: white; }
+        
+        .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--border-color); background: rgba(255,255,255,0.01); backdrop-filter: blur(5px); }
+        .feature-card { border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 40px 30px; min-height: 280px; transition: all 0.3s ease; position: relative; background: transparent; cursor: default; border-color: rgba(255,255,255,0.05); }
+        .feature-card:nth-child(4n) { border-right: none; } .feature-card:nth-child(n+5) { border-bottom: none; }
+        .feature-card:hover { z-index: 10; background-color: rgba(255,255,255,0.03); backdrop-filter: blur(10px); }
+        .theme-orange .feature-card:hover { border: 1px solid var(--brand-color) !important; box-shadow: 0 0 20px rgba(255, 102, 0, 0.2); }
+        .theme-blue .feature-card:hover { border: 1px solid #0073FF !important; box-shadow: 0 0 20px rgba(0, 115, 255, 0.2); }
+
+        .feature-icon { font-size: 28px; margin-bottom: 20px; }
+        .feature-card-title { font-size: 20px; font-weight: 600; margin-bottom: 15px; line-height: 1.2; }
+        .feature-card-desc { font-size: 13px; color: #999; line-height: 1.5; }
+        .dynamic-content { transition: opacity 0.3s, transform 0.3s; opacity: 1; transform: translateY(0); } .dynamic-content.switching { opacity: 0; transform: translateY(10px); }
+
+        /* --- SCROLL SECTION (STICKY RESULTS) --- */
+        .scroll-section { padding: 100px 0; border-top: 1px solid var(--border-color); position: relative; z-index: 1; background-color: #080808; overflow: visible !important; }
+        .scroll-bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none; }
+        .scroll-bg-layer::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 50% 50%, rgba(255, 102, 0, 0.05), transparent 40%), radial-gradient(circle at 20% 80%, rgba(0, 115, 255, 0.03), transparent 40%); filter: blur(80px); animation: mistFlow 30s linear infinite; }
+        .scroll-intro { text-align: center; max-width: 800px; margin: 0 auto 80px auto; padding: 0 20px; position: relative; z-index: 2; }
+        .scroll-title { font-size: 48px; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
+        .scroll-subtitle { font-size: 16px; color: #a0a0b0; line-height: 1.6; }
+        .sticky-wrapper { display: grid; grid-template-columns: 250px 1fr 250px; max-width: 1200px; margin: 0 auto; padding: 0 20px; gap: 60px; position: relative; z-index: 2; }
+        .sticky-col { position: sticky; top: 30vh; height: fit-content; align-self: start; }
+        .scroll-menu { display: flex; flex-direction: column; gap: 30px; }
+        .scroll-menu-item { display: flex; align-items: center; gap: 15px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #555; transition: all 0.3s; cursor: pointer; }
+        .scroll-menu-item.active { color: var(--brand-color); }
+        .menu-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #555; background: transparent; transition: all 0.3s; }
+        .scroll-menu-item.active .menu-dot { background: var(--brand-color); border-color: var(--brand-color); box-shadow: 0 0 10px rgba(255, 102, 0, 0.5); }
+        .scroll-center { display: flex; flex-direction: column; gap: 200px; padding-bottom: 100px; }
+        .scroll-visual-item { 
+            background-color: rgba(255,255,255,0.02); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 16px; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            opacity: 0.3; 
+            transform: scale(0.95); 
+            transition: all 0.5s ease; 
+            overflow: visible;
+            width: fit-content;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .scroll-visual-item.active { 
+            opacity: 1; 
+            transform: scale(1); 
+            border-color: var(--brand-color); 
+            box-shadow: 0 0 40px rgba(255, 102, 0, 0.15); 
+        }
+        
+        .scroll-result-img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-result-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(255, 102, 0, 0.3);
+        }
+        
+        .right-text-container { position: relative; min-height: 450px; }
+        .right-text-block { position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateY(20px); transition: all 0.5s ease; pointer-events: none; }
+        .right-text-block.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .right-title { font-size: 28px; font-weight: 600; margin-bottom: 20px; line-height: 1.2; }
+        .right-desc { font-size: 15px; color: #bbb; line-height: 1.6; margin-bottom: 25px; }
+        .right-stat-label { font-size: 12px; color: var(--brand-color); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; display: block; margin-top: 20px; margin-bottom: 10px; }
+        .right-stat-big { font-size: 42px; font-weight: 800; color: white; display: block; line-height: 1.1; margin-top: 5px; }
+
+        /* Mockups visuales */
+        .mockup-ui { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 15px; }
+        .mock-stack-card { background: #2a2a2a; border-radius: 8px; padding: 15px; margin-bottom: -60px; width: 80%; margin-left: auto; margin-right: auto; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); position: relative; z-index: 1; }
+        .mock-stack-card:nth-child(2) { transform: scale(1.05); z-index: 2; background: #333; }
+        .mock-stack-card:nth-child(3) { transform: scale(1.1); z-index: 3; background: #3a3a3a; border: 1px solid #444; }
+        .mock-line { height: 8px; background: #555; border-radius: 4px; margin-bottom: 8px; }
+        .mock-line.short { width: 40%; } .mock-line.long { width: 90%; }
+        .mock-graph-container { position: relative; height: 100%; display: flex; align-items: flex-end; padding-bottom: 20px; }
+        .mock-graph-line { width: 100%; height: 60%; background: linear-gradient(to top, rgba(255, 102, 0, 0.2), transparent); border-top: 3px solid var(--brand-color); border-radius: 50% 50% 0 0 / 20% 20% 0 0; }
+        .mock-tooltip { position: absolute; background: #fff; color: #000; padding: 10px; border-radius: 6px; font-size: 10px; font-weight: 700; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; }
+        .mock-tooltip.t1 { top: 20%; right: 10%; } .mock-tooltip.t2 { top: 40%; right: 10%; } .mock-tooltip span { color: var(--brand-color); }
+        .mock-dashboard { display: flex; gap: 15px; height: 100%; align-items: center; }
+        .mock-dash-left { flex: 1; background: #222; height: 80%; border-radius: 8px; padding: 15px; }
+        .mock-dash-card { background: #fff; color: #000; padding: 15px; border-radius: 8px; width: 140px; position: absolute; top: 30%; right: 10%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .mock-pie { width: 40px; height: 40px; background: conic-gradient(var(--brand-color) 0% 25%, #ff9500 25% 60%, #333 60% 100%); border-radius: 50%; margin-left: auto; }
+
+        /* --- NEW TESTIMONIALS SECTION --- */
+        .testimonials-section { padding: 120px 20px; border-top: 1px solid var(--border-color); position: relative; z-index: 1; background-color: #080808; overflow: visible; }
+        .testimonials-container { max-width: 1200px; width: 100%; margin: 0 auto; position: relative; }
+        
+        .testimonials-title { font-size: 42px; font-weight: 600; text-align: center; margin-bottom: 15px; color: white; letter-spacing: -1px; }
+        .testimonials-subtitle { font-size: 16px; color: #888; text-align: center; margin-bottom: 60px; font-weight: 400; }
+        
+        /* Grid */
+        .testimonials-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px; 
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Client Card */
+        .client-card {
+            aspect-ratio: 1/1;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            display: block;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .client-card:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+        
+
+        /* IMAGEN DE PARTNER */
+        .client-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 20px;
+            display: block;
+        }
+        
+        /* RADIAL MINI POPUP (IN-SECTION) */
+        .testimonial-popup {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 100%;
+            max-width: 500px;
+            background: radial-gradient(circle at center, rgba(30, 30, 30, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .testimonial-popup.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .testimonial-popup::before {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; height: 80%;
+            background: var(--brand-color);
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .popup-close:hover { background: rgba(255,255,255,0.2); }
+
+        .popup-image-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: 60px;
+            max-height: 90px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            padding: 10px 0;
+        }
+        
+        .popup-logo-img {
+            max-width: 100%;
+            max-height: 90px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .popup-stat { font-size: 36px; font-weight: 800; color: white; margin: 15px 0; background: linear-gradient(90deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .popup-desc { font-size: 15px; color: #aaa; line-height: 1.6; margin-bottom: 20px; }
+        .popup-tag { background: rgba(255, 102, 0, 0.15); color: var(--brand-color); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 102, 0, 0.3); }
+
+        /* Modal para resultados móviles */
+        .mobile-result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .mobile-result-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10001;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 102, 0, 0.8);
+            border-color: var(--brand-color);
+            transform: scale(1.1);
+        }
+        
+        .modal-image-container {
+            position: relative;
+            width: 95%;
+            max-width: 100%;
+            height: 80vh;
+            overflow: hidden;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        
+        .modal-image-container:active {
+            cursor: grabbing;
+        }
+        
+        .modal-result-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+        }
+        
+        .mobile-result-modal .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10002;
+        }
+
+        /* --- STICKY PROCESS / ROADMAP SECTION (SCROLLYTELLING) --- */
+        .process-section { 
+            position: relative; 
+            z-index: 10; 
+            background: #080808; 
+            height: 400vh; /* Extremely tall to allow scroll scrubbing */
+            border-top: 1px solid var(--border-color);
+            /* overflow: hidden;  REMOVED TO FIX STICKY */
+            clip-path: inset(0); /* Fixes overflow issues without breaking sticky */
+        }
+        
+        /* New Glass Blur Background for Process Section */
+        .process-sticky-container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            /* Subtle gradients to give life to the background */
+            background: radial-gradient(circle at 50% 50%, rgba(255, 102, 0, 0.05), transparent 50%), 
+                        radial-gradient(circle at 80% 20%, rgba(0, 115, 255, 0.03), transparent 40%);
+            filter: blur(60px);
+            animation: mistFlow 20s infinite alternate ease-in-out;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .process-sticky-container {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .process-header { text-align: center; max-width: 800px; margin: 0 auto 60px auto; flex-shrink: 0; }
+        .process-title { font-size: 48px; font-weight: 700; margin-bottom: 20px; color: white; letter-spacing: -1px; }
+        .process-subtitle { font-size: 18px; color: #888; }
+        
+        .process-wrapper { position: relative; max-width: 1200px; width: 100%; margin: 0 auto; min-height: 300px; display: flex; align-items: center; justify-content: space-between; }
+        
+        /* Linea de fondo */
+        .process-line-bg { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.1); transform: translateY(-50%); z-index: 0; }
+        
+        /* Linea de progreso (naranja) */
+        .process-line-fill { position: absolute; top: 50%; left: 0; height: 2px; background: var(--brand-color); transform: translateY(-50%); z-index: 1; width: 0%; transition: width 0.1s linear; box-shadow: 0 0 10px var(--brand-color); }
+        
+        .process-step { position: relative; z-index: 2; width: 18%; display: flex; flex-direction: column; align-items: center; text-align: center; opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); filter: blur(5px); }
+        .process-step.active { opacity: 1; transform: translateY(0); filter: blur(0); }
+        
+        .step-node { width: 20px; height: 20px; border-radius: 50%; background: #111; border: 2px solid rgba(255,255,255,0.2); margin-bottom: 30px; position: relative; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; }
+        .process-step.active .step-node { border-color: var(--brand-color); background: var(--brand-color); box-shadow: 0 0 20px rgba(255,102,0,0.5); }
+        
+        .step-node::after { content: ""; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--brand-color); position: absolute; opacity: 0; transform: scale(0.5); transition: all 0.5s ease; }
+        .process-step.active .step-node::after { opacity: 0.3; transform: scale(1.5); }
+        
+        .step-content { padding: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; backdrop-filter: blur(10px); transition: all 0.3s ease; }
+        .step-num { font-size: 12px; font-weight: 800; color: var(--brand-color); margin-bottom: 10px; display: block; text-transform: uppercase; letter-spacing: 1px; }
+        .step-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: white; }
+        .step-desc { font-size: 13px; color: #999; line-height: 1.5; }
+
+        /* --- FAQ & CTA --- */
+        .faq-cta-wrapper { background-color: var(--bg-color); position: relative; z-index: 1; border-top: 1px solid var(--border-color); overflow: hidden; }
+        .faq-cta-wrapper::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(255, 102, 0, 0.08) 0%, transparent 70%); filter: blur(100px); z-index: 0; pointer-events: none; }
+        .faq-section { padding: 100px 20px 60px 20px; position: relative; z-index: 1; background: transparent; }
+        .faq-container { max-width: 1200px; margin: 0 auto; width: 100%; }
+        .faq-header-text { text-align: center; margin-bottom: 60px; }
+        .faq-title { font-size: 36px; font-weight: 700; margin-bottom: 15px; background: linear-gradient(180deg, #fff 0%, #ccc 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .faq-subtitle { color: #888; font-size: 16px; }
+        .faq-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: start; }
+        .faq-item { 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            background: rgba(255,255,255,0.02); 
+            overflow: hidden; 
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            transform: translateZ(0); 
+            will-change: height, max-height; 
+            height: fit-content;
+            align-self: start;
+        }
+        .faq-item:hover { 
+            background: rgba(255,255,255,0.04); 
+            border-color: rgba(255, 102, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        .faq-item.active { 
+            background: rgba(255,255,255,0.05); 
+            border-color: var(--brand-color); 
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        .faq-question { 
+            padding: 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 18px; 
+            color: #eee;
+            transition: color 0.3s ease;
+        }
+        .faq-item:hover .faq-question,
+        .faq-item.active .faq-question {
+            color: #fff;
+        }
+        .faq-toggle-icon { width: 24px; height: 24px; position: relative; transition: transform 0.3s ease; }
+        .faq-toggle-icon::before, .faq-toggle-icon::after { content: ""; position: absolute; background-color: var(--brand-color); top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 2px; }
+        .faq-toggle-icon::before { width: 100%; height: 2px; } .faq-toggle-icon::after { width: 2px; height: 100%; transition: transform 0.3s ease; }
+        .faq-item.active .faq-toggle-icon { transform: rotate(180deg); } .faq-item.active .faq-toggle-icon::after { opacity: 0; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease; opacity: 0; padding: 0 25px; }
+        .faq-answer p { padding-bottom: 25px; margin: 0; }
+        .faq-item.active .faq-answer { opacity: 1; }
+        
+        .cta-final-section { padding: 60px 20px 120px 20px; text-align: center; position: relative; z-index: 1; background: transparent; }
+        .cta-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+        .cta-title { font-size: 56px; font-weight: 800; margin-bottom: 20px; line-height: 1.1; letter-spacing: -2px; }
+        .cta-desc { font-size: 20px; color: #ccc; margin-bottom: 40px; }
+        .cta-btn-big { 
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: white; 
+            padding: 22px 60px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px; 
+            cursor: pointer; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                        0 0 40px rgba(255, 102, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-btn-big::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 102, 0, 0.1) 0%, rgba(255, 102, 0, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .cta-btn-big:hover::before {
+            opacity: 1;
+        }
+        
+        .cta-btn-big:hover { 
+            transform: translateY(-3px); 
+            background: rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 102, 0, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+                        0 0 60px rgba(255, 102, 0, 0.2);
+        }
+        
+        .cta-btn-big:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Botones CTA sutiles en secciones */
+        .section-cta {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 0;
+            border-top: none;
+        }
+        
+        .section-cta-btn {
+            background: rgba(255, 102, 0, 0.1);
+            border: 1px solid rgba(255, 102, 0, 0.3);
+            color: var(--brand-color);
+            padding: 12px 28px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-cta-btn:hover {
+            background: rgba(255, 102, 0, 0.2);
+            border-color: var(--brand-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.2);
+        }
+        
+        .section-cta-btn i {
+            font-size: 12px;
+        }
+        
+        .section-cta-mobile-only {
+            display: block;
+        }
+        
+        @media (min-width: 768px) {
+            .section-cta-mobile-only {
+                display: none;
+            }
+        }
+
+        /* --- FOOTER --- */
+        .site-footer { 
+            background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+            border-top: 1px solid var(--border-color); 
+            padding: 80px 20px 40px; 
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .site-footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--brand-color), transparent);
+            opacity: 0.3;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-main {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .footer-brand {
+            max-width: 500px;
+        }
+        
+        .footer-logo-img {
+            max-height: 40px;
+            width: auto;
+            height: auto;
+            margin-bottom: 20px;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .footer-desc { 
+            line-height: 1.8; 
+            color: #aaa;
+            font-size: 15px;
+        }
+        
+        .footer-contact-title {
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .contact-item:hover {
+            color: var(--brand-color);
+            background: rgba(255, 102, 0, 0.1);
+            border-color: rgba(255, 102, 0, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .contact-item i {
+            font-size: 20px;
+            color: var(--brand-color);
+            width: 24px;
+            text-align: center;
+        }
+        
+        .footer-bottom { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .social-icons { 
+            display: flex; 
+            gap: 20px; 
+        }
+        
+        .social-icons a { 
+            color: #666; 
+            font-size: 20px; 
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .social-icons a:hover { 
+            color: var(--brand-color);
+            background: rgba(255, 102, 0, 0.1);
+            border-color: rgba(255, 102, 0, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 991px) {
+            /* Hero */
+            .hero-title { font-size: 48px; }
+            .hero-container { 
+                display: flex !important;
+                flex-direction: column !important;
+                grid-template-columns: none !important;
+                gap: 30px; 
+                text-align: center; 
+                padding: 40px 20px; 
+                margin: 0 auto;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            .hero-text-col { 
+                text-align: center; 
+                align-items: center; 
+                width: 100%;
+                max-width: 100%;
+            }
+            .hero-form-col { 
+                justify-content: center; 
+                width: 100%;
+                max-width: 100%;
+                display: flex;
+            }
+            .form-card {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            .hero-text-actions { justify-content: center; }
+            /* Mobile Hero opacity fix */
+            .hero-section { 
+                height: auto; min-height: 100vh; padding-bottom: 60px; position: relative; 
+                opacity: 1 !important; transform: none !important; pointer-events: auto !important;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                overflow-x: hidden;
+                overflow-y: visible;
+            } 
+
+            /* Features Grid */
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .feature-card:nth-child(2n) { border-right: none; }
+            .feature-card:nth-child(4n) { border-right: 1px solid var(--border-color); }
+            .feature-card:nth-child(2n):nth-child(4n) { border-right: none; }
+            .feature-card:nth-child(n+5) { border-bottom: 1px solid var(--border-color); }
+            .feature-card:nth-last-child(-n+2) { border-bottom: none; }
+            
+            /* Testimonials Mobile */
+            .testimonials-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+
+            /* SCROLL SECTION MOBILE RE-DESIGN (VERTICAL LIST) */
+            .sticky-wrapper { display: none; } 
+            
+            /* Ocultamos el viejo scroll horizontal */
+            .mobile-scroll-wrapper { display: none; }
+            .mobile-controls { display: none; }
+
+            /* Nueva Lista Vertical de Resultados */
+            .mobile-results-list {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                padding: 0 20px 40px 20px;
+            }
+            .mobile-result-card {
+                background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+                border: 1px solid rgba(255,255,255,0.05);
+                border-radius: 16px;
+                padding: 30px;
+                position: relative;
+                overflow: visible;
+            }
+            .mobile-result-card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--brand-color); }
+            .mobile-result-card h3 { font-size: 22px; color: white; margin-bottom: 10px; font-weight: 700; }
+            .mobile-result-card p { font-size: 14px; color: #aaa; line-height: 1.6; margin-bottom: 15px; }
+            
+            /* Imagen en Mobile Results */
+            .mobile-result-img {
+                width: auto;
+                height: auto;
+                max-width: 100%;
+                max-height: 400px;
+                object-fit: contain;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                display: block;
+                border: 1px solid rgba(255,255,255,0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .mobile-result-img:hover {
+                transform: scale(1.02);
+                border-color: var(--brand-color);
+                box-shadow: 0 4px 20px rgba(255, 102, 0, 0.3);
+            }
+
+            .mobile-stat-big { font-size: 32px; font-weight: 800; color: white; margin-top: 10px; display: block; }
+            .mobile-stat-label { font-size: 12px; color: var(--brand-color); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+            /* PROCESS SECTION MOBILE (VERTICAL) */
+            /* En móvil no queremos que sea sticky 400vh porque es muy molesto, lo hacemos scroll normal pero vertical */
+            .process-section { height: auto; }
+            
+            /* Add mobile background effect specifically here */
+            .process-sticky-container::before {
+                display: none !important; /* <--- ESTO ES LA SOLUCIÓN NUCLEAR. ADIÓS AL FONDO QUE MOLESTA EN MÓVIL */
+            }
+
+            .process-sticky-container { 
+                position: relative; 
+                height: auto; 
+                top: auto; 
+                padding: 60px 20px; 
+                overflow: hidden; /* Mantenemos hidden por si acaso */
+            } 
+
+            .process-wrapper { flex-direction: column; align-items: flex-start; padding-left: 30px; gap: 40px; min-height: auto; }
+            .process-line-bg { width: 2px; height: 100%; top: 0; left: 0; transform: none; }
+            .process-line-fill { width: 2px; height: 0%; top: 0; left: 0; transform: none; transition: height 0.2s ease-out; }
+            .process-step { width: 100%; text-align: left; align-items: flex-start; flex-direction: row; gap: 20px; transform: none; opacity: 0.3; filter: none; transition: opacity 0.3s; }
+            .process-step.active { opacity: 1; transform: none; }
+            .step-node { margin-bottom: 0; position: absolute; left: -40px; top: 20px; }
+            .step-content { width: 100%; }
+
+            /* MOBILE ACTIVE FOCUS (NUEVO) */
+            .process-step.current-step .step-content {
+                border-color: var(--brand-color);
+                box-shadow: 0 0 20px rgba(255, 102, 0, 0.3); /* Orange blur */
+                background: rgba(255, 102, 0, 0.05);
+            }
+            .process-step.active-node .step-node {
+                border-color: var(--brand-color); 
+                background: var(--brand-color); 
+                box-shadow: 0 0 20px rgba(255,102,0,0.5);
+            }
+
+            .main-content-wrapper { margin-top: 0; }
+        }
+
+        @media (min-width: 992px) {
+            .mobile-results-list { display: none; }
+        }
+
+        @media (max-width: 767px) {
+            .hero-title { font-size: 36px; }
+            .features-header { display: block; position: relative; margin-bottom: 40px; text-align: left; }
+            .header-text { text-align: left; padding-right: 0; padding-top: 60px; }
+            .features-label { justify-content: flex-start; }
+            
+            /* SWITCH A LA DERECHA (ARREGLADO) */
+            .switch-container { 
+                position: absolute; 
+                top: -25px; 
+                right: 0; 
+                padding: 6px 10px; 
+                transform: scale(0.7); 
+                transform-origin: top right; 
+                margin: 0; 
+                background-color: rgba(255,255,255,0.08); 
+                border: 1px solid rgba(255,255,255,0.15);
+                gap: 10px;
+            }
+            .switch-labels {
+                font-size: 10px;
+                gap: 10px;
+            }
+            .switch-track {
+                width: 24px;
+                height: 48px;
+            }
+            .switch-knob {
+                width: 18px;
+                height: 18px;
+                left: 3px;
+            }
+            .theme-orange .switch-knob { top: 3px; }
+            .theme-blue .switch-knob { top: 27px; }
+            
+            .features-grid { 
+                grid-template-columns: 1fr; 
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+            .features-grid.scroll-trigger {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+                filter: blur(0) !important;
+            }
+            .feature-card { 
+                border-right: none !important; 
+                border-bottom: 1px solid var(--border-color) !important; 
+                min-height: auto; 
+                padding: 25px 20px;
+                opacity: 0;
+                transform: translateY(30px);
+                filter: blur(15px);
+                transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                            transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                            filter 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+            .feature-card.card-visible {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+            .feature-card:hover {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+            .feature-card:last-child { border-bottom: none !important; }
+            .footer-main { 
+                grid-template-columns: 1fr; 
+                gap: 40px; 
+                text-align: left;
+            }
+            
+            .footer-brand {
+                max-width: 100%;
+            }
+            
+            .footer-contact-title {
+                font-size: 16px;
+            }
+            
+            .contact-item {
+                font-size: 15px;
+                padding: 15px;
+            }
+            
+            .footer-bottom { 
+                flex-direction: column; 
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .copyright {
+                order: 2;
+            }
+            
+            .social-icons {
+                order: 1;
+            }
+            .cta-title { font-size: 32px; }
+            .cta-btn-big { width: 100%; justify-content: center; }
+            
+            /* FAQ Mobile - Single Column */
+            .faq-list { grid-template-columns: 1fr; gap: 15px; }
+            .faq-item { margin-bottom: 0; }
+            .faq-item:hover { transform: none; }
+            .faq-item.active { transform: none; }
+            .faq-question { padding: 20px; font-size: 16px; }
+            .faq-answer { padding: 0 20px; }
+            .faq-answer p { padding-bottom: 20px; }
+            .faq-section { padding: 60px 20px 40px 20px; }
+            .faq-header-text { margin-bottom: 40px; }
+            .faq-title { font-size: 28px; }
+            #hero-canvas { position: fixed !important; height: 100vh; width: 100vw !important; max-width: 100vw !important; top: 0; left: 0; z-index: 0; }
+            
+            .pill-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+            
+            .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+            .testimonial-popup { width: 90%; }
+        }
+
+        /* WIDGET FLOTANTE WHATSAPP */
+        .whatsapp-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .whatsapp-button {
+            width: 60px;
+            height: 60px;
+            background: var(--brand-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(255, 102, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            font-size: 32px;
+            animation: whatsappPulse 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(255, 102, 0, 0.6);
+            background: #ff7700;
+        }
+
+        .whatsapp-button:active {
+            transform: scale(0.95);
+        }
+
+        .whatsapp-message {
+            position: absolute;
+            right: 75px;
+            background: rgba(0, 0, 0, 0.35);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateX(10px);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .whatsapp-message.show {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .whatsapp-message.hide {
+            opacity: 0;
+            transform: translateX(10px);
+            pointer-events: none;
+        }
+
+        @keyframes whatsappPulse {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .whatsapp-widget {
+                bottom: 20px;
+                right: 20px;
+                gap: 10px;
+            }
+            .whatsapp-button {
+                width: 56px;
+                height: 56px;
+                font-size: 28px;
+            }
+            .whatsapp-message {
+                font-size: 12px;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body itemscope itemtype="https://schema.org/WebPage">
+
+    <section class="hero-section" id="hero" itemscope itemtype="https://schema.org/WebPageElement">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-container">
+            <div class="hero-text-col">
+                <div class="logo-wrapper" id="tilt-logo">
+                    <img src="logo.png" alt="LibertySeller - Agencia Amazon FBA" class="hero-main-logo" loading="eager" width="120" height="30" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<span class=\'hero-main-logo-text\'>LIBERTYSELLER</span>')">
+                </div>
+                <h1 class="hero-title"> Hacemos que vendas más, sin complicaciones</h1>
+                <p class="hero-subtitle">Delega la operativa en nosotros y máximiza tu beneficio. Soluciones probadas tanto para nuevos vendedores como para marcas consolidadas</p>
+                
+                <div class="hero-stats-wrapper">
+                    <div class="stats-track">
+                        <div class="stat-badge"><i class="fa-solid fa-chart-line"></i> 7.8M+ Facturados</div>
+                        <div class="stat-badge"><i class="fa-solid fa-users"></i> +20 Marcas Activas</div>
+                        <div class="stat-badge"><i class="fa-solid fa-check-circle"></i> Amazon Partner</div>
+                        <div class="stat-badge"><i class="fa-solid fa-arrow-trend-up"></i> ROAS Medio 4.5x</div>
+                        <div class="stat-badge"><i class="fa-solid fa-globe"></i> 5 Mercados</div>
+                        <div class="stat-badge"><i class="fa-solid fa-chart-line"></i> 7.8M+ Facturados</div>
+                        <div class="stat-badge"><i class="fa-solid fa-users"></i> +20 Marcas Activas</div>
+                        <div class="stat-badge"><i class="fa-solid fa-check-circle"></i> Amazon Partner</div>
+                        <div class="stat-badge"><i class="fa-solid fa-arrow-trend-up"></i> ROAS Medio 4.5x</div>
+                        <div class="stat-badge"><i class="fa-solid fa-globe"></i> 5 Mercados</div>
+                    </div>
+                </div>
+
+                <div class="hero-text-actions">
+                    <button class="btn-watch-video" id="open-video-btn" aria-label="Ver video explicativo de LibertySeller">
+                        <i class="fa-solid fa-play-circle" aria-hidden="true"></i> Mira como podemos ayudarte
+                    </button>
+                </div>
+            </div>
+            <div class="hero-form-col">
+                <div class="form-card">
+                    <h3 class="form-title">Nos ponemos en contacto contigo</h3>
+                    <form id="signup-form" class="smart-form">
+                        <input type="hidden" name="selling_duration" id="hero-duration-input">
+                        <input type="hidden" name="monthly_revenue" id="hero-revenue-input">
+                        
+                        <div class="input-group"><input type="text" id="form-name" class="form-input" placeholder="Nombre completo" required></div>
+                        <div class="input-group"><input type="tel" id="form-phone" class="form-input" placeholder="Teléfono" required></div>
+                        <div class="input-group"><input type="email" id="form-email" class="form-input" placeholder="Correo electrónico" required></div>
+                        
+                        <div class="amazon-switch-group">
+                            <span class="switch-label-text">¿Vendes en Amazon?</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="form-amazon-seller">
+                                <span class="slider"><span class="txt-no">NO</span><span class="txt-si">SÍ</span></span>
+                            </label>
+                        </div>
+                        
+                        <div class="expandable-fields" id="hero-expandable">
+                            <span class="pill-label">¿Cuánto tiempo llevas vendiendo?</span>
+                            <div class="pill-grid cols-3" id="hero-duration-grid">
+                                <div class="pill-btn" onclick="selectPill(this, 'hero-duration-input', 'hero-duration-grid')">0-1 año</div>
+                                <div class="pill-btn" onclick="selectPill(this, 'hero-duration-input', 'hero-duration-grid')">2-5 años</div>
+                                <div class="pill-btn" onclick="selectPill(this, 'hero-duration-input', 'hero-duration-grid')">+5 años</div>
+                            </div>
+                            
+                            <span class="pill-label">¿Facturación mensual?</span>
+                            <div class="pill-grid cols-4" id="hero-revenue-grid">
+                                <div class="pill-btn" onclick="selectPill(this, 'hero-revenue-input', 'hero-revenue-grid')">0-5k</div>
+                                <div class="pill-btn" onclick="selectPill(this, 'hero-revenue-input', 'hero-revenue-grid')">5k-20k</div>
+                                <div class="pill-btn" onclick="selectPill(this, 'hero-revenue-input', 'hero-revenue-grid')">20k-50k</div>
+                                <div class="pill-btn" onclick="selectPill(this, 'hero-revenue-input', 'hero-revenue-grid')">+50k</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn" aria-label="Enviar formulario de contacto">EMPEZAR AHORA</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="video-modal" id="video-modal">
+        <div class="video-modal-content">
+            <button class="close-modal-btn" id="close-video-btn" aria-label="Cerrar video"><i class="fa-solid fa-times"></i></button>
+            <iframe class="video-iframe" src="" data-src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1" title="VSL Video - Cómo funciona LibertySeller" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+
+    <div class="main-content-wrapper">
+        <section class="features-section theme-orange" id="features-section">
+            <div class="features-container">
+                <div class="features-header">
+                    
+                    <div class="header-text dynamic-content" id="header-text-container">
+                        <div class="features-label scroll-trigger" id="feature-tagline">Si ya eres vendedor</div>
+                        <h2 class="features-title scroll-trigger" id="feature-title">Tu cuenta de Amazon tiene más potencial, vamos a desbloquearlo</h2>
+                        <p class="features-desc scroll-trigger" id="feature-desc">Tienes buen producto, pero el algoritmo es despiadado. Dejamos de lado las intuiciones y aplicamos ingenieria de datos para arreglar lo que falla, reducir tu ACOS y recuperar el control de tu facturación.</p>
+                        <button class="btn-demo-small scroll-trigger" onclick="scrollToForm(); return false;">TE CONTACTAMOS</button>
+                    </div>
+
+                    <div class="switch-container scroll-trigger">
+                        <div class="switch-labels"><span class="switch-label brand" onclick="setTheme('orange')">Soy vendedor</span><span class="switch-label seller" onclick="setTheme('blue')">Quiero vender</span></div>
+                        <div class="switch-track" onclick="toggleTheme()"><div class="switch-knob"></div></div>
+                    </div>
+                </div>
+                <div class="features-grid dynamic-content scroll-trigger" id="features-grid"></div>
+            </div>
+        </section>
+
+        <section class="testimonials-section">
+            <div class="testimonials-container">
+                <h2 class="testimonials-title scroll-trigger">Algunos de nuestros partners que confían en nosotros</h2>
+                <p class="testimonials-subtitle scroll-trigger">Haz clic en ellas para ver cómo pudimos ayudarles</p>
+                
+                <div class="testimonials-grid scroll-trigger" id="testimonials-grid">
+                    </div>
+
+                <div class="testimonial-popup" id="testimonial-popup">
+                    <button class="popup-close" onclick="closePopup()"><i class="fa-solid fa-times"></i></button>
+                    <div class="popup-image-container" id="popup-image-container">
+                        <img id="popup-logo-img" src="" alt="Partner Logo" class="popup-logo-img" loading="lazy">
+                    </div>
+                    <div id="popup-stat" class="popup-stat">+140%</div>
+                    <p id="popup-desc" class="popup-desc">Descripción del resultado logrado...</p>
+                    <span id="popup-tag" class="popup-tag">ESTRATEGIA PPC</span>
+                </div>
+            </div>
+            <div class="section-cta">
+                <button class="section-cta-btn" onclick="scrollToForm(); return false;">
+                    <span>¿Listo para empezar?</span>
+                    <i class="fa-solid fa-arrow-up"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="scroll-section" id="scroll-section">
+            <div class="scroll-bg-layer"></div>
+            <div class="scroll-intro">
+                <h2 class="scroll-title scroll-trigger">Resultados que Hablan</h2>
+                <p class="scroll-subtitle scroll-trigger">No nos basamos en promesas vacías. Nuestra metodología basada en datos transforma cuentas estancadas en líderes de categoría.</p>
+            </div>
+            
+            <div class="sticky-wrapper scroll-trigger">
+                <div class="sticky-col">
+                    <div class="scroll-menu">
+                        <div class="scroll-menu-item active" id="menu-1"><div class="menu-dot"></div><span>Explotamos tu rentabilidad</span></div>
+                        <div class="scroll-menu-item" id="menu-2"><div class="menu-dot"></div><span>OPTIMIZACIÓN ACOS</span></div>
+                        <div class="scroll-menu-item" id="menu-3"><div class="menu-dot"></div><span>Optimización de Buy Box</span></div>
+                        <div class="scroll-menu-item" id="menu-4"><div class="menu-dot"></div><span>Productos Rentables</span></div>
+                        <div class="scroll-menu-item" id="menu-5"><div class="menu-dot"></div><span>INTERNACIONALIZACIÓN</span></div>
+                    </div>
+                </div>
+                <div class="scroll-center">
+                    <div class="scroll-visual-item active" data-step="1">
+                        <img src="testimonio1.png" alt="Resultado: Incremento a 20.000€ de facturación el 3er mes" class="scroll-result-img" loading="lazy">
+                    </div>
+                    <div class="scroll-visual-item" data-step="2">
+                        <img src="testimonio2.png" alt="Resultado: ACOS reducido al 18%" class="scroll-result-img" loading="lazy">
+                    </div>
+                    <div class="scroll-visual-item" data-step="3">
+                        <img src="testimonio3.png" alt="Resultado: Incremento 13% Buy Box" class="scroll-result-img" loading="lazy">
+                    </div>
+                    <div class="scroll-visual-item" data-step="4">
+                        <img src="testimonio4.png" alt="Resultado: Margenes del 20-25% - Marca Privada" class="scroll-result-img" loading="lazy">
+                    </div>
+                    <div class="scroll-visual-item" data-step="5">
+                        <img src="testimonio5.png" alt="Resultado: +7 paises - Internacionalización" class="scroll-result-img" loading="lazy">
+                    </div>
+                </div>
+                <div class="sticky-col">
+                    <div class="right-text-container">
+                        <div class="right-text-block active" id="text-1">
+                            <h3 class="right-title">Lanzamiento de una tienda de naranjas</h3>
+                            <p class="right-desc">Una empresa que vende naranjas nos contactó porque muchas agencias le dijeron que no trabajan con este tipo de negocios.</p>
+                            <span class="right-stat-label">Resultado</span>
+                            <span class="right-stat-big">+20.000€/mes</span>
+                    </div>
+                        <div class="right-text-block" id="text-2">
+                            <h3 class="right-title">Sin miedo a las PPC's</h3>
+                            <p class="right-desc">Nuestro cliente nos contactó porque tenia autenticos destrozos en sus campañas publicitarias. Nosotros tomamos el control de todo y bajamos el acos a un 16% (y bajanado), consiguiendo para él unas campañas altamente rentable por los margenes de sus productos</p>
+                            <span class="right-stat-label">EFICIENCIA</span>
+                            <span class="right-stat-big">ACOS 16%</span>
+                        </div>
+                        <div class="right-text-block" id="text-3">
+                            <h3 class="right-title">Aumento de ACOS</h3>
+                            <p class="right-desc">Un cliente trabaja con marcas de terceros, contaba con un buy box de 2-3%. Trabajando su catalgo y analizando margenes conseguimos aumentar su buy box en picos de 24-25% y una sostenibilidad permanente de un 13%.</p>
+                            <span class="right-stat-label">Buy Box</span>
+                            <span class="right-stat-big">Incremento 13%</span>
+                        </div>
+                        <div class="right-text-block" id="text-4">
+                            <h3 class="right-title">Lanzamientos Marca Privada</h3>
+                            <p class="right-desc">Varios clientes nos contactan para que lancemos sus tiendas con productos rentables para su venta en amazon. Analizamos productos perfil bajo y armamos una tienda llena de productos con margenes altos y con control absoluto de la situación.</p>
+                            <span class="right-stat-label">Marca Privada</span>
+                            <span class="right-stat-big">Margenes del 20-25%</span>
+                        </div>
+                        <div class="right-text-block" id="text-5">
+                            <h3 class="right-title">Internacionalización Controlada</h3>
+                            <p class="right-desc">Nuestro plan de escalada cuenta con la internacionalización. Aumenta hasta un x5 tu facturación vendiendo en todos los paises de europa o da el salto a vender tus productos a estados unidos, mexico y canada. Gestionamos tu crecimiento y te acompañamos en todo momento.</p>
+                            <span class="right-stat-label">Expansión</span>
+                            <span class="right-stat-big">+7 paises</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mobile-results-list scroll-trigger">
+                <div class="mobile-result-card">
+                    <h3>Lanzamiento de una tienda de naranjas</h3>
+                    <p>Una empresa que vende naranjas nos contactó porque muchas agencias le dijeron que no trabajan con este tipo de negocios.</p>
+                    <img src="testimonio1.png" alt="Resultado: +20.000€/mes - Caso de éxito LibertySeller" class="mobile-result-img" loading="lazy" width="400" height="300">
+                    <span class="mobile-stat-label">Resultado</span>
+                    <span class="mobile-stat-big">+20.000€/mes</span>
+                </div>
+                <div class="mobile-result-card">
+                    <h3>Sin miedo a las PPC's</h3>
+                    <p>Nuestro cliente nos contactó porque tenia autenticos destrozos en sus campañas publicitarias. Nosotros tomamos el control de todo y bajamos el acos a un 16% (y bajanado), consiguiendo para él unas campañas altamente rentable por los margenes de sus productos</p>
+                    <img src="testimonio2.png" alt="Resultado: ACOS reducido al 18% - Optimización PPC LibertySeller" class="mobile-result-img" loading="lazy" width="400" height="300">
+                    <span class="mobile-stat-label">EFICIENCIA</span>
+                    <span class="mobile-stat-big">ACOS 16%</span>
+                </div>
+                <div class="mobile-result-card">
+                    <h3>Aumento de ACOS</h3>
+                    <p>Un cliente trabaja con marcas de terceros, contaba con un buy box de 2-3%. Trabajando su catalgo y analizando margenes conseguimos aumentar su buy box en picos de 24-25% y una sostenibilidad permanente de un 13%.</p>
+                    <img src="testimonio3.png" alt="Resultado: Incremento 13% Buy Box - Optimización Buy Box LibertySeller" class="mobile-result-img" loading="lazy" width="400" height="300">
+                    <span class="mobile-stat-label">Buy Box</span>
+                    <span class="mobile-stat-big">Incremento 13%</span>
+                </div>
+                <div class="mobile-result-card">
+                    <h3>Lanzamientos Marca Privada</h3>
+                    <p>Varios clientes nos contactan para que lancemos sus tiendas con productos rentables para su venta en amazon. Analizamos productos perfil bajo y armamos una tienda llena de productos con margenes altos y con control absoluto de la situación.</p>
+                    <img src="testimonio4.png" alt="Resultado: Margenes del 20-25% - Marca Privada LibertySeller" class="mobile-result-img" loading="lazy" width="400" height="300">
+                    <span class="mobile-stat-label">Marca Privada</span>
+                    <span class="mobile-stat-big">Margenes del 20-25%</span>
+                </div>
+                <div class="mobile-result-card">
+                    <h3>Internacionalización controlada</h3>
+                    <p>Nuestro plan de escalada cuenta con la internacionalización. Aumenta hasta un x5 tu facturación vendiendo en todos los paises de europa o da el salto a vender tus productos a estados unidos, mexico y canada. Gestionamos tu crecimiento y te acompañamos en todo momento.</p>
+                    <img src="testimonio5.png" alt="Resultado: +7 paises - Internacionalización LibertySeller" class="mobile-result-img" loading="lazy" width="400" height="300">
+                    <span class="mobile-stat-label">Expansión</span>
+                    <span class="mobile-stat-big">+7 paises</span>
+                </div>
+            </div>
+            
+            <!-- Modal para zoom de imágenes de resultados móviles -->
+            <div class="mobile-result-modal" id="mobile-result-modal">
+                <button class="modal-close" onclick="closeMobileResultModal()"><i class="fa-solid fa-times"></i></button>
+                <div class="modal-image-container" id="modal-image-container">
+                    <img id="modal-result-img" src="" alt="Resultado ampliado" class="modal-result-img">
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" onclick="mobileZoomIn()" title="Acercar"><i class="fa-solid fa-plus"></i></button>
+                        <button class="zoom-btn" onclick="mobileZoomOut()" title="Alejar"><i class="fa-solid fa-minus"></i></button>
+                        <button class="zoom-btn" onclick="mobileResetZoom()" title="Restablecer"><i class="fa-solid fa-rotate-left"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="section-cta">
+                <button class="section-cta-btn" onclick="scrollToForm(); return false;">
+                    <span>Quiero estos resultados</span>
+                    <i class="fa-solid fa-arrow-up"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="process-section" id="process-section">
+            <div class="process-sticky-container">
+                <div class="process-header">
+                    <h2 class="process-title scroll-trigger">Cómo lo hacemos</h2>
+                    <p class="process-subtitle scroll-trigger">Un proceso validado paso a paso. Tú sigues bajando, nosotros seguimos construyendo.</p>
+                </div>
+                
+                <div class="process-wrapper scroll-trigger">
+                    <div class="process-line-container">
+                        <div class="process-line-bg"></div>
+                        <div class="process-line-fill" id="process-fill"></div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-node"><i class="fa-solid fa-phone" style="font-size: 10px; color: white;"></i></div>
+                        <div class="step-content">
+                            <span class="step-num">PASO 01</span>
+                            <h3 class="step-title">Llamada</h3>
+                            <p class="step-desc">Nos ponemos en contacto para una primera conversación sobre el estado actual de tu cuenta y tus objetivos.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-node"><i class="fa-solid fa-calendar-check" style="font-size: 10px; color: white;"></i></div>
+                        <div class="step-content">
+                            <span class="step-num">PASO 02</span>
+                            <h3 class="step-title">Planificación</h3>
+                            <p class="step-desc">Trabajamos un periodo intenso de 3  meses para sanear tu cuenta y optimizarla para obtener los mejores resultados.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-node"><i class="fa-solid fa-chart-bar" style="font-size: 10px; color: white;"></i></div>
+                        <div class="step-content">
+                            <span class="step-num">PASO 03</span>
+                            <h3 class="step-title">Mantenimiento</h3>
+                            <p class="step-desc">Analizamos el rendimiento de la cuenta después de nuestras acciones. Optimizamos para tener mejores resultados.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-node"><i class="fa-solid fa-arrow-trend-up" style="font-size: 10px; color: white;"></i></div>
+                        <div class="step-content">
+                            <span class="step-num">PASO 04</span>
+                            <h3 class="step-title">Escalado</h3>
+                            <p class="step-desc">Miramos nuevas oportunidades de inclusión de productos al catalogo para crecer horizontalmente.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-node"><i class="fa-solid fa-globe" style="font-size: 10px; color: white;"></i></div>
+                        <div class="step-content">
+                            <span class="step-num">PASO 05</span>
+                            <h3 class="step-title">Expansión</h3>
+                            <p class="step-desc">Planificamos la internacionalización de tu cuenta para crecer verticalmente de manera exponencial.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-cta section-cta-mobile-only">
+                <button class="section-cta-btn" onclick="scrollToForm(); return false;">
+                    <span>Empecemos juntos</span>
+                    <i class="fa-solid fa-arrow-up"></i>
+                </button>
+            </div>
+        </section>
+
+        <div class="faq-cta-wrapper">
+            <section class="faq-section">
+                <div class="faq-container">
+                    <div class="faq-header-text"><h2 class="faq-title scroll-trigger">Preguntas Frecuentes</h2><p class="faq-subtitle scroll-trigger">Resolvemos las dudas más comunes...</p></div>
+                    <div class="faq-list scroll-trigger">
+                        <div class="faq-item">
+                            <div class="faq-question"><span>¿Tenéis algún contrato de permanencia?</span><div class="faq-toggle-icon"></div></div>
+                            <div class="faq-answer"><p>No. En Liberty Seller no atamos a ningún cliente con contratos blindados[cite: 209]. Creemos que la única razón para que te quedes con nosotros es que veas resultados mes a mes. Si no aportamos valor, eres libre de irte; no tiene sentido retenerte a la fuerza[cite: 210].</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><span>¿Garantizáis resultados de venta?</span><div class="faq-toggle-icon"></div></div>
+                            <div class="faq-answer"><p>Si alguien te garantiza ventas fijas en Amazon, <strong>huye</strong>. Nosotros somos honestos: el mercado fluctúa. Lo que sí garantizamos es una gestión profesional basada en datos y estrategias testadas en nuestras propias cuentas[cite: 147, 208]. No somos una agencia que "prueba suerte" con tu dinero, gestionamos tu capital con el mismo cuidado que el nuestro[cite: 207].</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><span>¿Cómo estructuráis el precio?</span><div class="faq-toggle-icon"></div></div>
+<div class="faq-answer"><p>Huimos de las tarifas estándar[cite: 113]. Nuestro modelo se basa en el éxito compartido: cobramos un fijo ajustado para la operativa y un variable (generalmente un 5%) que se aplica <strong>exclusivamente sobre la facturación que supere</strong> lo que hiciste el año anterior en ese mismo mes[cite: 252, 253]. Si no mejoramos tus números históricos, no cobramos ese variable.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><span>Ya trabajé con agencias y perdí dinero en PPC, ¿qué haréis distinto?</span><div class="faq-toggle-icon"></div></div>
+                            <div class="faq-answer"><p>Entendemos tu frustración. Muchos gestores disparan el gasto sin ton ni son[cite: 206]. Nuestro enfoque es conservador: <strong>no quemamos dinero si el listing no convierte</strong>[cite: 217]. Primero auditamos y reparamos el catálogo; solo invertimos en campañas cuando tenemos un ACOS controlado y el margen protegido[cite: 238].</p></div>
+                        </div>
+                    
+                        <div class="faq-item">
+                            <div class="faq-question"><span>He escuchado que puedo empezar con 100€ o 1.000€, ¿es cierto?</span><div class="faq-toggle-icon"></div></div>
+                            <div class="faq-answer"><p>Seamos honestos: muchos gurús te dirán eso, pero es falso. Si quieres montar un negocio real y no un hobby, necesitas estructura y stock. Para lanzar una tienda en condiciones y que funcione bien, la inversión mínima realista ronda los <strong>6.000€ - 8.000€</strong>. Amazon es un negocio serio y requiere darle el valor que merece.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><span>¿Trabajáis con cuentas nuevas o desde cero?</span><div class="faq-toggle-icon"></div></div>
+                            <div class="faq-answer"><p>Sí. Gestionamos proyectos desde la fase semilla, como hicimos con clientes de Marca Privada[cite: 74, 91]. Te asesoramos desde la creación de la cuenta hasta la estrategia de lanzamiento, asegurando que empiezas con una base sólida y evitas los errores de novato que suelen costar mucho dinero.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><span>No tengo tiempo para gestionar la cuenta, ¿vosotros os encargáis?</span><div class="faq-toggle-icon"></div></div>
+                            <div class="faq-answer"><p>Exacto. Ofrecemos una <strong>Gestión 360°</strong>[cite: 220]. Nos convertimos en tu departamento de Amazon: desde la logística hasta hablar con el Soporte de Amazon para resolver incidencias[cite: 226]. Tú supervisas el crecimiento, nosotros nos encargamos de toda la operativa diaria[cite: 223].</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><span>¿Cómo sé si mi producto tiene potencial antes de invertir?</span><div class="faq-toggle-icon"></div></div>
+<div class="faq-answer"><p>Antes de lanzarnos, realizamos una auditoría y análisis de mercado[cite: 29]. No se trata de "subir productos", sino de analizar la competencia y los márgenes reales. Si vemos que el producto no es viable, te lo diremos antes de que inviertas. Preferimos perder un cliente a que tú pierdas tus ahorros.</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-cta">
+                    <button class="section-cta-btn" onclick="scrollToForm(); return false;">
+                        <span>Resuelve tus dudas con nosotros</span>
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-main">
+                <div class="footer-section footer-brand">
+                    <img src="logo.png" alt="LibertySeller - Agencia Amazon FBA" class="footer-logo-img" loading="lazy">
+                    <p class="footer-desc">La agencia especializada en Amazon FBA que transforma cuentas estancadas en líderes de categoría. Gestionamos tu crecimiento con metodología basada en datos.</p>
+                </div>
+                <div class="footer-section footer-contact">
+                    <h3 class="footer-contact-title">Contacto</h3>
+                    <div class="contact-info">
+                        <a href="mailto:business@libertyseller.com" class="contact-item">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>business@libertyseller.com</span>
+                        </a>
+                        <a href="tel:+91910626798" class="contact-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+91 910 62 67 98</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">© 2025 LibertySeller. Todos los derechos reservados.</div>
+                <div class="social-icons">
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- LOGICA DE FORMULARIO MEJORADA ---
+
+        function setupExpandableForm(checkboxId, expandableId) {
+            const checkbox = document.getElementById(checkboxId);
+            const container = document.getElementById(expandableId);
+            if(checkbox && container) {
+                checkbox.addEventListener('change', function() {
+                    if(this.checked) {
+                        container.classList.add('open');
+                    } else {
+                        container.classList.remove('open');
+                    }
+                });
+            }
+        }
+
+        setupExpandableForm('form-amazon-seller', 'hero-expandable');
+        setupExpandableForm('modal-amazon-seller', 'modal-expandable');
+
+        window.selectPill = function(element, inputId, gridId) {
+            document.getElementById(inputId).value = element.innerText;
+            const grid = document.getElementById(gridId);
+            const pills = grid.querySelectorAll('.pill-btn');
+            pills.forEach(p => p.classList.remove('active'));
+            element.classList.add('active');
+        };
+
+        // --- LOGO CON EFECTO BLUR (sin hover) ---
+
+        // --- SCROLL TRIGGER ANIMATION PARA TEXTOS ---
+        const scrollTriggers = document.querySelectorAll('.scroll-trigger');
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    scrollObserver.unobserve(entry.target); // Animación de una sola vez
+                }
+            });
+        }, { threshold: 0.2 });
+
+        scrollTriggers.forEach(trigger => scrollObserver.observe(trigger));
+
+
+        // --- LOGICA TESTIMONIOS (RUTAS LOCALES RESTAURADAS) ---
+        const testimonialsData = [
+            { id: 1, name: "Everox", image: "partner_1.png", stat: "Lanzamiento exitoso", desc: "Marca creada desde 0 que llegó a tener 3000€/dia de facturación.", tag: "Marca Privada" },
+            { id: 2, name: "Diru", image: "partner_2.png", stat: "Cuenta en crecimiento", desc: "Nuestro cliente decidió confiar en un equipo que le creé la cuenta desde 0 y ya gestiona varios productos rentables con +20% de rentabilidad cada uno.", tag: "Cuenta nueva" },
+            { id: 3, name: "IronTechGlobal", image: "partner_3.png", stat: "Optimización de PPC's", desc: "Estudio y gestión activa de campañas de PPC's, el cliente venia gastando 60% de ACOS por culpa de otras agencias y con nosotros bajó a 13% (y bajando...)", tag: "PPC's" },
+            { id: 4, name: "EvoComputer", image: "partner_4.png", stat: "Volcado de Inventario", desc: "Un cliente que tenia un potencial enorme en un catalogo que manejaba y no estaba subido a Amazon, analizamos rentabilidades y aumentamos facturación en pocas semanas.", tag: "Inventario sin explotar" },
+            { id: 5, name: "Creative Toys", image: "partner_5.png", stat: "Marca Reconocida ", desc: "Empresa TOP en el mercado de juegos de mesa que decidió contar con nosotros para crear su cuenta desde 0 en Amazon.", tag: "Creación de cuenta" },
+            { id: 6, name: "BSC", image: "partner_6.png", stat: "Gestión 360º", desc: "Cliente que cuenta con nuestra ayuda para poder gestionar su cuenta de manera activa en Amazon. Aumento de Buy Box de 3% a 17%-25%", tag: "Buy Box y gestión." },
+            { id: 7, name: "Naranjas Ramblizo", image: "partner_7.png", stat: "Marca con productos de comida", desc: "Trabajamos con este cliente para llevar su negocio de fruta a la venta online, consiguiendo ventas asombrosas cada dia.", tag: "Marca Privada" },
+            { id: 8, name: "SAUSI", image: "partner_8.png", stat: "Una de nuestras Mejores Tiendas", desc: "Lanzamiento de tienda desde 0, contando con varios productos de más de 20% de margen y con altas ventas al dia (+10ud)", tag: "Nuevo Vendedor" }
+        ];
+
+        const testimonialsGrid = document.getElementById('testimonials-grid');
+        const popup = document.getElementById('testimonial-popup');
+        
+        if (testimonialsGrid) {
+            testimonialsData.forEach(client => {
+                const card = document.createElement('div');
+                card.className = 'client-card';
+                card.onclick = () => showPopup(client, card);
+                card.innerHTML = `<img src="${client.image}" alt="${client.name} - Partner LibertySeller" class="client-logo-img" loading="lazy">`;
+                testimonialsGrid.appendChild(card);
+            });
+        }
+
+        function showPopup(client, cardElement) {
+            const popupImg = document.getElementById('popup-logo-img');
+            popupImg.src = client.image;
+            document.getElementById('popup-stat').innerText = client.stat;
+            document.getElementById('popup-desc').innerText = client.desc;
+            document.getElementById('popup-tag').innerText = client.tag;
+            popup.classList.add('active');
+        }
+
+        window.closePopup = function() {
+            popup.classList.remove('active');
+        };
+
+        document.addEventListener('click', (e) => {
+            if (popup.classList.contains('active') && !popup.contains(e.target) && !e.target.closest('.client-card')) {
+                closePopup();
+            }
+        });
+        
+        // ===== ZOOM PARA IMÁGENES DE RESULTADOS MÓVILES =====
+        let mobileCurrentZoom = 1;
+        let mobileIsDragging = false;
+        let mobileStartX, mobileStartY, mobileScrollLeft, mobileScrollTop;
+        let mobileCurrentTranslateX = 0;
+        let mobileCurrentTranslateY = 0;
+        
+        // Hacer las imágenes móviles y desktop clickeables
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileResultImgs = document.querySelectorAll('.mobile-result-img');
+            const desktopResultImgs = document.querySelectorAll('.scroll-result-img');
+            const mobileModal = document.getElementById('mobile-result-modal');
+            const modalImg = document.getElementById('modal-result-img');
+            const modalImageContainer = document.getElementById('modal-image-container');
+            
+            // Función para abrir modal con imagen
+            function openImageModal(imgSrc, imgAlt) {
+                modalImg.src = imgSrc;
+                modalImg.alt = imgAlt;
+                mobileModal.classList.add('active');
+                mobileResetZoom();
+            }
+            
+            // Event listeners para imágenes móviles
+            mobileResultImgs.forEach(img => {
+                img.addEventListener('click', function() {
+                    openImageModal(this.src, this.alt);
+                });
+            });
+            
+            // Event listeners para imágenes desktop
+            desktopResultImgs.forEach(img => {
+                img.addEventListener('click', function() {
+                    openImageModal(this.src, this.alt);
+                });
+            });
+            
+            // Funciones de zoom
+            window.mobileZoomIn = function() {
+                mobileCurrentZoom = Math.min(mobileCurrentZoom + 0.5, 5);
+                mobileApplyTransform();
+            };
+            
+            window.mobileZoomOut = function() {
+                mobileCurrentZoom = Math.max(mobileCurrentZoom - 0.5, 1);
+                mobileApplyTransform();
+            };
+            
+            window.mobileResetZoom = function() {
+                mobileCurrentZoom = 1;
+                mobileCurrentTranslateX = 0;
+                mobileCurrentTranslateY = 0;
+                mobileApplyTransform();
+            };
+            
+            window.closeMobileResultModal = function() {
+                mobileModal.classList.remove('active');
+                mobileResetZoom();
+            };
+            
+            function mobileApplyTransform() {
+                if (modalImg) {
+                    modalImg.style.transform = `translate(${mobileCurrentTranslateX}px, ${mobileCurrentTranslateY}px) scale(${mobileCurrentZoom})`;
+                }
+            }
+            
+            // Cerrar al hacer click fuera
+            mobileModal.addEventListener('click', function(e) {
+                if (e.target === mobileModal) {
+                    closeMobileResultModal();
+                }
+            });
+            
+            // Drag para mover la imagen cuando está zoomed
+            if (modalImageContainer) {
+                // Mouse events
+                modalImageContainer.addEventListener('mousedown', (e) => {
+                    if (mobileCurrentZoom > 1) {
+                        mobileIsDragging = true;
+                        mobileStartX = e.pageX - modalImageContainer.offsetLeft;
+                        mobileStartY = e.pageY - modalImageContainer.offsetTop;
+                        mobileScrollLeft = mobileCurrentTranslateX;
+                        mobileScrollTop = mobileCurrentTranslateY;
+                    }
+                });
+                
+                modalImageContainer.addEventListener('mouseleave', () => {
+                    mobileIsDragging = false;
+                });
+                
+                modalImageContainer.addEventListener('mouseup', () => {
+                    mobileIsDragging = false;
+                });
+                
+                modalImageContainer.addEventListener('mousemove', (e) => {
+                    if (!mobileIsDragging || mobileCurrentZoom <= 1) return;
+                    e.preventDefault();
+                    const x = e.pageX - modalImageContainer.offsetLeft;
+                    const y = e.pageY - modalImageContainer.offsetTop;
+                    const walkX = (x - mobileStartX) * 1.5;
+                    const walkY = (y - mobileStartY) * 1.5;
+                    mobileCurrentTranslateX = mobileScrollLeft + walkX;
+                    mobileCurrentTranslateY = mobileScrollTop + walkY;
+                    mobileApplyTransform();
+                });
+                
+                // Touch events para móvil
+                let mobileInitialDistance = 0;
+                let mobileInitialZoom = 1;
+                
+                modalImageContainer.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        mobileInitialDistance = Math.hypot(
+                            touch2.clientX - touch1.clientX,
+                            touch2.clientY - touch1.clientY
+                        );
+                        mobileInitialZoom = mobileCurrentZoom;
+                    } else if (e.touches.length === 1 && mobileCurrentZoom > 1) {
+                        mobileIsDragging = true;
+                        const touch = e.touches[0];
+                        mobileStartX = touch.pageX - modalImageContainer.offsetLeft;
+                        mobileStartY = touch.pageY - modalImageContainer.offsetTop;
+                        mobileScrollLeft = mobileCurrentTranslateX;
+                        mobileScrollTop = mobileCurrentTranslateY;
+                    }
+                }, { passive: false });
+                
+                modalImageContainer.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        const currentDistance = Math.hypot(
+                            touch2.clientX - touch1.clientX,
+                            touch2.clientY - touch1.clientY
+                        );
+                        const scale = currentDistance / mobileInitialDistance;
+                        mobileCurrentZoom = Math.max(1, Math.min(5, mobileInitialZoom * scale));
+                        mobileApplyTransform();
+                    } else if (e.touches.length === 1 && mobileIsDragging && mobileCurrentZoom > 1) {
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        const x = touch.pageX - modalImageContainer.offsetLeft;
+                        const y = touch.pageY - modalImageContainer.offsetTop;
+                        const walkX = (x - mobileStartX) * 1.5;
+                        const walkY = (y - mobileStartY) * 1.5;
+                        mobileCurrentTranslateX = mobileScrollLeft + walkX;
+                        mobileCurrentTranslateY = mobileScrollTop + walkY;
+                        mobileApplyTransform();
+                    }
+                }, { passive: false });
+                
+                modalImageContainer.addEventListener('touchend', () => {
+                    mobileIsDragging = false;
+                });
+            }
+        });
+
+        // --- FAQ LOGIC ---
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', () => {
+                document.querySelectorAll('.faq-item').forEach(other => { if(other !== item && other.classList.contains('active')) { other.classList.remove('active'); other.querySelector('.faq-answer').style.maxHeight = null; } });
+                item.classList.toggle('active');
+                const answer = item.querySelector('.faq-answer');
+                if (item.classList.contains('active')) answer.style.maxHeight = answer.scrollHeight + "px"; else answer.style.maxHeight = null;
+            });
+        });
+
+        // --- CANVAS LOGIC ---
+        const canvas = document.getElementById('hero-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let width, height, particles = [], mouse = { x: null, y: null };
+            const particleCount = 3000, mouseConnectDistance = 120; 
+            class Particle { 
+                constructor() { 
+                    this.x = Math.random() * width; 
+                    this.y = Math.random() * height; 
+                    this.vx = (Math.random() - 0.5) * 0.2; 
+                    this.vy = (Math.random() - 0.5) * 0.2; 
+                    this.size = Math.random() * 1.5 + 0.5;
+                    this.color = '#FF6600'; 
+                } 
+                update() { 
+                    this.x += this.vx; 
+                    this.y += this.vy; 
+                    if (this.x < 0 || this.x > width) this.vx = -this.vx; 
+                    if (this.y < 0 || this.y > height) this.vy = -this.vy; 
+                } 
+                draw() { 
+                    ctx.beginPath(); 
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                    ctx.fillStyle = this.color; 
+                    ctx.globalAlpha = 0.5; 
+                    ctx.fill(); 
+                } 
+            }
+            function initCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; particles = []; for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); } }
+            function animateCanvas() { ctx.clearRect(0, 0, width, height); for (let i = 0; i < particles.length; i++) { let p = particles[i]; p.update(); p.draw(); if (mouse.x != null) { let dx = mouse.x - p.x; let dy = mouse.y - p.y; let distance = Math.sqrt(dx * dx + dy * dy); if (distance < mouseConnectDistance) { ctx.beginPath(); ctx.strokeStyle = `rgba(255, 102, 0, ${1 - distance/mouseConnectDistance})`; ctx.lineWidth = 0.5; ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(p.x, p.y); ctx.stroke(); const force = (mouseConnectDistance - distance) / mouseConnectDistance; p.x -= (dx / distance) * force * 0.5; p.y -= (dy / distance) * force * 0.5; } } } requestAnimationFrame(animateCanvas); }
+            window.addEventListener('resize', initCanvas); 
+            if(window.innerWidth > 991) { window.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); mouse.x = e.clientX; mouse.y = e.clientY; }); }
+            window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; }); initCanvas(); animateCanvas();
+        }
+
+        // --- CURTAIN LOGIC ---
+        const heroContainer = document.querySelector('.hero-container');
+        if (heroContainer) {
+            window.addEventListener('scroll', () => {
+                if (window.innerWidth > 991) {
+                    const scrollPosition = window.scrollY; const windowHeight = window.innerHeight;
+                    let opacity = 1 - (scrollPosition / (windowHeight * 0.7)); opacity = Math.max(0, Math.min(1, opacity));
+                    heroContainer.style.opacity = opacity; heroContainer.style.transform = `translateY(${scrollPosition * 0.3}px)`;
+                    if (opacity <= 0.01) heroContainer.style.pointerEvents = 'none'; else heroContainer.style.pointerEvents = 'auto';
+                }
+            });
+        }
+
+        // --- FEATURES SWITCH ---
+        const featureData = {
+            orange: { tagline: "Si ya eres vendedor", title: "Tu cuenta de Amazon tiene más potencial, vamos a desbloquearlo", desc: "Tienes buen producto, pero el algoritmo es despiadado. Dejamos de lado las intuiciones y aplicamos ingenieria de datos para arreglar lo que falla, reducir tu ACOS y recuperar el control de tu facturación", cards: [ { icon: "fa-chart-line", title: "Reducción de ACOS", desc: "Dejamos de quemar dinero en PPC's. Optimizamos tus campañas para maximizar el ROAS y eliminar palabras clave que solo generan gasto" }, { icon: "fa-magnifying-glass", title: "SEO y Posicionamiento Orgánico", desc: "No solo buscamos keywords, entendemos la intención de compra. Posicionamos tus productos correctamente." }, { icon: "fa-store", title: "Contenido A+ y Storefront", desc: "Tu marca debe parecer premium para cobrar como premium. Diseñamos fichas y tiendas que disparan la tasa de conversión." }, { icon: "fa-warehouse", title: "Logística FBA Sin Fisuras", desc: "Evitamos roturas de stock y sobrecostes de almacenamiento. Planificamos tus envíos para que Amazon siempre tenga inventario sano." }, { icon: "fa-shield", title: "Protección de Marca", desc: "¿Hijackers? ¿Falsificaciones? Nos encargamos de limpiar tu listado y proteger tu propiedad intelectual con Brand Registry." }, { icon: "fa-globe", title: "Expansión Internacional", desc: "¿Vendes solo en tu pais? Analizamos tu tienda para armar un plan de internacionalización para vender en más paises." }, { icon: "fa-headset", title: "Salud de cuenta y Bloqueos", desc: " Recuperamos cuentas suspendidas y gestionamos casos complejos con el soporte de Amazon (sí, hablamos su idioma)" }, { icon: "fa-chart-bar", title: "Auditoría de Rentabilidad", desc: "Te decimos cuánto ganas realmente. Desglosamos márgenes reales después de comisiones, devoluciones y publicidad." } ] },
+            blue: { tagline: "Aun no vendes en Amazon", title: 'Empieza a vender en Amazon con una "ventaja injusta"', desc: "La mayoría de nuevos vendedores fracasan por falta de estrategia. Nosotros construimos los cimientos sólidos de tu marca para que te saltes la curva de aprendizaje (y los errores caros) desde el día uno.", cards: [ { icon: "fa-chart-bar", title: "Validación de Mercado", desc: "Antes de gastar un euro en stock, analizamos la demanda y la competencia para asegurarnos de que tu producto tiene hueco" }, { icon: "fa-file-invoice", title: "Burocracia Cero", desc: " Nos ocupamos del alta de cuenta, registros fiscales y normativas de Amazon. Tú olvídate del papeleo aburrido." }, { icon: "fa-rocket", title: "Estrategia de Lanzamiento ", desc: 'Aprovechamos la "Luna de Miel" del algoritmo. Diseñamos una estrategia agresiva para conseguir tracción y reseñas desde el día 1.'}, { icon: "fa-pen-fancy", title: "Copywriting Persuasivo", desc: " Escribimos títulos y viñetas que venden. Transformamos características técnicas en deseos de compra irresistibles." }, { icon: "fa-camera", title: "Fotografía Estratégica", desc: "En Amazon no se toca el producto, se compra por los ojos. Creamos imágenes y renders que destacan frente a la competencia." }, { icon: "fa-ship", title: "Gestión de Importación", desc: "Te asesoramos en la primera entrada de stock a los almacenes de Amazon (FBA) para que no rechacen tu mercancía." }, { icon: "fa-bullhorn", title: "Publicidad de Controlada", desc: " Configuramos tus primeras campañas de PPC para ganar visibilidad inmediata sin desperdiciar presupuesto en pruebas a ciegas." }, { icon: "fa-user-tie", title: "Mentoria 1 a 1", desc: "No estarás solo ante el gigante. Tendrás un canal directo con expertos para resolver dudas y definir el futuro de tu marca." } ] }
+        };
+        const featuresSection = document.getElementById('features-section');
+        const featuresGrid = document.getElementById('features-grid');
+        const headerTextContainer = document.getElementById('header-text-container');
+        let currentTheme = 'orange'; let isAnimating = false;
+        function renderCardsHTML(theme) {
+            const data = featureData[theme];
+            if(document.getElementById('feature-tagline')) document.getElementById('feature-tagline').textContent = data.tagline;
+            if(document.getElementById('feature-title')) document.getElementById('feature-title').textContent = data.title;
+            if(document.getElementById('feature-desc')) document.getElementById('feature-desc').textContent = data.desc;
+            if (featuresGrid) {
+                featuresGrid.innerHTML = ''; 
+                data.cards.forEach((card, index) => {
+                    const cardHTML = `<div class="feature-card" style="transition-delay: ${index * 0.1}s;"><i class="fa-solid ${card.icon} feature-icon"></i><h3 class="feature-card-title">${card.title}</h3><p class="feature-card-desc">${card.desc}</p></div>`;
+                    featuresGrid.insertAdjacentHTML('beforeend', cardHTML);
+                });
+                // Observar feature-cards individualmente en móvil
+                if (window.innerWidth <= 768) {
+                    observeFeatureCards();
+                }
+            }
+        }
+        
+        // Función para observar feature-cards en móvil
+        function observeFeatureCards() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            const cardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('card-visible');
+                        cardObserver.unobserve(entry.target);
+                    }
+                });
+            }, { 
+                threshold: 0.2,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            featureCards.forEach(card => cardObserver.observe(card));
+        }
+        function setTheme(theme) {
+            if (currentTheme === theme || isAnimating) return;
+            if (!featuresSection || !headerTextContainer || !featuresGrid) return;
+            isAnimating = true; headerTextContainer.classList.add('switching'); featuresGrid.classList.add('switching');
+            setTimeout(() => {
+                currentTheme = theme;
+                if (theme === 'orange') { featuresSection.classList.add('theme-orange'); featuresSection.classList.remove('theme-blue'); } else { featuresSection.classList.add('theme-blue'); featuresSection.classList.remove('theme-orange'); }
+                renderCardsHTML(theme); void featuresSection.offsetWidth; 
+                headerTextContainer.classList.remove('switching'); featuresGrid.classList.remove('switching');
+                isAnimating = false;
+            }, 300); 
+        }
+        function toggleTheme() { if (currentTheme === 'orange') setTheme('blue'); else setTheme('orange'); }
+        renderCardsHTML('orange');
+        
+        // Observar feature-cards en móvil al cargar la página
+        if (window.innerWidth <= 768) {
+            setTimeout(() => observeFeatureCards(), 100);
+        }
+        
+        // Re-observar cuando cambia el tamaño de ventana
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (window.innerWidth <= 768) {
+                    observeFeatureCards();
+                }
+            }, 250);
+        });
+
+        // --- SCROLL SPY (DESKTOP) ---
+        const visualItems = document.querySelectorAll('.scroll-visual-item');
+        const menuItems = document.querySelectorAll('.scroll-menu-item');
+        const textBlocks = document.querySelectorAll('.right-text-block');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { const step = entry.target.getAttribute('data-step'); activateStep(step); } });
+        }, { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+        visualItems.forEach(item => observer.observe(item));
+        function activateStep(step) {
+            visualItems.forEach(item => { item.classList.remove('active'); if(item.getAttribute('data-step') === step) item.classList.add('active'); });
+            menuItems.forEach((item, index) => { item.classList.remove('active'); if((index + 1).toString() === step) item.classList.add('active'); });
+            textBlocks.forEach((block) => { block.classList.remove('active'); });
+            const activeText = document.getElementById(`text-${step}`); if(activeText) activeText.classList.add('active');
+        }
+
+        // --- STICKY PROCESS ANIMATION (SCROLLYTELLING) ---
+        const processSection = document.querySelector('.process-section');
+        const processFill = document.getElementById('process-fill');
+        const processSteps = document.querySelectorAll('.process-step');
+
+        if(processSection && processFill) {
+            window.addEventListener('scroll', () => {
+                if (window.innerWidth > 991) {
+                    const rect = processSection.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    const sectionHeight = processSection.offsetHeight;
+                    
+                    // Logic: Progress goes from 0 to 1 as we scroll through the section height
+                    // The 'sticky' part makes it feel like we are stopping
+                    
+                    let progress = -rect.top / (sectionHeight - windowHeight);
+                    
+                    progress = Math.max(0, Math.min(1, progress));
+                    const finalPercent = progress * 100;
+                    
+                    processFill.style.width = finalPercent + "%";
+                    processFill.style.height = "2px";
+
+                    processSteps.forEach((step, index) => {
+                        // Activate slightly before the exact percentage for better feel
+                        const threshold = (index) / (processSteps.length - 1); 
+                        if (progress >= threshold - 0.05) {
+                            step.classList.add('active');
+                        } else {
+                            step.classList.remove('active');
+                        }
+                    });
+                } 
+                else {
+                    // Fallback for Mobile (Vertical Scroll normal)
+                    const rect = processSection.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    const triggerPoint = windowHeight * 0.5; // Start at middle of screen
+
+                    // Only animate if section is somewhat in view starting from middle
+                    if (rect.top < triggerPoint) {
+                        // Progress calculation relative to when top hits middle screen
+                        // We assume height of section roughly matches duration we want
+                        const totalDistance = rect.height; 
+                        const scrolledDistance = triggerPoint - rect.top;
+                        
+                        let progress = scrolledDistance / totalDistance;
+                        progress = Math.max(0, Math.min(1, progress));
+                        
+                        processFill.style.height = (progress * 100) + "%";
+                        processFill.style.width = "2px";
+                        
+                        // New logic: Check if progress exceeds step's visual threshold with a buffer
+                        processSteps.forEach((step, index) => {
+                            const stepThreshold = (index * 0.20) + 0.05; // 5% buffer past the start of the section
+                            
+                            if (progress > stepThreshold) {
+                                step.classList.add('current-step');
+                                step.classList.add('active-node');
+                                step.classList.add('active');
+                            } else {
+                                step.classList.remove('current-step');
+                                step.classList.remove('active-node');
+                                // Keep dim visibility if past index 0, or reset
+                                if(index > 0) step.classList.remove('active');
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        // --- MODALS ---
+        const modal = document.getElementById('video-modal');
+        const openBtn = document.getElementById('open-video-btn');
+        const closeBtn = document.getElementById('close-video-btn');
+        if (modal && openBtn && closeBtn) {
+            const iframe = modal.querySelector('iframe');
+            const videoSrc = iframe ? (iframe.dataset.src || iframe.src) : '';
+            let videoLoaded = false;
+            
+            openBtn.addEventListener('click', () => { 
+                modal.classList.add('active'); 
+                // Lazy load iframe only when modal opens
+                if (iframe && !videoLoaded && iframe.dataset.src) {
+                    iframe.src = iframe.dataset.src + "&autoplay=1";
+                    videoLoaded = true;
+                } else if (iframe && videoLoaded) {
+                    iframe.src = videoSrc + "&autoplay=1";
+                }
+            });
+            const closeModal = () => { 
+                modal.classList.remove('active'); 
+                // Pause video when closing (optional - keeps it loaded for faster reopen)
+                // if (iframe && videoLoaded) iframe.src = "";
+            };
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        }
+
+        // --- SCROLL TO FORM FUNCTION ---
+        function scrollToForm(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Como el hero tiene position: fixed, simplemente scrolleamos a la parte superior
+            const currentScroll = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || 0;
+            const targetScroll = 0; // Scroll hasta arriba donde está el formulario
+            
+            // Animación suave
+            const startTime = performance.now();
+            const duration = 1000;
+            const distance = targetScroll - currentScroll;
+            
+            function smoothScroll(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing easeInOutCubic
+                const ease = progress < 0.5
+                    ? 4 * progress * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                
+                const currentPosition = currentScroll + (distance * ease);
+                
+                // Forzar scroll en todos los navegadores
+                window.scrollTo(0, currentPosition);
+                document.documentElement.scrollTop = currentPosition;
+                document.body.scrollTop = currentPosition;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(smoothScroll);
+                }
+            }
+            
+            requestAnimationFrame(smoothScroll);
+            return false;
+        }
+        
+        // Hacer la función disponible globalmente
+        window.scrollToForm = scrollToForm;
+
+        // --- FORM SUBMIT ---
+        const handleFormSubmit = async (e, formId) => {
+            e.preventDefault();
+            const form = document.getElementById(formId);
+            if (!form) return;
+            
+            const formBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = formBtn.innerHTML;
+            
+            const name = form.querySelector('input[type="text"]').value;
+            const phone = form.querySelector('input[type="tel"]').value;
+            const email = form.querySelector('input[type="email"]').value;
+            const isSeller = form.querySelector('.toggle-switch input[type="checkbox"]').checked;
+            
+            const durationInput = form.querySelector('input[name="selling_duration"]');
+            const revenueInput = form.querySelector('input[name="monthly_revenue"]');
+            const sellingDuration = isSeller ? (durationInput ? durationInput.value : '') : '';
+            const monthlyRevenue = isSeller ? (revenueInput ? revenueInput.value : '') : '';
+
+            formBtn.disabled = true; formBtn.style.opacity = '0.7'; formBtn.textContent = 'Enviando...';
+            
+            const data = { 
+                name, phone, email, 
+                vendeEnAmazon: isSeller ? "Sí" : "No",
+                sellingDuration, monthlyRevenue,
+                source: "Hero Form", 
+                timestamp: new Date().toISOString() 
+            };
+            
+            try {
+                const response = await fetch('https://n8n-n8n.hyonwd.easypanel.host/webhook/08ef2386-67c2-46e0-9bd8-5084f6908215', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                if (response.ok) { 
+                    formBtn.style.opacity = '1'; formBtn.style.backgroundColor = '#CC5200'; formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'; 
+                    form.reset(); 
+                    form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'));
+                    form.querySelector('.expandable-fields').classList.remove('open');
+                    setTimeout(() => { formBtn.disabled = false; formBtn.style.backgroundColor = 'var(--brand-color)'; formBtn.innerHTML = originalBtnText; }, 5000); 
+                } else { throw new Error('Error servidor'); }
+            } catch (error) { 
+                console.error(error); formBtn.style.backgroundColor = '#ff4444'; formBtn.textContent = 'Error. Intenta de nuevo.'; 
+                setTimeout(() => { formBtn.disabled = false; formBtn.style.opacity = '1'; formBtn.style.backgroundColor = 'var(--brand-color)'; formBtn.innerHTML = originalBtnText; }, 3000); 
+            }
+        };
+
+        const signupForm = document.getElementById('signup-form');
+        if (signupForm) signupForm.addEventListener('submit', (e) => handleFormSubmit(e, 'signup-form'));
+    </script>
+    
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "LibertySeller",
+        "description": "Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.",
+        "url": "https://libertyseller.es",
+        "logo": "https://libertyseller.es/logo.png",
+        "serviceType": "Amazon FBA Management",
+        "areaServed": {
+            "@type": "Country",
+            "name": "Spain"
+        },
+        "offers": {
+            "@type": "Offer",
+            "description": "Servicios de gestión y optimización de cuentas Amazon FBA"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "20"
+        }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "LibertySeller",
+        "url": "https://libertyseller.es",
+        "logo": "https://libertyseller.es/logo.png",
+        "sameAs": [
+            "https://twitter.com/libertyseller",
+            "https://linkedin.com/company/libertyseller"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "availableLanguage": "Spanish"
+        }
+    }
+    </script>
+    
+    <!-- Widget Flotante WhatsApp -->
+    <div class="whatsapp-widget">
+        <div class="whatsapp-message" id="whatsapp-message">
+            Si necesitas ayuda, contáctanos
+        </div>
+        <div class="whatsapp-message" id="whatsapp-message-2">
+            ¿Tienes dudas? Te las resolvemos
+        </div>
+        <a href="https://wa.me/91910626798?text=Necesito%20ayuda%20sobre%20vuestros%20servicios" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="whatsapp-button"
+           aria-label="Contactar por WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <script>
+        // Mostrar primer mensaje de WhatsApp después de 15 segundos
+        setTimeout(function() {
+            const message = document.getElementById('whatsapp-message');
+            if (message) {
+                message.classList.add('show');
+                
+                // Ocultar mensaje después de 7 segundos
+                setTimeout(function() {
+                    message.classList.remove('show');
+                    message.classList.add('hide');
+                }, 7000);
+            }
+        }, 15000);
+
+        // Mostrar segundo mensaje después de 40 segundos (25 segundos después del primero)
+        setTimeout(function() {
+            const message2 = document.getElementById('whatsapp-message-2');
+            if (message2) {
+                message2.classList.add('show');
+                
+                // Ocultar mensaje después de 7 segundos
+                setTimeout(function() {
+                    message2.classList.remove('show');
+                    message2.classList.add('hide');
+                }, 7000);
+            }
+        }, 40000);
+    </script>
+</body>
+</html>
