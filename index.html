@@ -682,6 +682,33 @@
             gap: 10px;
             z-index: 10002;
         }
+        
+        .zoom-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 16px;
+        }
+        
+        .zoom-btn:hover {
+            background: rgba(255, 102, 0, 0.8);
+            border-color: var(--brand-color);
+            transform: scale(1.1);
+        }
+        
+        .zoom-btn:active {
+            transform: scale(0.95);
+        }
 
         /* --- STICKY PROCESS / ROADMAP SECTION (SCROLLYTELLING) --- */
         .process-section { 
@@ -1440,13 +1467,13 @@
                     <div class="stats-track">
                         <div class="stat-badge"><i class="fa-solid fa-chart-line"></i> 7.8M+ Facturados</div>
                         <div class="stat-badge"><i class="fa-solid fa-users"></i> +20 Marcas Activas</div>
-                        <div class="stat-badge"><i class="fa-solid fa-check-circle"></i> Amazon Partner</div>
+                        <div class="stat-badge"><i class="fa-solid fa-check-circle"></i> Amazon GrowthPartner</div>
                         <div class="stat-badge"><i class="fa-solid fa-arrow-trend-up"></i> ROAS Medio 4.5x</div>
-                        <div class="stat-badge"><i class="fa-solid fa-globe"></i> 5 Mercados</div>
+                        <div class="stat-badge"><i class="fa-solid fa-globe"></i> +7 Mercados</div>
                         <div class="stat-badge"><i class="fa-solid fa-chart-line"></i> 7.8M+ Facturados</div>
                         <div class="stat-badge"><i class="fa-solid fa-users"></i> +20 Marcas Activas</div>
-                        <div class="stat-badge"><i class="fa-solid fa-check-circle"></i> Amazon Partner</div>
-                        <div class="stat-badge"><i class="fa-solid fa-arrow-trend-up"></i> ROAS Medio 4.5x</div>
+                        <div class="stat-badge"><i class="fa-solid fa-check-circle"></i> Amazon Growth Partner</div>
+                        <div class="stat-badge"><i class="fa-solid fa-arrow-trend-up"></i> Aumento Buy Box</div>
                         <div class="stat-badge"><i class="fa-solid fa-globe"></i> 5 Mercados</div>
                     </div>
                 </div>
@@ -1558,7 +1585,7 @@
         <section class="scroll-section" id="scroll-section">
             <div class="scroll-bg-layer"></div>
             <div class="scroll-intro">
-                <h2 class="scroll-title scroll-trigger">Resultados que Hablan</h2>
+                <h2 class="scroll-title scroll-trigger">Resultados que hablan por sí solos</h2>
                 <p class="scroll-subtitle scroll-trigger">No nos basamos en promesas vacías. Nuestra metodología basada en datos transforma cuentas estancadas en líderes de categoría.</p>
             </div>
             
@@ -1687,7 +1714,7 @@
             <div class="process-sticky-container">
                 <div class="process-header">
                     <h2 class="process-title scroll-trigger">Cómo lo hacemos</h2>
-                    <p class="process-subtitle scroll-trigger">Un proceso validado paso a paso. Tú sigues bajando, nosotros seguimos construyendo.</p>
+                    <p class="process-subtitle scroll-trigger">Un proceso validado paso a paso. No hacemos testeos, replicamos lo que funciona.</p>
                 </div>
                 
                 <div class="process-wrapper scroll-trigger">
