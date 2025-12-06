@@ -125,7 +125,7 @@
             background: radial-gradient(circle at 30% 40%, rgba(255, 102, 0, 0.12), transparent 40%), radial-gradient(circle at 70% 60%, rgba(0, 115, 255, 0.08), transparent 40%);
             filter: blur(80px); animation: mistFlow 25s infinite alternate ease-in-out; z-index: 0;
         }
-        #hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.5; }
+        #hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; pointer-events: none; }
         
         .hero-container { position: relative; z-index: 10; width: 100%; max-width: 1200px; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin: 0 auto; }
         .hero-text-col { text-align: left; display: flex; flex-direction: column; align-items: flex-start; }
@@ -810,7 +810,20 @@
 
         /* --- FAQ & CTA --- */
         .faq-cta-wrapper { background-color: var(--bg-color); position: relative; z-index: 1; border-top: 1px solid var(--border-color); overflow: hidden; }
-        .faq-cta-wrapper::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(255, 102, 0, 0.08) 0%, transparent 70%); filter: blur(100px); z-index: 0; pointer-events: none; }
+        .faq-cta-wrapper::before { 
+            content: ""; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 800px; 
+            height: 800px; 
+            /* Gradiente estático sin blur para mejor rendimiento */
+            background: radial-gradient(circle, rgba(255, 102, 0, 0.15) 0%, rgba(255, 102, 0, 0.08) 35%, rgba(255, 102, 0, 0.03) 60%, transparent 75%); 
+            z-index: 0; 
+            pointer-events: none; 
+            will-change: auto;
+        }
         .faq-section { padding: 100px 20px 60px 20px; position: relative; z-index: 1; background: transparent; }
         
         .faq-container { max-width: 1200px; margin: 0 auto; width: 100%; }
@@ -1546,7 +1559,7 @@
             .faq-title { font-size: 28px; }
             #hero-canvas { 
                 display: block !important; 
-                opacity: 0.3 !important;
+                opacity: 0.4 !important;
             }
             .hero-mist { display: none !important; }
             
@@ -2389,31 +2402,26 @@
             }, { passive: false });
         });
 
-        // --- CANVAS LOGIC (OPTIMIZADO PARA MÓVIL) ---
+        // --- CANVAS LOGIC (PAUSA CUANDO SALES DE HERO) ---
         const canvas = document.getElementById('hero-canvas');
+        const isMobileDevice = window.innerWidth <= 767;
         if (canvas) {
             const ctx = canvas.getContext('2d');
-            const isMobileDevice = window.innerWidth <= 767;
-            
-            // Optimizaciones: menos partículas en móvil, sin interacción mouse
-            const particleCount = isMobileDevice ? 600 : 3000;
-            const mouseConnectDistance = 120;
-            const mobileOpacity = 0.3;
-            const desktopOpacity = 0.5;
-            
             let width, height, particles = [], mouse = { x: null, y: null };
+            // Menos partículas en móvil para mejor rendimiento
+            const particleCount = isMobileDevice ? 800 : 3000;
+            const mouseConnectDistance = 120; 
             let animationId = null;
-            let isScrolling = false;
-            let scrollTimeout = null;
             let isPaused = false;
+            const heroSection = document.getElementById('hero');
             
             class Particle { 
                 constructor() { 
                     this.x = Math.random() * width; 
                     this.y = Math.random() * height; 
-                    this.vx = (Math.random() - 0.5) * (isMobileDevice ? 0.1 : 0.2); 
-                    this.vy = (Math.random() - 0.5) * (isMobileDevice ? 0.1 : 0.2); 
-                    this.size = Math.random() * (isMobileDevice ? 1 : 1.5) + 0.5;
+                    this.vx = (Math.random() - 0.5) * 0.2; 
+                    this.vy = (Math.random() - 0.5) * 0.2; 
+                    this.size = Math.random() * 1.5 + 0.5;
                     this.color = '#FF6600'; 
                 } 
                 update() { 
@@ -2427,7 +2435,7 @@
                     ctx.beginPath(); 
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
                     ctx.fillStyle = this.color; 
-                    ctx.globalAlpha = isMobileDevice ? mobileOpacity : desktopOpacity; 
+                    ctx.globalAlpha = isMobileDevice ? 0.5 : 0.7; 
                     ctx.fill(); 
                 } 
             }
@@ -2448,13 +2456,10 @@
                 }
                 
                 ctx.clearRect(0, 0, width, height); 
-                
-                // Optimización: dibujar solo partículas visibles
                 for (let i = 0; i < particles.length; i++) { 
                     let p = particles[i]; 
                     p.update(); 
                     p.draw(); 
-                    
                     // Interacción mouse solo en desktop
                     if (!isMobileDevice && mouse.x != null) { 
                         let dx = mouse.x - p.x; 
@@ -2462,7 +2467,7 @@
                         let distance = Math.sqrt(dx * dx + dy * dy); 
                         if (distance < mouseConnectDistance) { 
                             ctx.beginPath(); 
-                            ctx.strokeStyle = `rgba(255, 102, 0, ${(1 - distance/mouseConnectDistance) * 0.3})`; 
+                            ctx.strokeStyle = `rgba(255, 102, 0, ${1 - distance/mouseConnectDistance})`; 
                             ctx.lineWidth = 0.5; 
                             ctx.moveTo(mouse.x, mouse.y); 
                             ctx.lineTo(p.x, p.y); 
@@ -2473,45 +2478,63 @@
                         } 
                     } 
                 } 
-                
                 animationId = requestAnimationFrame(animateCanvas); 
             }
             
-            // Pausar durante scroll en móvil
-            function handleScroll() {
-                if (isMobileDevice) {
-                    isScrolling = true;
+            // Detectar visibilidad de la hero para pausar/reanudar
+            function checkHeroVisibility() {
+                if (!heroSection) return;
+                
+                const rect = heroSection.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                // Si la hero está visible (aunque sea parcialmente)
+                const isVisible = rect.bottom > 0 && rect.top < windowHeight;
+                
+                if (isVisible && isPaused) {
+                    // Reanudar animación
+                    isPaused = false;
+                } else if (!isVisible && !isPaused) {
+                    // Pausar animación
                     isPaused = true;
-                    
-                    // Limpiar timeout anterior
-                    if (scrollTimeout) {
-                        clearTimeout(scrollTimeout);
-                    }
-                    
-                    // Reanudar después de 150ms sin scroll
-                    scrollTimeout = setTimeout(() => {
-                        isScrolling = false;
-                        isPaused = false;
-                    }, 150);
                 }
             }
             
-            // Throttle del scroll para mejor performance
-            let scrollThrottle = null;
-            window.addEventListener('scroll', () => {
-                if (scrollThrottle) return;
-                scrollThrottle = setTimeout(() => {
-                    handleScroll();
-                    scrollThrottle = null;
-                }, 50);
-            }, { passive: true });
+            // Usar IntersectionObserver para mejor performance
+            if (heroSection && 'IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            isPaused = false;
+                        } else {
+                            isPaused = true;
+                        }
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0
+                });
+                
+                observer.observe(heroSection);
+                
+                // Verificar estado inicial - si la hero está visible al cargar
+                const initialCheck = heroSection.getBoundingClientRect();
+                if (initialCheck.bottom > 0 && initialCheck.top < window.innerHeight) {
+                    isPaused = false;
+                }
+            } else {
+                // Fallback para navegadores sin IntersectionObserver
+                window.addEventListener('scroll', () => {
+                    checkHeroVisibility();
+                }, { passive: true });
+                
+                // Verificar estado inicial
+                checkHeroVisibility();
+            }
             
-            window.addEventListener('resize', () => {
-                initCanvas();
-            }); 
-            
-            // Mouse solo en desktop
-            if (!isMobileDevice && window.innerWidth > 991) { 
+            window.addEventListener('resize', initCanvas); 
+            if(window.innerWidth > 991) { 
                 window.addEventListener('mousemove', (e) => { 
                     mouse.x = e.clientX; 
                     mouse.y = e.clientY; 
