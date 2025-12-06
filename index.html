@@ -1448,12 +1448,12 @@
                 border-color: transparent !important;
             }
             .faq-question { 
-                padding: 20px 0 20px 15px !important;
+                padding: 20px 15px 20px 15px !important;
                 font-size: 16px;
                 gap: 15px;
                 position: relative;
-                padding-right: 0 !important;
                 align-items: center;
+                display: flex !important;
             }
             .faq-question::before {
                 content: "";
@@ -1471,7 +1471,7 @@
             .faq-question span {
                 flex: 1 1 auto;
                 min-width: 0;
-                padding-right: 15px;
+                padding-right: 10px;
                 word-wrap: break-word;
                 overflow-wrap: break-word;
                 color: #eee;
@@ -1487,21 +1487,49 @@
                 max-width: 20px !important;
                 flex: 0 0 20px !important;
                 flex-shrink: 0 !important;
+                margin-left: auto;
                 opacity: 0.6;
+                position: relative;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+            .faq-toggle-icon::before, .faq-toggle-icon::after {
+                content: "";
+                position: absolute;
+                background-color: var(--brand-color);
+                border-radius: 1px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .faq-toggle-icon::before {
+                width: 12px;
+                height: 2px;
+            }
+            .faq-toggle-icon::after {
+                width: 2px;
+                height: 12px;
+                transition: transform 0.3s ease, opacity 0.3s ease;
             }
             .faq-item.active .faq-toggle-icon {
                 opacity: 1;
             }
+            .faq-item.active .faq-toggle-icon::after {
+                transform: translate(-50%, -50%) rotate(90deg);
+                opacity: 0;
+            }
             .faq-answer { 
-                padding: 0 0 20px 15px !important;
+                padding: 0 15px 0 15px !important;
                 max-height: 0;
                 overflow: hidden;
-                display: none;
+                transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+                opacity: 0;
             }
             .faq-item.active .faq-answer {
-                padding: 0 0 20px 15px !important;
-                max-height: none;
-                display: block;
+                padding: 0 15px 20px 15px !important;
+                max-height: 500px;
+                opacity: 1;
             }
             .faq-answer p { 
                 padding: 0;
@@ -1516,7 +1544,11 @@
             .faq-section { padding: 60px 20px 40px 20px; }
             .faq-header-text { margin-bottom: 40px; }
             .faq-title { font-size: 28px; }
-            #hero-canvas { position: fixed !important; height: 100vh; width: 100vw !important; max-width: 100vw !important; top: 0; left: 0; z-index: 0; }
+            #hero-canvas { 
+                display: block !important; 
+                opacity: 0.3 !important;
+            }
+            .hero-mist { display: none !important; }
             
             .pill-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
             
@@ -2337,33 +2369,55 @@
                 // Toggle del item actual
                 item.classList.toggle('active');
                 
-                // En móvil: cambio instantáneo SIN animaciones (máxima velocidad)
+                // En móvil: usar max-height para animación suave
                 if (isMobile && answer) {
                     if (item.classList.contains('active')) {
+                        // Calcular altura real del contenido
                         answer.style.display = 'block';
+                        const height = answer.scrollHeight;
+                        answer.style.maxHeight = height + 'px';
                     } else {
-                        answer.style.display = 'none';
+                        answer.style.maxHeight = '0px';
+                        // Esperar a que termine la animación antes de ocultar
+                        setTimeout(() => {
+                            if (!item.classList.contains('active')) {
+                                answer.style.display = 'none';
+                            }
+                        }, 400);
                     }
                 }
             }, { passive: false });
         });
 
-        // --- CANVAS LOGIC ---
+        // --- CANVAS LOGIC (OPTIMIZADO PARA MÓVIL) ---
         const canvas = document.getElementById('hero-canvas');
         if (canvas) {
             const ctx = canvas.getContext('2d');
+            const isMobileDevice = window.innerWidth <= 767;
+            
+            // Optimizaciones: menos partículas en móvil, sin interacción mouse
+            const particleCount = isMobileDevice ? 600 : 3000;
+            const mouseConnectDistance = 120;
+            const mobileOpacity = 0.3;
+            const desktopOpacity = 0.5;
+            
             let width, height, particles = [], mouse = { x: null, y: null };
-            const particleCount = 3000, mouseConnectDistance = 120; 
+            let animationId = null;
+            let isScrolling = false;
+            let scrollTimeout = null;
+            let isPaused = false;
+            
             class Particle { 
                 constructor() { 
                     this.x = Math.random() * width; 
                     this.y = Math.random() * height; 
-                    this.vx = (Math.random() - 0.5) * 0.2; 
-                    this.vy = (Math.random() - 0.5) * 0.2; 
-                    this.size = Math.random() * 1.5 + 0.5;
+                    this.vx = (Math.random() - 0.5) * (isMobileDevice ? 0.1 : 0.2); 
+                    this.vy = (Math.random() - 0.5) * (isMobileDevice ? 0.1 : 0.2); 
+                    this.size = Math.random() * (isMobileDevice ? 1 : 1.5) + 0.5;
                     this.color = '#FF6600'; 
                 } 
                 update() { 
+                    if (isPaused) return;
                     this.x += this.vx; 
                     this.y += this.vy; 
                     if (this.x < 0 || this.x > width) this.vx = -this.vx; 
@@ -2373,15 +2427,104 @@
                     ctx.beginPath(); 
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
                     ctx.fillStyle = this.color; 
-                    ctx.globalAlpha = 0.5; 
+                    ctx.globalAlpha = isMobileDevice ? mobileOpacity : desktopOpacity; 
                     ctx.fill(); 
                 } 
             }
-            function initCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; particles = []; for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); } }
-            function animateCanvas() { ctx.clearRect(0, 0, width, height); for (let i = 0; i < particles.length; i++) { let p = particles[i]; p.update(); p.draw(); if (mouse.x != null) { let dx = mouse.x - p.x; let dy = mouse.y - p.y; let distance = Math.sqrt(dx * dx + dy * dy); if (distance < mouseConnectDistance) { ctx.beginPath(); ctx.strokeStyle = `rgba(255, 102, 0, ${1 - distance/mouseConnectDistance})`; ctx.lineWidth = 0.5; ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(p.x, p.y); ctx.stroke(); const force = (mouseConnectDistance - distance) / mouseConnectDistance; p.x -= (dx / distance) * force * 0.5; p.y -= (dy / distance) * force * 0.5; } } } requestAnimationFrame(animateCanvas); }
-            window.addEventListener('resize', initCanvas); 
-            if(window.innerWidth > 991) { window.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); mouse.x = e.clientX; mouse.y = e.clientY; }); }
-            window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; }); initCanvas(); animateCanvas();
+            
+            function initCanvas() { 
+                width = canvas.width = window.innerWidth; 
+                height = canvas.height = window.innerHeight; 
+                particles = []; 
+                for (let i = 0; i < particleCount; i++) { 
+                    particles.push(new Particle()); 
+                } 
+            }
+            
+            function animateCanvas() { 
+                if (isPaused) {
+                    animationId = requestAnimationFrame(animateCanvas);
+                    return;
+                }
+                
+                ctx.clearRect(0, 0, width, height); 
+                
+                // Optimización: dibujar solo partículas visibles
+                for (let i = 0; i < particles.length; i++) { 
+                    let p = particles[i]; 
+                    p.update(); 
+                    p.draw(); 
+                    
+                    // Interacción mouse solo en desktop
+                    if (!isMobileDevice && mouse.x != null) { 
+                        let dx = mouse.x - p.x; 
+                        let dy = mouse.y - p.y; 
+                        let distance = Math.sqrt(dx * dx + dy * dy); 
+                        if (distance < mouseConnectDistance) { 
+                            ctx.beginPath(); 
+                            ctx.strokeStyle = `rgba(255, 102, 0, ${(1 - distance/mouseConnectDistance) * 0.3})`; 
+                            ctx.lineWidth = 0.5; 
+                            ctx.moveTo(mouse.x, mouse.y); 
+                            ctx.lineTo(p.x, p.y); 
+                            ctx.stroke(); 
+                            const force = (mouseConnectDistance - distance) / mouseConnectDistance; 
+                            p.x -= (dx / distance) * force * 0.5; 
+                            p.y -= (dy / distance) * force * 0.5; 
+                        } 
+                    } 
+                } 
+                
+                animationId = requestAnimationFrame(animateCanvas); 
+            }
+            
+            // Pausar durante scroll en móvil
+            function handleScroll() {
+                if (isMobileDevice) {
+                    isScrolling = true;
+                    isPaused = true;
+                    
+                    // Limpiar timeout anterior
+                    if (scrollTimeout) {
+                        clearTimeout(scrollTimeout);
+                    }
+                    
+                    // Reanudar después de 150ms sin scroll
+                    scrollTimeout = setTimeout(() => {
+                        isScrolling = false;
+                        isPaused = false;
+                    }, 150);
+                }
+            }
+            
+            // Throttle del scroll para mejor performance
+            let scrollThrottle = null;
+            window.addEventListener('scroll', () => {
+                if (scrollThrottle) return;
+                scrollThrottle = setTimeout(() => {
+                    handleScroll();
+                    scrollThrottle = null;
+                }, 50);
+            }, { passive: true });
+            
+            window.addEventListener('resize', () => {
+                initCanvas();
+            }); 
+            
+            // Mouse solo en desktop
+            if (!isMobileDevice && window.innerWidth > 991) { 
+                window.addEventListener('mousemove', (e) => { 
+                    mouse.x = e.clientX; 
+                    mouse.y = e.clientY; 
+                }); 
+                window.addEventListener('mouseout', () => { 
+                    mouse.x = null; 
+                    mouse.y = null; 
+                }); 
+            }
+            
+            // Inicializar y empezar animación
+            initCanvas(); 
+            animateCanvas();
         }
 
         // --- CURTAIN LOGIC ---
