@@ -16,7 +16,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     
     <title>Agencia Amazon FBA - Escala tus Ventas | Liberty Seller</title>
-    <meta name="description" content="Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.">
+    <meta name="description" content="Agencia especializada en Amazon FBA. Reducimos tu ACOS, optimizamos PPC's y aumentamos tu Buy Box. Gestión 360° de tu cuenta Amazon con resultados medibles. +20.000€/mes de facturación para nuestros clientes.">
 
     <!-- SEO Meta Tags -->
     <meta name="keywords" content="Amazon FBA, agencia Amazon, gestión Amazon, Amazon Seller, Amazon PPC, optimización Amazon, Amazon marketing">
@@ -42,9 +42,12 @@
     <!-- Performance & Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://www.youtube.com">
     <link rel="dns-prefetch" href="https://n8n-n8n.hyonwd.easypanel.host">
+    <link rel="dns-prefetch" href="https://wa.me">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -74,6 +77,8 @@
     
     <!-- Preload Critical Resources -->
     <link rel="preload" href="logo.png" as="image" type="image/png" fetchpriority="high">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
 
     <style>
         /* RESET */
@@ -1487,15 +1492,12 @@
                 padding: 0 0 20px 15px !important;
                 max-height: 0;
                 overflow: hidden;
-                transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, filter 0.3s ease !important;
-                opacity: 0;
-                filter: blur(10px);
+                display: none;
             }
             .faq-item.active .faq-answer {
                 padding: 0 0 20px 15px !important;
-                max-height: 2000px;
-                opacity: 1;
-                filter: blur(0);
+                max-height: none;
+                display: block;
             }
             .faq-answer p { 
                 padding: 0;
@@ -2011,7 +2013,7 @@
                         </a>
                         <a href="tel:+910626798" class="contact-item">
                             <i class="fa-solid fa-phone"></i>
-                            <span>+910 62 67 98</span>
+                            <span>+ 34 910 62 67 98</span>
                         </a>
                     </div>
                 </div>
@@ -2026,7 +2028,7 @@
         </div>
     </footer>
 
-    <script>
+    <script defer>
         // --- LOGICA DE FORMULARIO MEJORADA ---
 
         function setupExpandableForm(checkboxId, expandableId) {
@@ -2318,11 +2320,11 @@
                 faqItems.forEach(other => { 
                     if(other !== item && other.classList.contains('active')) { 
                         other.classList.remove('active');
-                        // En móvil, resetear maxHeight de otros items
+                        // En móvil, resetear display de otros items
                         if (isMobile) {
                             const otherAnswer = other.querySelector('.faq-answer');
                             if (otherAnswer) {
-                                otherAnswer.style.maxHeight = '0px';
+                                otherAnswer.style.display = 'none';
                             }
                         }
                     } 
@@ -2331,26 +2333,12 @@
                 // Toggle del item actual
                 item.classList.toggle('active');
                 
-                // En móvil, calcular altura real para animación suave con blur
+                // En móvil: cambio instantáneo SIN animaciones (máxima velocidad)
                 if (isMobile && answer) {
-                    if (!wasActive) {
-                        // Abrir: calcular altura real
-                        answer.style.maxHeight = 'none';
-                        const realHeight = answer.scrollHeight;
-                        answer.style.maxHeight = '0px';
-                        // Forzar reflow
-                        void answer.offsetHeight;
-                        // Aplicar altura real para animación
-                        requestAnimationFrame(() => {
-                            answer.style.maxHeight = realHeight + 'px';
-                        });
+                    if (item.classList.contains('active')) {
+                        answer.style.display = 'block';
                     } else {
-                        // Cerrar: animar a 0
-                        answer.style.maxHeight = answer.scrollHeight + 'px';
-                        void answer.offsetHeight;
-                        requestAnimationFrame(() => {
-                            answer.style.maxHeight = '0px';
-                        });
+                        answer.style.display = 'none';
                     }
                 }
             }, { passive: false });
@@ -2731,8 +2719,88 @@
         "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "Customer Service",
+            "email": "business@libertyseller.com",
+            "telephone": "+34910626798",
             "availableLanguage": "Spanish"
+        },
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "ES"
         }
+    }
+    </script>
+    
+    <!-- FAQ Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "¿Tenéis algún contrato de permanencia?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. En Liberty Seller no atamos a ningún cliente con contratos blindados. Creemos que la única razón para que te quedes con nosotros es que veas resultados mes a mes. Si no aportamos valor, eres libre de irte; no tiene sentido retenerte a la fuerza."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "¿Garantizáis resultados de venta?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Si alguien te garantiza ventas fijas en Amazon, huye. Nosotros somos honestos: el mercado fluctúa. Lo que sí garantizamos es una gestión profesional basada en datos y estrategias testadas en nuestras propias cuentas. No somos una agencia que \"prueba suerte\" con tu dinero, gestionamos tu capital con el mismo cuidado que el nuestro."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "¿Cómo estructuráis el precio?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Huimos de las tarifas estándar. Nuestro modelo se basa en el éxito compartido: cobramos un fijo ajustado para la operativa y un variable (generalmente un 5%) que se aplica exclusivamente sobre la facturación que supere lo que hiciste el año anterior en ese mismo mes. Si no mejoramos tus números históricos, no cobramos ese variable."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Ya trabajé con agencias y perdí dinero en PPC, ¿qué haréis distinto?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Entendemos tu frustración. Muchos gestores disparan el gasto sin ton ni son. Nuestro enfoque es conservador: no quemamos dinero si el listing no convierte. Primero auditamos y reparamos el catálogo; solo invertimos en campañas cuando tenemos un ACOS controlado y el margen protegido."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "He escuchado que puedo empezar con 100€ o 1.000€, ¿es cierto?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Seamos honestos: muchos gurús te dirán eso, pero es falso. Si quieres montar un negocio real y no un hobby, necesitas estructura y stock. Para lanzar una tienda en condiciones y que funcione bien, la inversión mínima realista ronda los 6.000€ - 8.000€. Amazon es un negocio serio y requiere darle el valor que merece."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "¿Trabajáis con cuentas nuevas o desde cero?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sí. Gestionamos proyectos desde la fase semilla, como hicimos con clientes de Marca Privada. Te asesoramos desde la creación de la cuenta hasta la estrategia de lanzamiento, asegurando que empiezas con una base sólida y evitas los errores de novato que suelen costar mucho dinero."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "No tengo tiempo para gestionar la cuenta, ¿vosotros os encargáis?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Exacto. Ofrecemos una Gestión 360°. Nos convertimos en tu departamento de Amazon: desde la logística hasta hablar con el Soporte de Amazon para resolver incidencias. Tú supervisas el crecimiento, nosotros nos encargamos de toda la operativa diaria."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "¿Cómo sé si mi producto tiene potencial antes de invertir?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Antes de lanzarnos, realizamos una auditoría y análisis de mercado. No se trata de \"subir productos\", sino de analizar la competencia y los márgenes reales. Si vemos que el producto no es viable, te lo diremos antes de que inviertas. Preferimos perder un cliente a que tú pierdas tus ahorros."
+                }
+            }
+        ]
     }
     </script>
     
