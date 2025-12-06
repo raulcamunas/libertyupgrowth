@@ -15,7 +15,7 @@
     <meta name="theme-color" content="#FF6600">
     <meta name="mobile-web-app-capable" content="yes">
     
-    <title>Agencia Amazon FBA - Escala tus Ventas | Liberty Seller</title>
+    <title>Liberty Seller | Agencia 360º de Amazon FBA</title>
     <meta name="description" content="Agencia especializada en Amazon FBA. Reducimos tu ACOS, optimizamos PPC's y aumentamos tu Buy Box. Gestión 360° de tu cuenta Amazon con resultados medibles. +20.000€/mes de facturación para nuestros clientes.">
 
     <!-- SEO Meta Tags -->
@@ -27,17 +27,21 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://libertyseller.es">
-    <meta property="og:title" content="Agencia Amazon FBA - Escala tus Ventas | LibertySeller">
-    <meta property="og:description" content="Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.">
-    <meta property="og:image" content="https://libertyseller.es/logo.png">
+    <meta property="og:url" content="https://libertyseller.com">
+    <meta property="og:title" content="Liberty Seller | Agencia 360º de Amazon FBA">
+    <meta property="og:description" content="Agencia especializada en Amazon FBA. Reducimos tu ACOS, optimizamos PPC's y aumentamos tu Buy Box. Gestión 360° de tu cuenta Amazon con resultados medibles.">
+    <meta property="og:image" content="https://libertyseller.com/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Liberty Seller - Agencia Amazon FBA">
     
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://libertyseller.es">
-    <meta property="twitter:title" content="Agencia Amazon FBA - Escala tus Ventas | LibertySeller">
-    <meta property="twitter:description" content="Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.">
-    <meta property="twitter:image" content="https://libertyseller.es/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://libertyseller.com">
+    <meta name="twitter:title" content="Liberty Seller | Agencia 360º de Amazon FBA">
+    <meta name="twitter:description" content="Agencia especializada en Amazon FBA. Reducimos tu ACOS, optimizamos PPC's y aumentamos tu Buy Box. Gestión 360° de tu cuenta Amazon con resultados medibles.">
+    <meta name="twitter:image" content="https://libertyseller.com/logo.png">
+    <meta name="twitter:image:alt" content="Liberty Seller - Agencia Amazon FBA">
     
     <!-- Performance & Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -313,27 +317,13 @@
         .expandable-fields {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease, transform 0.3s ease;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease;
             opacity: 0;
-            transform: translateY(-10px);
         }
         .expandable-fields.open {
             max-height: 500px; /* Suficiente para el contenido */
             opacity: 1;
             padding-bottom: 20px;
-            transform: translateY(0);
-        }
-        
-        /* Optimización móvil: animación más ligera */
-        @media (max-width: 767px) {
-            .expandable-fields {
-                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                max-height: 0;
-            }
-            .expandable-fields.open {
-                max-height: 1000px;
-                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            }
         }
         
         .pill-label { font-size: 12px; color: #888; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-top: 15px; }
@@ -806,17 +796,6 @@
         
         .process-step { position: relative; z-index: 2; width: 18%; display: flex; flex-direction: column; align-items: center; text-align: center; opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); filter: blur(5px); }
         .process-step.active { opacity: 1; transform: translateY(0); filter: blur(0); }
-        
-        /* Eliminar blur en móvil para mejor performance */
-        @media (max-width: 767px) {
-            .process-step {
-                filter: none !important;
-                transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            }
-            .process-step.active {
-                filter: none !important;
-            }
-        }
         
         .step-node { width: 20px; height: 20px; border-radius: 50%; background: #111; border: 2px solid rgba(255,255,255,0.2); margin-bottom: 30px; position: relative; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; }
         .process-step.active .step-node { border-color: var(--brand-color); background: var(--brand-color); box-shadow: 0 0 20px rgba(255,102,0,0.5); }
@@ -1323,15 +1302,6 @@
         }
 
         @media (max-width: 767px) {
-            /* Eliminar blur de todas las animaciones en móvil */
-            .scroll-trigger {
-                filter: none !important;
-                transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            }
-            .scroll-trigger.is-visible {
-                filter: none !important;
-            }
-            
             .hero-title { font-size: 36px; }
             .hero-subtitle { font-size: 16px; color: #a0a0b0; line-height: 1.6; }
             .features-header { display: block; position: relative; margin-bottom: 40px; text-align: left; }
@@ -1383,13 +1353,16 @@
                 min-height: auto; 
                 padding: 25px 20px;
                 opacity: 0;
-                transform: translateY(20px);
-                transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                            transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                transform: translateY(30px);
+                filter: blur(15px);
+                transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                            transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                            filter 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             }
             .feature-card.card-visible {
                 opacity: 1;
                 transform: translateY(0);
+                filter: blur(0);
             }
             .feature-card:hover {
                 backdrop-filter: none !important;
@@ -1523,15 +1496,12 @@
                 padding: 0 0 20px 15px !important;
                 max-height: 0;
                 overflow: hidden;
-                opacity: 0;
-                transform: translateY(-10px);
-                transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                display: none;
             }
             .faq-item.active .faq-answer {
                 padding: 0 0 20px 15px !important;
-                max-height: 2000px;
-                opacity: 1;
-                transform: translateY(0);
+                max-height: none;
+                display: block;
             }
             .faq-answer p { 
                 padding: 0;
@@ -2068,40 +2038,12 @@
         function setupExpandableForm(checkboxId, expandableId) {
             const checkbox = document.getElementById(checkboxId);
             const container = document.getElementById(expandableId);
-            const isMobile = window.innerWidth <= 767;
-            
             if(checkbox && container) {
                 checkbox.addEventListener('change', function() {
                     if(this.checked) {
                         container.classList.add('open');
-                        // En móvil, calcular altura real para animación suave
-                        if (isMobile) {
-                            container.style.maxHeight = 'none';
-                            const realHeight = container.scrollHeight;
-                            container.style.maxHeight = '0px';
-                            container.style.opacity = '0';
-                            container.style.transform = 'translateY(-10px)';
-                            void container.offsetHeight;
-                            requestAnimationFrame(() => {
-                                container.style.maxHeight = realHeight + 'px';
-                                container.style.opacity = '1';
-                                container.style.transform = 'translateY(0)';
-                            });
-                        }
                     } else {
                         container.classList.remove('open');
-                        // En móvil, animar cierre
-                        if (isMobile) {
-                            container.style.maxHeight = container.scrollHeight + 'px';
-                            container.style.opacity = '1';
-                            container.style.transform = 'translateY(0)';
-                            void container.offsetHeight;
-                            requestAnimationFrame(() => {
-                                container.style.maxHeight = '0px';
-                                container.style.opacity = '0';
-                                container.style.transform = 'translateY(-10px)';
-                            });
-                        }
                     }
                 });
             }
@@ -2382,13 +2324,11 @@
                 faqItems.forEach(other => { 
                     if(other !== item && other.classList.contains('active')) { 
                         other.classList.remove('active');
-                        // En móvil, resetear estilos de otros items
+                        // En móvil, resetear display de otros items
                         if (isMobile) {
                             const otherAnswer = other.querySelector('.faq-answer');
                             if (otherAnswer) {
-                                otherAnswer.style.maxHeight = '0px';
-                                otherAnswer.style.opacity = '0';
-                                otherAnswer.style.transform = 'translateY(-10px)';
+                                otherAnswer.style.display = 'none';
                             }
                         }
                     } 
@@ -2397,34 +2337,12 @@
                 // Toggle del item actual
                 item.classList.toggle('active');
                 
-                // En móvil: animación ligera con opacity y transform (GPU-accelerated)
+                // En móvil: cambio instantáneo SIN animaciones (máxima velocidad)
                 if (isMobile && answer) {
                     if (item.classList.contains('active')) {
-                        // Abrir: calcular altura real para animación suave
-                        answer.style.maxHeight = 'none';
-                        const realHeight = answer.scrollHeight;
-                        answer.style.maxHeight = '0px';
-                        answer.style.opacity = '0';
-                        answer.style.transform = 'translateY(-10px)';
-                        // Forzar reflow
-                        void answer.offsetHeight;
-                        // Aplicar animación
-                        requestAnimationFrame(() => {
-                            answer.style.maxHeight = realHeight + 'px';
-                            answer.style.opacity = '1';
-                            answer.style.transform = 'translateY(0)';
-                        });
+                        answer.style.display = 'block';
                     } else {
-                        // Cerrar: animar a 0
-                        answer.style.maxHeight = answer.scrollHeight + 'px';
-                        answer.style.opacity = '1';
-                        answer.style.transform = 'translateY(0)';
-                        void answer.offsetHeight;
-                        requestAnimationFrame(() => {
-                            answer.style.maxHeight = '0px';
-                            answer.style.opacity = '0';
-                            answer.style.transform = 'translateY(-10px)';
-                        });
+                        answer.style.display = 'none';
                     }
                 }
             }, { passive: false });
@@ -2772,8 +2690,8 @@
         "@type": "ProfessionalService",
         "name": "LibertySeller",
         "description": "Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.",
-        "url": "https://libertyseller.es",
-        "logo": "https://libertyseller.es/logo.png",
+        "url": "https://libertyseller.com",
+        "logo": "https://libertyseller.com/logo.png",
         "serviceType": "Amazon FBA Management",
         "areaServed": {
             "@type": "Country",
@@ -2796,8 +2714,8 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "LibertySeller",
-        "url": "https://libertyseller.es",
-        "logo": "https://libertyseller.es/logo.png",
+        "url": "https://libertyseller.com",
+        "logo": "https://libertyseller.com/logo.png",
         "sameAs": [
             "https://twitter.com/libertyseller",
             "https://linkedin.com/company/libertyseller"
