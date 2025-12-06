@@ -1368,6 +1368,18 @@
             
             .footer-brand {
                 max-width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .footer-logo-img {
+                margin-bottom: 0;
+            }
+            
+            .footer-desc {
+                margin: 0;
             }
             
             .footer-contact-title {
@@ -1382,48 +1394,116 @@
             .footer-bottom { 
                 flex-direction: column; 
                 gap: 20px;
-                text-align: center;
+                text-align: left;
+                align-items: center;
             }
             
             .copyright {
                 order: 2;
+                text-align: center;
             }
             
             .social-icons {
                 order: 1;
+                justify-content: center;
             }
             .cta-title { font-size: 32px; }
             .cta-btn-big { width: 100%; justify-content: center; }
             
-            /* FAQ Mobile - Sin animaciones, una columna */
-            .faq-list { grid-template-columns: 1fr; gap: 15px; }
+            /* FAQ Mobile - Diseño minimalista con línea naranja y blur */
+            .faq-list { 
+                grid-template-columns: 1fr; 
+                gap: 0; 
+                display: flex;
+                flex-direction: column;
+            }
             .faq-item { 
                 margin-bottom: 0;
+                border: none !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                padding: 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                display: block !important;
+                overflow: visible;
             }
-            .faq-item:hover { transform: none; }
-            .faq-item.active { transform: none; }
-            .faq-question { padding: 20px; font-size: 16px; gap: 15px; }
+            .faq-item:last-child {
+                border-bottom: none;
+            }
+            .faq-item:hover { 
+                transform: none;
+                background: transparent !important;
+            }
+            .faq-item.active { 
+                background: transparent !important;
+                border-color: transparent !important;
+            }
+            .faq-question { 
+                padding: 20px 0 20px 15px !important;
+                font-size: 16px;
+                gap: 15px;
+                position: relative;
+                padding-right: 0 !important;
+                align-items: center;
+            }
+            .faq-question::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                background: transparent;
+                transition: background 0.2s ease;
+            }
+            .faq-item.active .faq-question::before {
+                background: var(--brand-color);
+            }
             .faq-question span {
                 flex: 1 1 auto;
                 min-width: 0;
-                padding-right: 12px;
+                padding-right: 15px;
                 word-wrap: break-word;
                 overflow-wrap: break-word;
+                color: #eee;
+                line-height: 1.4;
+            }
+            .faq-item.active .faq-question span {
+                color: #fff;
             }
             .faq-toggle-icon { 
-                min-width: 24px; 
-                max-width: 24px;
-                flex: 0 0 24px;
-                flex-shrink: 0;
+                width: 20px !important;
+                height: 20px !important;
+                min-width: 20px !important;
+                max-width: 20px !important;
+                flex: 0 0 20px !important;
+                flex-shrink: 0 !important;
+                opacity: 0.6;
+            }
+            .faq-item.active .faq-toggle-icon {
+                opacity: 1;
             }
             .faq-answer { 
-                padding: 0 20px !important;
-                transition: none !important;
+                padding: 0 0 20px 15px !important;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, filter 0.3s ease !important;
+                opacity: 0;
+                filter: blur(10px);
             }
             .faq-item.active .faq-answer {
-                padding: 0 20px 20px 20px !important;
+                padding: 0 0 20px 15px !important;
+                max-height: 2000px;
+                opacity: 1;
+                filter: blur(0);
             }
-            .faq-answer p { padding-bottom: 20px; }
+            .faq-answer p { 
+                padding: 0;
+                margin: 0;
+                font-size: 14px;
+                color: #aaa;
+                line-height: 1.6;
+            }
             .faq-section { padding: 60px 20px 40px 20px; }
             .faq-header-text { margin-bottom: 40px; }
             .faq-title { font-size: 28px; }
@@ -2223,16 +2303,56 @@
 
         // --- FAQ LOGIC (ÚNICA VERSIÓN PARA DESKTOP Y MÓVIL) ---
         const faqItems = document.querySelectorAll('.faq-item');
+        const isMobile = window.innerWidth <= 767;
+        
         faqItems.forEach(item => {
             const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+            
             question.addEventListener('click', (e) => {
                 e.preventDefault();
+                
+                const wasActive = item.classList.contains('active');
+                
+                // Cerrar otros items PRIMERO (antes de toggle)
                 faqItems.forEach(other => { 
                     if(other !== item && other.classList.contains('active')) { 
                         other.classList.remove('active');
+                        // En móvil, resetear maxHeight de otros items
+                        if (isMobile) {
+                            const otherAnswer = other.querySelector('.faq-answer');
+                            if (otherAnswer) {
+                                otherAnswer.style.maxHeight = '0px';
+                            }
+                        }
                     } 
                 });
+                
+                // Toggle del item actual
                 item.classList.toggle('active');
+                
+                // En móvil, calcular altura real para animación suave con blur
+                if (isMobile && answer) {
+                    if (!wasActive) {
+                        // Abrir: calcular altura real
+                        answer.style.maxHeight = 'none';
+                        const realHeight = answer.scrollHeight;
+                        answer.style.maxHeight = '0px';
+                        // Forzar reflow
+                        void answer.offsetHeight;
+                        // Aplicar altura real para animación
+                        requestAnimationFrame(() => {
+                            answer.style.maxHeight = realHeight + 'px';
+                        });
+                    } else {
+                        // Cerrar: animar a 0
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                        void answer.offsetHeight;
+                        requestAnimationFrame(() => {
+                            answer.style.maxHeight = '0px';
+                        });
+                    }
+                }
             }, { passive: false });
         });
 
