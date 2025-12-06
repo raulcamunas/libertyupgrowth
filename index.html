@@ -1435,7 +1435,7 @@
             /* FAQ Mobile - Diseño redondo con blur y animación smooth */
             .faq-list { 
                 grid-template-columns: 1fr; 
-                gap: 30px !important; 
+                gap: 18px !important; 
             }
             .faq-item { 
                 border: 1px solid var(--border-color) !important;
@@ -1468,9 +1468,9 @@
                 opacity: 1;
             }
             .faq-question { 
-                padding: 28px 24px !important;
+                padding: 20px 18px !important;
                 font-size: 16px;
-                gap: 20px;
+                gap: 15px;
                 position: relative;
                 align-items: center;
                 display: flex !important;
@@ -1481,11 +1481,11 @@
             .faq-question span {
                 flex: 1 1 auto;
                 min-width: 0;
-                padding-right: 24px;
+                padding-right: 15px;
                 word-wrap: break-word;
                 overflow-wrap: break-word;
                 color: #eee;
-                line-height: 1.6;
+                line-height: 1.5;
             }
             .faq-item.active .faq-question span {
                 color: #fff;
@@ -1529,10 +1529,10 @@
                 opacity: 0;
             }
             .faq-answer { 
-                padding: 0 24px !important;
+                padding: 0 18px !important;
             }
             .faq-item.active .faq-answer {
-                padding: 20px 24px 28px 24px !important;
+                padding: 16px 18px 20px 18px !important;
             }
             .faq-answer p { 
                 padding: 0;
@@ -2376,17 +2376,27 @@
                 // Calcular altura real para animación suave con max-height
                 if (answer) {
                     if (item.classList.contains('active')) {
+                        // Aplicar display y padding INMEDIATAMENTE
                         answer.style.display = 'block';
-                        // Pequeño delay para que el navegador calcule la altura correctamente
-                        setTimeout(() => {
-                            const height = answer.scrollHeight;
-                            answer.style.maxHeight = height + 'px';
-                        }, 10);
+                        answer.style.paddingTop = '16px';
+                        answer.style.paddingBottom = '20px';
+                        answer.style.paddingLeft = '18px';
+                        answer.style.paddingRight = '18px';
+                        answer.style.maxHeight = 'none';
+                        
+                        // Forzar reflow inmediato
+                        void answer.offsetHeight;
+                        
+                        // Calcular altura después de que el padding esté aplicado
+                        const height = answer.scrollHeight;
+                        answer.style.maxHeight = height + 'px';
                     } else {
                         answer.style.maxHeight = '0px';
                         setTimeout(() => {
                             if (!item.classList.contains('active')) {
                                 answer.style.display = 'none';
+                                answer.style.paddingTop = '0';
+                                answer.style.paddingBottom = '0';
                             }
                         }, 600);
                     }
