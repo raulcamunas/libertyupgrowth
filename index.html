@@ -819,8 +819,9 @@
             border-radius: 16px; 
             background: rgba(255,255,255,0.02); 
             overflow: hidden; 
-            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            transform: translateZ(0); 
+            transition: background-color 0.15s ease, border-color 0.15s ease, grid-template-rows 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            transform: translateZ(0);
+            will-change: grid-template-rows;
             display: grid;
             grid-template-rows: auto 0fr;
             align-self: start;
@@ -832,8 +833,8 @@
         .faq-item.active { 
             background: rgba(255,255,255,0.05); 
             border-color: var(--brand-color); 
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.15);
             grid-template-rows: auto 1fr;
+            will-change: auto;
         }
         .faq-question { 
             padding: 25px; 
@@ -856,7 +857,7 @@
         .faq-item.active .faq-toggle-icon { transform: rotate(180deg); } .faq-item.active .faq-toggle-icon::after { opacity: 0; }
         .faq-answer { 
             overflow: hidden; 
-            transition: opacity 0.3s ease 0.1s; 
+            transition: opacity 0.15s ease; 
             opacity: 0; 
             padding: 0 25px;
             min-height: 0;
@@ -864,6 +865,7 @@
         .faq-answer p { padding-bottom: 25px; margin: 0; }
         .faq-item.active .faq-answer { 
             opacity: 1; 
+            transition-delay: 0.05s;
         }
         
         .cta-final-section { padding: 60px 20px 120px 20px; text-align: center; position: relative; z-index: 1; background: transparent; }
@@ -2148,18 +2150,23 @@
             }
         });
 
-        // --- FAQ LOGIC (OPTIMIZADO) ---
-        document.querySelectorAll('.faq-item').forEach(item => {
-            item.querySelector('.faq-question').addEventListener('click', () => {
-                // Cerrar otros items activos
-                document.querySelectorAll('.faq-item').forEach(other => { 
-                    if(other !== item && other.classList.contains('active')) { 
-                        other.classList.remove('active');
-                    } 
+        // --- FAQ LOGIC (ULTRA OPTIMIZADO) ---
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                // Usar requestAnimationFrame para batch de cambios
+                requestAnimationFrame(() => {
+                    // Cerrar otros items activos
+                    faqItems.forEach(other => { 
+                        if(other !== item && other.classList.contains('active')) { 
+                            other.classList.remove('active');
+                        } 
+                    });
+                    // Toggle del item actual
+                    item.classList.toggle('active');
                 });
-                // Toggle del item actual
-                item.classList.toggle('active');
-            });
+            }, { passive: true });
         });
 
         // --- CANVAS LOGIC ---
