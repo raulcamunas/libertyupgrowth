@@ -2,7 +2,7 @@ name: Deploy a Hostinger 🚀
 on:
   push:
     branches:
-      - main  # Asegúrate de que tu rama principal se llama 'main'. Si es 'master', cambia esto a 'master'.
+      - main  # Asegúrate de que tu rama se llama 'main'
 
 jobs:
   web-deploy:
@@ -18,8 +18,8 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: ./public_html/
-        # Esto borrará archivos en el servidor que no existan en tu git (limpieza automática)
+        server-dir: ./
+        # Al poner ./ le decimos que lo suelte todo en la raíz del usuario FTP
         delete: true 
         exclude: |
           **/.git*
