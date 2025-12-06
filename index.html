@@ -804,97 +804,6 @@
         .faq-cta-wrapper::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(255, 102, 0, 0.08) 0%, transparent 70%); filter: blur(100px); z-index: 0; pointer-events: none; }
         .faq-section { padding: 100px 20px 60px 20px; position: relative; z-index: 1; background: transparent; }
         
-        /* FAQ DESKTOP - Mostrar solo en desktop */
-        .faq-section-mobile { display: none; }
-        
-        /* FAQ MOBILE - Versión optimizada para 60fps */
-        .faq-list-mobile {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .faq-item-mobile {
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            background: rgba(255,255,255,0.02);
-            overflow: hidden;
-        }
-        .faq-item-mobile.active-mobile {
-            background: rgba(255,255,255,0.05);
-            border-color: var(--brand-color);
-        }
-        .faq-question-mobile {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 16px;
-            color: #eee;
-        }
-        .faq-question-mobile span {
-            flex: 1 1 0%;
-            min-width: 0;
-            max-width: calc(100% - 50px);
-            padding-right: 12px;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        .faq-toggle-icon-mobile {
-            width: 24px;
-            height: 24px;
-            min-width: 24px;
-            max-width: 24px;
-            flex: 0 0 24px;
-            flex-shrink: 0;
-            position: relative;
-            transition: transform 0.2s ease;
-        }
-        .faq-toggle-icon-mobile::before,
-        .faq-toggle-icon-mobile::after {
-            content: "";
-            position: absolute;
-            background-color: var(--brand-color);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 2px;
-        }
-        .faq-toggle-icon-mobile::before {
-            width: 100%;
-            height: 2px;
-        }
-        .faq-toggle-icon-mobile::after {
-            width: 2px;
-            height: 100%;
-        }
-        .faq-item-mobile.active-mobile .faq-toggle-icon-mobile {
-            transform: rotate(45deg);
-        }
-        .faq-item-mobile.active-mobile .faq-toggle-icon-mobile::after {
-            opacity: 0;
-        }
-        .faq-answer-mobile {
-            padding: 0 20px;
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, padding 0.3s ease;
-        }
-        .faq-item-mobile.active-mobile .faq-answer-mobile {
-            padding: 0 20px 20px 20px;
-            max-height: 2000px;
-            opacity: 1;
-        }
-        .faq-answer-mobile p {
-            margin: 0;
-            padding: 0;
-            font-size: 14px;
-            color: #aaa;
-            line-height: 1.6;
-        }
         .faq-container { max-width: 1200px; margin: 0 auto; width: 100%; }
         .faq-header-text { text-align: center; margin-bottom: 60px; }
         .faq-title { font-size: 36px; font-weight: 700; margin-bottom: 15px; background: linear-gradient(180deg, #fff 0%, #ccc 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
@@ -1082,8 +991,6 @@
             .section-cta-mobile-only {
                 display: none;
             }
-            .faq-section-mobile { display: none !important; }
-            .faq-section:not(.faq-section-mobile) { display: block !important; }
         }
 
         /* --- FOOTER --- */
@@ -1488,10 +1395,36 @@
             .cta-title { font-size: 32px; }
             .cta-btn-big { width: 100%; justify-content: center; }
             
-            /* FAQ - Ocultar desktop, mostrar móvil optimizado */
-            .faq-section:not(.faq-section-mobile) { display: none !important; }
-            .faq-section-mobile { display: block !important; }
-            .faq-section-mobile { padding: 60px 20px 40px 20px; }
+            /* FAQ Mobile - Sin animaciones, una columna */
+            .faq-list { grid-template-columns: 1fr; gap: 15px; }
+            .faq-item { 
+                margin-bottom: 0;
+            }
+            .faq-item:hover { transform: none; }
+            .faq-item.active { transform: none; }
+            .faq-question { padding: 20px; font-size: 16px; gap: 15px; }
+            .faq-question span {
+                flex: 1 1 auto;
+                min-width: 0;
+                padding-right: 12px;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            .faq-toggle-icon { 
+                min-width: 24px; 
+                max-width: 24px;
+                flex: 0 0 24px;
+                flex-shrink: 0;
+            }
+            .faq-answer { 
+                padding: 0 20px !important;
+                transition: none !important;
+            }
+            .faq-item.active .faq-answer {
+                padding: 0 20px 20px 20px !important;
+            }
+            .faq-answer p { padding-bottom: 20px; }
+            .faq-section { padding: 60px 20px 40px 20px; }
             .faq-header-text { margin-bottom: 40px; }
             .faq-title { font-size: 28px; }
             .faq-section { padding: 60px 20px 40px 20px; }
@@ -1936,7 +1869,7 @@
             <section class="faq-section">
                 <div class="faq-container">
                     <div class="faq-header-text"><h2 class="faq-title scroll-trigger">Preguntas Frecuentes</h2><p class="faq-subtitle scroll-trigger">Resolvemos las dudas más comunes...</p></div>
-                    <div class="faq-list faq-list-desktop scroll-trigger">
+                    <div class="faq-list scroll-trigger">
                         <div class="faq-item">
                             <div class="faq-question"><span>¿Tenéis algún contrato de permanencia?</span><div class="faq-toggle-icon"></div></div>
                             <div class="faq-answer"><p>No. En Liberty Seller no atamos a ningún cliente con contratos blindados. Creemos que la única razón para que te quedes con nosotros es que veas resultados mes a mes. Si no aportamos valor, eres libre de irte; no tiene sentido retenerte a la fuerza.</p></div>
@@ -1969,53 +1902,6 @@
                         <div class="faq-item">
                             <div class="faq-question"><span>¿Cómo sé si mi producto tiene potencial antes de invertir?</span><div class="faq-toggle-icon"></div></div>
                             <div class="faq-answer"><p>Antes de lanzarnos, realizamos una auditoría y análisis de mercado. No se trata de "subir productos", sino de analizar la competencia y los márgenes reales. Si vemos que el producto no es viable, te lo diremos antes de que inviertas. Preferimos perder un cliente a que tú pierdas tus ahorros.</p></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="section-cta">
-                    <button class="section-cta-btn" onclick="scrollToForm(); return false;">
-                        <span>Resuelve tus dudas con nosotros</span>
-                        <i class="fa-solid fa-arrow-up"></i>
-                    </button>
-                </div>
-            </section>
-            
-            <!-- FAQ MOBILE VERSION (OPTIMIZADA PARA 60FPS) -->
-            <section class="faq-section faq-section-mobile">
-                <div class="faq-container">
-                    <div class="faq-header-text"><h2 class="faq-title scroll-trigger">Preguntas Frecuentes</h2><p class="faq-subtitle scroll-trigger">Resolvemos las dudas más comunes...</p></div>
-                    <div class="faq-list faq-list-mobile">
-                        <div class="faq-item-mobile">
-                            <div class="faq-question-mobile"><span>¿Tenéis algún contrato de permanencia?</span><div class="faq-toggle-icon-mobile"></div></div>
-                            <div class="faq-answer-mobile"><p>No. En Liberty Seller no atamos a ningún cliente con contratos blindados. Creemos que la única razón para que te quedes con nosotros es que veas resultados mes a mes. Si no aportamos valor, eres libre de irte; no tiene sentido retenerte a la fuerza.</p></div>
-                        </div>
-                        <div class="faq-item-mobile">
-                            <div class="faq-question-mobile"><span>¿Garantizáis resultados de venta?</span><div class="faq-toggle-icon-mobile"></div></div>
-                            <div class="faq-answer-mobile"><p>Si alguien te garantiza ventas fijas en Amazon, <strong>huye</strong>. Nosotros somos honestos: el mercado fluctúa. Lo que sí garantizamos es una gestión profesional basada en datos y estrategias testadas en nuestras propias cuentas. No somos una agencia que "prueba suerte" con tu dinero, gestionamos tu capital con el mismo cuidado que el nuestro.</p></div>
-                        </div>
-                        <div class="faq-item-mobile">
-                            <div class="faq-question-mobile"><span>¿Cómo estructuráis el precio?</span><div class="faq-toggle-icon-mobile"></div></div>
-                            <div class="faq-answer-mobile"><p>Huimos de las tarifas estándar. Nuestro modelo se basa en el éxito compartido: cobramos un fijo ajustado para la operativa y un variable (generalmente un 5%) que se aplica <strong>exclusivamente sobre la facturación que supere</strong> lo que hiciste el año anterior en ese mismo mes. Si no mejoramos tus números históricos, no cobramos ese variable.</p></div>
-                        </div>
-                        <div class="faq-item-mobile">
-                            <div class="faq-question-mobile"><span>Ya trabajé con agencias y perdí dinero en PPC, ¿qué haréis distinto?</span><div class="faq-toggle-icon-mobile"></div></div>
-                            <div class="faq-answer-mobile"><p>Entendemos tu frustración. Muchos gestores disparan el gasto sin ton ni son. Nuestro enfoque es conservador: <strong>no quemamos dinero si el listing no convierte</strong>. Primero auditamos y reparamos el catálogo; solo invertimos en campañas cuando tenemos un ACOS controlado y el margen protegido.</p></div>
-                        </div>
-                        <div class="faq-item-mobile">
-                            <div class="faq-question-mobile"><span>He escuchado que puedo empezar con 100€ o 1.000€, ¿es cierto?</span><div class="faq-toggle-icon-mobile"></div></div>
-                            <div class="faq-answer-mobile"><p>Seamos honestos: muchos gurús te dirán eso, pero es falso. Si quieres montar un negocio real y no un hobby, necesitas estructura y stock. Para lanzar una tienda en condiciones y que funcione bien, la inversión mínima realista ronda los <strong>6.000€ - 8.000€</strong>. Amazon es un negocio serio y requiere darle el valor que merece.</p></div>
-                        </div>
-                        <div class="faq-item-mobile">
-                            <div class="faq-question-mobile"><span>¿Trabajáis con cuentas nuevas o desde cero?</span><div class="faq-toggle-icon-mobile"></div></div>
-                            <div class="faq-answer-mobile"><p>Sí. Gestionamos proyectos desde la fase semilla, como hicimos con clientes de Marca Privada. Te asesoramos desde la creación de la cuenta hasta la estrategia de lanzamiento, asegurando que empiezas con una base sólida y evitas los errores de novato que suelen costar mucho dinero.</p></div>
-                        </div>
-                        <div class="faq-item-mobile">
-                            <div class="faq-question-mobile"><span>No tengo tiempo para gestionar la cuenta, ¿vosotros os encargáis?</span><div class="faq-toggle-icon-mobile"></div></div>
-                            <div class="faq-answer-mobile"><p>Exacto. Ofrecemos una <strong>Gestión 360°</strong>. Nos convertimos en tu departamento de Amazon: desde la logística hasta hablar con el Soporte de Amazon para resolver incidencias. Tú supervisas el crecimiento, nosotros nos encargamos de toda la operativa diaria.</p></div>
-                        </div>
-                        <div class="faq-item-mobile">
-                            <div class="faq-question-mobile"><span>¿Cómo sé si mi producto tiene potencial antes de invertir?</span><div class="faq-toggle-icon-mobile"></div></div>
-                            <div class="faq-answer-mobile"><p>Antes de lanzarnos, realizamos una auditoría y análisis de mercado. No se trata de "subir productos", sino de analizar la competencia y los márgenes reales. Si vemos que el producto no es viable, te lo diremos antes de que inviertas. Preferimos perder un cliente a que tú pierdas tus ahorros.</p></div>
                         </div>
                     </div>
                 </div>
@@ -2335,63 +2221,19 @@
             }
         });
 
-        // --- FAQ LOGIC DESKTOP (Versión original con grid) ---
-        const faqItemsDesktop = document.querySelectorAll('.faq-item');
-        faqItemsDesktop.forEach(item => {
+        // --- FAQ LOGIC (ÚNICA VERSIÓN PARA DESKTOP Y MÓVIL) ---
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
             const question = item.querySelector('.faq-question');
             question.addEventListener('click', (e) => {
                 e.preventDefault();
-                faqItemsDesktop.forEach(other => { 
+                faqItems.forEach(other => { 
                     if(other !== item && other.classList.contains('active')) { 
                         other.classList.remove('active');
                     } 
                 });
                 item.classList.toggle('active');
             }, { passive: false });
-        });
-
-        // --- FAQ LOGIC MOBILE (OPTIMIZADO CON ANIMACIÓN SUAVE) ---
-        const faqItemsMobile = document.querySelectorAll('.faq-item-mobile');
-        faqItemsMobile.forEach(item => {
-            const question = item.querySelector('.faq-question-mobile');
-            const answer = item.querySelector('.faq-answer-mobile');
-            
-            question.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                const wasActive = item.classList.contains('active-mobile');
-                
-                // Cerrar otros items
-                faqItemsMobile.forEach(other => { 
-                    if(other !== item && other.classList.contains('active-mobile')) { 
-                        other.classList.remove('active-mobile');
-                    } 
-                });
-                
-                // Toggle del item actual
-                item.classList.toggle('active-mobile');
-                
-                // Calcular altura real para animación suave
-                if (!wasActive && answer) {
-                    // Abrir: calcular altura real
-                    answer.style.maxHeight = 'none';
-                    const realHeight = answer.scrollHeight;
-                    answer.style.maxHeight = '0px';
-                    // Forzar reflow
-                    void answer.offsetHeight;
-                    // Aplicar altura real para animación
-                    requestAnimationFrame(() => {
-                        answer.style.maxHeight = realHeight + 'px';
-                    });
-                } else if (wasActive && answer) {
-                    // Cerrar: animar a 0
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
-                    void answer.offsetHeight;
-                    requestAnimationFrame(() => {
-                        answer.style.maxHeight = '0px';
-                    });
-                }
-            }, { passive: true });
         });
 
         // --- CANVAS LOGIC ---
