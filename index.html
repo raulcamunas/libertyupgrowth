@@ -507,13 +507,16 @@
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
             padding: 20px;
             box-sizing: border-box;
+            min-height: 0;
         }
         
         .client-card:hover {
@@ -522,19 +525,17 @@
             transform: translateY(-5px);
         }
         
-
         /* IMAGEN DE PARTNER */
         .client-logo-img {
-            width: calc(100% - 40px);
-            height: calc(100% - 40px);
+            max-width: 100%;
+            max-height: 100%;
+            width: auto !important;
+            height: auto !important;
             object-fit: contain;
             object-position: center;
             display: block;
-            margin: 20px auto;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            flex-shrink: 0;
+            margin: 0;
         }
         
         /* RADIAL MINI POPUP (IN-SECTION) */
@@ -1964,7 +1965,7 @@
                 const card = document.createElement('div');
                 card.className = 'client-card';
                 card.onclick = () => showPopup(client, card);
-                card.innerHTML = `<img src="${client.image}" alt="${client.name} - Partner LibertySeller" class="client-logo-img" loading="lazy">`;
+                card.innerHTML = `<img src="${client.image}" alt="${client.name} - Partner LibertySeller" class="client-logo-img" loading="lazy" style="width: auto; height: auto;">`;
                 testimonialsGrid.appendChild(card);
             });
         }
