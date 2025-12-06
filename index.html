@@ -824,9 +824,9 @@
             pointer-events: none; 
             will-change: auto;
         }
-        .faq-section { padding: 100px 20px 60px 20px; position: relative; z-index: 1; background: transparent; }
+        .faq-section { padding: 100px 40px 60px 40px; position: relative; z-index: 1; background: transparent; }
         
-        .faq-container { max-width: 1200px; margin: 0 auto; width: 100%; }
+        .faq-container { max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 20px; }
         .faq-header-text { text-align: center; margin-bottom: 60px; }
         .faq-title { font-size: 36px; font-weight: 700; margin-bottom: 15px; background: linear-gradient(180deg, #fff 0%, #ccc 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .faq-subtitle { color: #888; font-size: 16px; }
@@ -1432,30 +1432,32 @@
             .cta-title { font-size: 32px; }
             .cta-btn-big { width: 100%; justify-content: center; }
             
-            /* FAQ Mobile - Diseño redondo con blur y animación smooth */
+            /* FAQ Mobile - Diseño limpio con líneas divisorias y blur */
             .faq-list { 
                 grid-template-columns: 1fr; 
-                gap: 18px !important; 
+                gap: 0 !important; 
             }
             .faq-item { 
-                border: 1px solid var(--border-color) !important;
-                border-radius: 16px !important;
-                background: rgba(255,255,255,0.02) !important;
+                border: none !important;
+                border-radius: 0 !important;
+                background: transparent !important;
                 padding: 0 !important;
-                overflow: hidden;
+                overflow: visible;
                 margin-bottom: 0 !important;
                 margin-top: 0 !important;
-                transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                transition: none;
                 display: block !important;
             }
+            .faq-item:last-child {
+                border-bottom: none !important;
+            }
             .faq-item:hover { 
-                background: rgba(255,255,255,0.04) !important;
-                border-color: rgba(255, 102, 0, 0.3) !important;
-                transform: translateY(-2px);
+                background: transparent !important;
             }
             .faq-item.active { 
-                background: rgba(255,255,255,0.05) !important;
-                border-color: var(--brand-color) !important;
+                background: transparent !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             }
             .faq-answer {
                 max-height: 0;
@@ -1464,11 +1466,11 @@
                 opacity: 0;
             }
             .faq-item.active .faq-answer {
-                max-height: 1000px;
+                max-height: 5000px;
                 opacity: 1;
             }
             .faq-question { 
-                padding: 20px 18px !important;
+                padding: 22px 0 !important;
                 font-size: 16px;
                 gap: 15px;
                 position: relative;
@@ -1476,12 +1478,23 @@
                 display: flex !important;
             }
             .faq-question::before {
-                display: none;
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                background: transparent;
+                transition: background 0.3s ease;
+            }
+            .faq-item.active .faq-question::before {
+                background: var(--brand-color);
             }
             .faq-question span {
                 flex: 1 1 auto;
                 min-width: 0;
                 padding-right: 15px;
+                padding-left: 15px;
                 word-wrap: break-word;
                 overflow-wrap: break-word;
                 color: #eee;
@@ -1491,36 +1504,37 @@
                 color: #fff;
             }
             .faq-toggle-icon { 
-                width: 24px !important;
-                height: 24px !important;
-                min-width: 24px !important;
-                max-width: 24px !important;
-                flex: 0 0 24px !important;
+                width: 20px !important;
+                height: 20px !important;
+                min-width: 20px !important;
+                max-width: 20px !important;
+                flex: 0 0 20px !important;
                 flex-shrink: 0 !important;
                 position: relative !important;
-                opacity: 0.7;
-                transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                opacity: 0.6;
+                transition: opacity 0.3s ease;
                 display: flex !important;
                 align-items: center;
                 justify-content: center;
+                margin-left: auto;
             }
             .faq-toggle-icon::before, .faq-toggle-icon::after {
                 content: "";
                 position: absolute;
                 background-color: var(--brand-color);
-                border-radius: 2px;
+                border-radius: 1px;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: opacity 0.3s ease;
             }
             .faq-toggle-icon::before {
-                width: 14px;
+                width: 12px;
                 height: 2px;
             }
             .faq-toggle-icon::after {
                 width: 2px;
-                height: 14px;
+                height: 12px;
             }
             .faq-item.active .faq-toggle-icon {
                 opacity: 1;
@@ -1529,17 +1543,20 @@
                 opacity: 0;
             }
             .faq-answer { 
-                padding: 0 18px !important;
+                padding: 0 0 0 0 !important;
             }
             .faq-item.active .faq-answer {
-                padding: 16px 18px 20px 18px !important;
+                padding: 18px 0 22px 0 !important;
             }
             .faq-answer p { 
-                padding: 0;
+                padding: 0 15px;
                 margin: 0 0 8px 0;
                 font-size: 14px;
                 color: #aaa;
                 line-height: 1.7;
+            }
+            .faq-answer p:first-child {
+                margin-top: 0;
             }
             .faq-answer p:last-child {
                 margin-bottom: 0;
@@ -2348,7 +2365,7 @@
         
         faqItems.forEach(item => {
             const question = item.querySelector('.faq-question');
-            const answer = item.querySelector('.faq-answer');
+                const answer = item.querySelector('.faq-answer');
             
             question.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -2357,46 +2374,59 @@
                 faqItems.forEach(other => { 
                     if(other !== item && other.classList.contains('active')) { 
                         other.classList.remove('active');
-                        const otherAnswer = other.querySelector('.faq-answer');
-                        if (otherAnswer) {
-                            otherAnswer.style.maxHeight = '0px';
-                            setTimeout(() => {
-                                if (!other.classList.contains('active')) {
-                                    otherAnswer.style.display = 'none';
-                                }
-                            }, 600);
+                        // Solo aplicar estilos inline en móvil
+                        if (isMobile) {
+                            const otherAnswer = other.querySelector('.faq-answer');
+                            if (otherAnswer) {
+                                otherAnswer.style.maxHeight = '0px';
+                                setTimeout(() => {
+                                    if (!other.classList.contains('active')) {
+                                        otherAnswer.style.display = 'none';
+                                    }
+                                }, 600);
+                            }
                         }
                     } 
                 });
                 
                 // Toggle del item actual
-                const wasActive = item.classList.contains('active');
                 item.classList.toggle('active');
                 
-                // Calcular altura real para animación suave con max-height
-                if (answer) {
+                // Solo aplicar estilos inline en móvil - en desktop el CSS maneja todo con grid-template-rows
+                if (isMobile && answer) {
                     if (item.classList.contains('active')) {
                         // Aplicar display y padding INMEDIATAMENTE
                         answer.style.display = 'block';
-                        answer.style.paddingTop = '16px';
-                        answer.style.paddingBottom = '20px';
-                        answer.style.paddingLeft = '18px';
-                        answer.style.paddingRight = '18px';
-                        answer.style.maxHeight = 'none';
+                        answer.style.paddingTop = '18px';
+                        answer.style.paddingBottom = '22px';
+                        answer.style.paddingLeft = '0';
+                        answer.style.paddingRight = '0';
+                        answer.style.opacity = '1';
+                        answer.style.maxHeight = '5000px'; // Valor alto para que no se corte mientras calculamos
                         
-                        // Forzar reflow inmediato
+                        // Forzar múltiples reflows para asegurar renderizado completo
+                        void answer.offsetHeight;
+                        void answer.scrollHeight;
                         void answer.offsetHeight;
                         
-                        // Calcular altura después de que el padding esté aplicado
-                        const height = answer.scrollHeight;
-                        answer.style.maxHeight = height + 'px';
+                        // Calcular altura usando múltiples métodos y tomar el mayor
+                        const scrollHeight = answer.scrollHeight;
+                        const clientHeight = answer.clientHeight;
+                        const boundingHeight = answer.getBoundingClientRect().height;
+                        
+                        // Usar el mayor valor y añadir margen de seguridad
+                        const maxHeight = Math.max(scrollHeight, clientHeight, boundingHeight) + 20;
+                        answer.style.maxHeight = maxHeight + 'px';
                     } else {
                         answer.style.maxHeight = '0px';
+                        answer.style.opacity = '0';
                         setTimeout(() => {
                             if (!item.classList.contains('active')) {
                                 answer.style.display = 'none';
                                 answer.style.paddingTop = '0';
                                 answer.style.paddingBottom = '0';
+                                answer.style.paddingLeft = '0';
+                                answer.style.paddingRight = '0';
                             }
                         }, 600);
                     }
