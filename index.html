@@ -819,9 +819,7 @@
             border-radius: 16px; 
             background: rgba(255,255,255,0.02); 
             overflow: hidden; 
-            transition: background-color 0.15s ease, border-color 0.15s ease, grid-template-rows 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            transform: translateZ(0);
-            will-change: grid-template-rows;
+            transition: background-color 0.1s ease, border-color 0.1s ease; 
             display: grid;
             grid-template-rows: auto 0fr;
             align-self: start;
@@ -834,7 +832,6 @@
             background: rgba(255,255,255,0.05); 
             border-color: var(--brand-color); 
             grid-template-rows: auto 1fr;
-            will-change: auto;
         }
         .faq-question { 
             padding: 25px; 
@@ -851,21 +848,20 @@
         .faq-item.active .faq-question {
             color: #fff;
         }
-        .faq-toggle-icon { width: 24px; height: 24px; position: relative; transition: transform 0.3s ease; }
+        .faq-toggle-icon { width: 24px; height: 24px; position: relative; transition: transform 0.15s linear; }
         .faq-toggle-icon::before, .faq-toggle-icon::after { content: ""; position: absolute; background-color: var(--brand-color); top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 2px; }
         .faq-toggle-icon::before { width: 100%; height: 2px; } .faq-toggle-icon::after { width: 2px; height: 100%; transition: transform 0.3s ease; }
         .faq-item.active .faq-toggle-icon { transform: rotate(180deg); } .faq-item.active .faq-toggle-icon::after { opacity: 0; }
         .faq-answer { 
             overflow: hidden; 
-            transition: opacity 0.15s ease; 
             opacity: 0; 
             padding: 0 25px;
             min-height: 0;
+            transition: opacity 0.2s ease;
         }
         .faq-answer p { padding-bottom: 25px; margin: 0; }
         .faq-item.active .faq-answer { 
             opacity: 1; 
-            transition-delay: 0.05s;
         }
         
         .cta-final-section { padding: 60px 20px 120px 20px; text-align: center; position: relative; z-index: 1; background: transparent; }
@@ -965,6 +961,8 @@
         
         .section-cta-mobile-only {
             display: block;
+            margin: 40px 20px;
+            text-align: center;
         }
         
         @media (min-width: 768px) {
@@ -1245,12 +1243,23 @@
                 overflow: hidden; /* Mantenemos hidden por si acaso */
             } 
 
-            .process-wrapper { flex-direction: column; align-items: flex-start; padding-left: 30px; gap: 40px; min-height: auto; }
-            .process-line-bg { width: 2px; height: 100%; top: 0; left: 0; transform: none; }
-            .process-line-fill { width: 2px; height: 0%; top: 0; left: 0; transform: none; transition: height 0.2s ease-out; }
-            .process-step { width: 100%; text-align: left; align-items: flex-start; flex-direction: row; gap: 20px; transform: none; opacity: 0.3; filter: none; transition: opacity 0.3s; }
+            .process-wrapper { flex-direction: column; align-items: flex-start; padding-left: 30px; gap: 40px; min-height: auto; position: relative; }
+            .process-line-container { 
+                position: fixed; 
+                left: 15px; 
+                top: 0; 
+                width: 2px; 
+                height: 100vh; 
+                z-index: 0; 
+                pointer-events: none;
+                transform: translateY(0);
+                display: none; /* Se mostrará con JS cuando la sección esté visible */
+            }
+            .process-line-bg { width: 2px; height: 100%; top: 0; left: 0; transform: none; position: absolute; }
+            .process-line-fill { width: 2px; height: 0%; top: 50%; left: 0; transform: translateY(-50%); transform-origin: center; transition: height 0.2s ease-out; position: absolute; }
+            .process-step { width: 100%; text-align: left; align-items: flex-start; flex-direction: row; gap: 20px; transform: none; opacity: 0.3; filter: none; transition: opacity 0.3s; position: relative; z-index: 1; }
             .process-step.active { opacity: 1; transform: none; }
-            .step-node { margin-bottom: 0; position: absolute; left: -40px; top: 20px; }
+            .step-node { margin-bottom: 0; position: absolute; left: -40px; top: 20px; z-index: 2; }
             .step-content { width: 100%; }
 
             /* MOBILE ACTIVE FOCUS (NUEVO) */
@@ -1944,6 +1953,32 @@
 
         scrollTriggers.forEach(trigger => scrollObserver.observe(trigger));
 
+        // --- MOBILE RESULT CARDS ANIMATION (APARECEN ANTES) ---
+        if (window.innerWidth <= 991) {
+            const mobileResultCards = document.querySelectorAll('.mobile-result-card');
+            const mobileCardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.style.filter = 'blur(0)';
+                        mobileCardObserver.unobserve(entry.target);
+                    }
+                });
+            }, { 
+                threshold: 0.1,
+                rootMargin: '300px 0px -100px 0px' // Se activan 300px antes de entrar en viewport
+            });
+            
+            mobileResultCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.filter = 'blur(15px)';
+                card.style.transition = 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                mobileCardObserver.observe(card);
+            });
+        }
+
 
         // --- LOGICA TESTIMONIOS (RUTAS LOCALES RESTAURADAS) ---
         const testimonialsData = [
@@ -2150,23 +2185,21 @@
             }
         });
 
-        // --- FAQ LOGIC (ULTRA OPTIMIZADO) ---
+        // --- FAQ LOGIC (MÁXIMA VELOCIDAD) ---
         const faqItems = document.querySelectorAll('.faq-item');
         faqItems.forEach(item => {
             const question = item.querySelector('.faq-question');
-            question.addEventListener('click', () => {
-                // Usar requestAnimationFrame para batch de cambios
-                requestAnimationFrame(() => {
-                    // Cerrar otros items activos
-                    faqItems.forEach(other => { 
-                        if(other !== item && other.classList.contains('active')) { 
-                            other.classList.remove('active');
-                        } 
-                    });
-                    // Toggle del item actual
-                    item.classList.toggle('active');
+            question.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Cerrar otros items activos (sin animación para velocidad)
+                faqItems.forEach(other => { 
+                    if(other !== item && other.classList.contains('active')) { 
+                        other.classList.remove('active');
+                    } 
                 });
-            }, { passive: true });
+                // Toggle del item actual
+                item.classList.toggle('active');
+            }, { passive: false });
         });
 
         // --- CANVAS LOGIC ---
@@ -2346,37 +2379,66 @@
                     });
                 } 
                 else {
-                    // Fallback for Mobile (Vertical Scroll normal)
+                    // Mobile: Línea fija en el centro de la pantalla
                     const rect = processSection.getBoundingClientRect();
                     const windowHeight = window.innerHeight;
-                    const triggerPoint = windowHeight * 0.5; // Start at middle of screen
-
-                    // Only animate if section is somewhat in view starting from middle
-                    if (rect.top < triggerPoint) {
-                        // Progress calculation relative to when top hits middle screen
-                        // We assume height of section roughly matches duration we want
-                        const totalDistance = rect.height; 
-                        const scrolledDistance = triggerPoint - rect.top;
+                    const sectionTop = rect.top;
+                    const sectionBottom = rect.bottom;
+                    const lineContainer = document.querySelector('.process-line-container');
+                    
+                    // Solo animar si la sección está visible
+                    if (sectionTop < windowHeight && sectionBottom > 0 && lineContainer) {
+                        // Mantener la línea siempre en el centro de la pantalla
+                        lineContainer.style.display = 'block';
                         
-                        let progress = scrolledDistance / totalDistance;
+                        // Calcular progreso basado en cuánto de la sección ha pasado por el centro de la pantalla
+                        const centerY = windowHeight * 0.5;
+                        const sectionStart = sectionTop;
+                        const sectionEnd = sectionBottom;
+                        const totalHeight = sectionEnd - sectionStart;
+                        
+                        // Progreso: 0 cuando el inicio de la sección está en el centro, 1 cuando el final está en el centro
+                        let progress = 0;
+                        if (centerY >= sectionStart && centerY <= sectionEnd) {
+                            progress = (centerY - sectionStart) / totalHeight;
+                        } else if (centerY < sectionStart) {
+                            progress = 0;
+                        } else {
+                            progress = 1;
+                        }
+                        
                         progress = Math.max(0, Math.min(1, progress));
                         
-                        processFill.style.height = (progress * 100) + "%";
+                        // La línea crece desde el centro hacia arriba y abajo
+                        const fillHeight = progress * 100;
+                        processFill.style.height = fillHeight + "%";
                         processFill.style.width = "2px";
+                        processFill.style.top = "50%";
+                        processFill.style.transform = "translateY(-50%)";
                         
-                        // New logic: Check if progress exceeds step's visual threshold with a buffer
+                        // Activar pasos según el progreso
                         processSteps.forEach((step, index) => {
-                            const stepThreshold = (index * 0.20) + 0.05; // 5% buffer past the start of the section
+                            const stepThreshold = index / (processSteps.length - 1);
                             
-                            if (progress > stepThreshold) {
+                            if (progress >= stepThreshold - 0.1) {
                                 step.classList.add('current-step');
                                 step.classList.add('active-node');
                                 step.classList.add('active');
                             } else {
                                 step.classList.remove('current-step');
                                 step.classList.remove('active-node');
-                                // Keep dim visibility if past index 0, or reset
                                 if(index > 0) step.classList.remove('active');
+                            }
+                        });
+                    } else {
+                        // Si la sección no está visible, ocultar la línea
+                        if (lineContainer) lineContainer.style.display = 'none';
+                        processFill.style.height = "0%";
+                        processSteps.forEach((step, index) => {
+                            if(index > 0) {
+                                step.classList.remove('current-step');
+                                step.classList.remove('active-node');
+                                step.classList.remove('active');
                             }
                         });
                     }
