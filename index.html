@@ -49,6 +49,22 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <style>
+        @font-face {
+            font-family: 'Font Awesome 6 Free';
+            font-style: normal;
+            font-weight: 900;
+            font-display: swap;
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Font Awesome 6 Brands';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-brands-400.woff2') format('woff2');
+        }
+    </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"></noscript>
     
@@ -57,7 +73,7 @@
     <link rel="apple-touch-icon" href="icon.png">
     
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="logo.png" as="image" type="image/png">
+    <link rel="preload" href="logo.png" as="image" type="image/png" fetchpriority="high">
 
     <style>
         /* RESET */
@@ -482,6 +498,7 @@
             gap: 20px; 
             position: relative;
             z-index: 1;
+            content-visibility: auto;
         }
         
         /* Client Card */
@@ -786,7 +803,13 @@
         .faq-header-text { text-align: center; margin-bottom: 60px; }
         .faq-title { font-size: 36px; font-weight: 700; margin-bottom: 15px; background: linear-gradient(180deg, #fff 0%, #ccc 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .faq-subtitle { color: #888; font-size: 16px; }
-        .faq-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: start; }
+        .faq-list { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            align-items: start;
+            content-visibility: auto;
+        }
         .faq-item { 
             border: 1px solid var(--border-color); 
             border-radius: 16px; 
@@ -1474,7 +1497,7 @@
         <div class="hero-container">
             <div class="hero-text-col">
                 <div class="logo-wrapper" id="tilt-logo">
-                    <img src="logo.png" alt="LibertySeller - Agencia Amazon FBA" class="hero-main-logo" loading="eager" width="120" height="30" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<span class=\'hero-main-logo-text\'>LIBERTYSELLER</span>')">
+                    <img src="logo.png" alt="LibertySeller - Agencia Amazon FBA" class="hero-main-logo" loading="eager" fetchpriority="high" width="120" height="30" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<span class=\'hero-main-logo-text\'>LIBERTYSELLER</span>')">
                 </div>
                 <h1 class="hero-title"> Hacemos que vendas más, sin complicaciones</h1>
                 <p class="hero-subtitle">Delega la operativa en nosotros y máximiza tu beneficio. Soluciones probadas tanto para nuevos vendedores como para marcas consolidadas</p>
@@ -1583,7 +1606,7 @@
                 <div class="testimonial-popup" id="testimonial-popup">
                     <button class="popup-close" onclick="closePopup()"><i class="fa-solid fa-times"></i></button>
                     <div class="popup-image-container" id="popup-image-container">
-                        <img id="popup-logo-img" src="" alt="Partner Logo" class="popup-logo-img" loading="lazy">
+                        <img id="popup-logo-img" src="" alt="Partner Logo" class="popup-logo-img" loading="lazy" width="200" height="90">
                     </div>
                     <div id="popup-stat" class="popup-stat">+140%</div>
                     <p id="popup-desc" class="popup-desc">Descripción del resultado logrado...</p>
@@ -1617,19 +1640,19 @@
                 </div>
                 <div class="scroll-center">
                     <div class="scroll-visual-item active" data-step="1">
-                        <img src="testimonio1.png" alt="Resultado: Incremento a 20.000€ de facturación el 3er mes" class="scroll-result-img" loading="lazy">
+                        <img src="testimonio1.png" alt="Resultado: Incremento a 20.000€ de facturación el 3er mes" class="scroll-result-img" loading="lazy" width="800" height="600">
                     </div>
                     <div class="scroll-visual-item" data-step="2">
-                        <img src="testimonio2.png" alt="Resultado: ACOS reducido al 18%" class="scroll-result-img" loading="lazy">
+                        <img src="testimonio2.png" alt="Resultado: ACOS reducido al 18%" class="scroll-result-img" loading="lazy" width="800" height="600">
                     </div>
                     <div class="scroll-visual-item" data-step="3">
-                        <img src="testimonio3.png" alt="Resultado: Incremento 13% Buy Box" class="scroll-result-img" loading="lazy">
+                        <img src="testimonio3.png" alt="Resultado: Incremento 13% Buy Box" class="scroll-result-img" loading="lazy" width="800" height="600">
                     </div>
                     <div class="scroll-visual-item" data-step="4">
-                        <img src="testimonio4.png" alt="Resultado: Margenes del 20-25% - Marca Privada" class="scroll-result-img" loading="lazy">
+                        <img src="testimonio4.png" alt="Resultado: Margenes del 20-25% - Marca Privada" class="scroll-result-img" loading="lazy" width="800" height="600">
                     </div>
                     <div class="scroll-visual-item" data-step="5">
-                        <img src="testimonio5.png" alt="Resultado: +7 paises - Internacionalización" class="scroll-result-img" loading="lazy">
+                        <img src="testimonio5.png" alt="Resultado: +7 paises - Internacionalización" class="scroll-result-img" loading="lazy" width="800" height="600">
                     </div>
                 </div>
                 <div class="sticky-col">
@@ -2126,10 +2149,24 @@
         // --- FAQ LOGIC ---
         document.querySelectorAll('.faq-item').forEach(item => {
             item.querySelector('.faq-question').addEventListener('click', () => {
-                document.querySelectorAll('.faq-item').forEach(other => { if(other !== item && other.classList.contains('active')) { other.classList.remove('active'); other.querySelector('.faq-answer').style.maxHeight = null; } });
+                document.querySelectorAll('.faq-item').forEach(other => { 
+                    if(other !== item && other.classList.contains('active')) { 
+                        other.classList.remove('active'); 
+                        requestAnimationFrame(() => {
+                            other.querySelector('.faq-answer').style.maxHeight = null;
+                        });
+                    } 
+                });
                 item.classList.toggle('active');
                 const answer = item.querySelector('.faq-answer');
-                if (item.classList.contains('active')) answer.style.maxHeight = answer.scrollHeight + "px"; else answer.style.maxHeight = null;
+                if (item.classList.contains('active')) {
+                    // Usar requestAnimationFrame para evitar reflows forzados
+                    requestAnimationFrame(() => {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                    });
+                } else {
+                    answer.style.maxHeight = null;
+                }
             });
         });
 
@@ -2233,7 +2270,11 @@
             setTimeout(() => {
                 currentTheme = theme;
                 if (theme === 'orange') { featuresSection.classList.add('theme-orange'); featuresSection.classList.remove('theme-blue'); } else { featuresSection.classList.add('theme-blue'); featuresSection.classList.remove('theme-orange'); }
-                renderCardsHTML(theme); void featuresSection.offsetWidth; 
+                renderCardsHTML(theme);
+                // Usar requestAnimationFrame en lugar de reflow forzado
+                requestAnimationFrame(() => {
+                    featuresSection.classList.add('switching');
+                }); 
                 headerTextContainer.classList.remove('switching'); featuresGrid.classList.remove('switching');
                 isAnimating = false;
             }, 300); 
