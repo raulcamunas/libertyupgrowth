@@ -2,7 +2,7 @@ name: Deploy a Hostinger 🚀
 on:
   push:
     branches:
-      - main  # Asegúrate de que tu rama se llama 'main'
+      - main
 
 jobs:
   web-deploy:
@@ -11,17 +11,20 @@ jobs:
     steps:
     - name: 🚚 Obtener código más reciente
       uses: actions/checkout@v4
-    
+      with:
+        fetch-depth: 1  # ⚡️ Optimización: Baja solo la última versión para evitar errores con el historial .git
+
     - name: 📂 Sincronizar archivos (FTP)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: ./
-        # Al poner ./ le decimos que lo suelte todo en la raíz del usuario FTP
-        delete: true 
+        server-dir: ./ 
+        # Hemos quitado 'delete: true' porque daba error.
+        # Esta acción sobreescribirá los archivos que hayan cambiado.
         exclude: |
           **/.git*
-          **/.github*
+          **/.git/**
+          **/.github/**
           README.md
