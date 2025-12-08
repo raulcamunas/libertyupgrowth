@@ -15,7 +15,7 @@
     <meta name="theme-color" content="#FF6600">
     <meta name="mobile-web-app-capable" content="yes">
     
-    <title>Liberty Seller | Agencia 360º de Amazon FBA</title>
+    <title>Agencia Amazon FBA - Escala tus Ventas | Liberty Seller</title>
     <meta name="description" content="Agencia especializada en Amazon FBA. Reducimos tu ACOS, optimizamos PPC's y aumentamos tu Buy Box. Gestión 360° de tu cuenta Amazon con resultados medibles. +20.000€/mes de facturación para nuestros clientes.">
 
     <!-- SEO Meta Tags -->
@@ -27,21 +27,17 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://libertyseller.com">
-    <meta property="og:title" content="Liberty Seller | Agencia 360º de Amazon FBA">
-    <meta property="og:description" content="Agencia especializada en Amazon FBA. Reducimos tu ACOS, optimizamos PPC's y aumentamos tu Buy Box. Gestión 360° de tu cuenta Amazon con resultados medibles.">
-    <meta property="og:image" content="https://libertyseller.com/logo.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Liberty Seller - Agencia Amazon FBA">
+    <meta property="og:url" content="https://libertyseller.es">
+    <meta property="og:title" content="Agencia Amazon FBA - Escala tus Ventas | LibertySeller">
+    <meta property="og:description" content="Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.">
+    <meta property="og:image" content="https://libertyseller.es/logo.png">
     
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://libertyseller.com">
-    <meta name="twitter:title" content="Liberty Seller | Agencia 360º de Amazon FBA">
-    <meta name="twitter:description" content="Agencia especializada en Amazon FBA. Reducimos tu ACOS, optimizamos PPC's y aumentamos tu Buy Box. Gestión 360° de tu cuenta Amazon con resultados medibles.">
-    <meta name="twitter:image" content="https://libertyseller.com/logo.png">
-    <meta name="twitter:image:alt" content="Liberty Seller - Agencia Amazon FBA">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://libertyseller.es">
+    <meta property="twitter:title" content="Agencia Amazon FBA - Escala tus Ventas | LibertySeller">
+    <meta property="twitter:description" content="Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.">
+    <meta property="twitter:image" content="https://libertyseller.es/logo.png">
     
     <!-- Performance & Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,7 +121,7 @@
             background: radial-gradient(circle at 30% 40%, rgba(255, 102, 0, 0.12), transparent 40%), radial-gradient(circle at 70% 60%, rgba(0, 115, 255, 0.08), transparent 40%);
             filter: blur(80px); animation: mistFlow 25s infinite alternate ease-in-out; z-index: 0;
         }
-        #hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; pointer-events: none; }
+        #hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.5; }
         
         .hero-container { position: relative; z-index: 10; width: 100%; max-width: 1200px; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin: 0 auto; }
         .hero-text-col { text-align: left; display: flex; flex-direction: column; align-items: flex-start; }
@@ -151,7 +147,7 @@
 
         /* HERO TITLE - BLANCO PURO + BLUR IN */
         .hero-title { 
-            font-size: 64px; 
+            font-size: 50px; 
             line-height: 1.1; 
             font-weight: 800; 
             margin-bottom: 25px; 
@@ -181,7 +177,7 @@
             100% { opacity: 1; filter: blur(0); transform: translateY(0); }
         }
 
-        .hero-subtitle { font-size: 20px; color: #a0a0b0; margin-bottom: 30px; line-height: 1.6; max-width: 550px; opacity: 0; animation: textBlurIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards; }
+        .hero-subtitle { font-size: 16px; color: #a0a0b0; margin-bottom: 30px; line-height: 1.6; max-width: 550px; opacity: 0; animation: textBlurIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards; }
         
         /* HERO STATS TICKER */
         .hero-stats-wrapper {
@@ -810,23 +806,10 @@
 
         /* --- FAQ & CTA --- */
         .faq-cta-wrapper { background-color: var(--bg-color); position: relative; z-index: 1; border-top: 1px solid var(--border-color); overflow: hidden; }
-        .faq-cta-wrapper::before { 
-            content: ""; 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            width: 800px; 
-            height: 800px; 
-            /* Gradiente estático sin blur para mejor rendimiento */
-            background: radial-gradient(circle, rgba(255, 102, 0, 0.15) 0%, rgba(255, 102, 0, 0.08) 35%, rgba(255, 102, 0, 0.03) 60%, transparent 75%); 
-            z-index: 0; 
-            pointer-events: none; 
-            will-change: auto;
-        }
-        .faq-section { padding: 100px 40px 60px 40px; position: relative; z-index: 1; background: transparent; }
+        .faq-cta-wrapper::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(255, 102, 0, 0.08) 0%, transparent 70%); filter: blur(100px); z-index: 0; pointer-events: none; }
+        .faq-section { padding: 100px 20px 60px 20px; position: relative; z-index: 1; background: transparent; }
         
-        .faq-container { max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 20px; }
+        .faq-container { max-width: 1200px; margin: 0 auto; width: 100%; }
         .faq-header-text { text-align: center; margin-bottom: 60px; }
         .faq-title { font-size: 36px; font-weight: 700; margin-bottom: 15px; background: linear-gradient(180deg, #fff 0%, #ccc 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .faq-subtitle { color: #888; font-size: 16px; }
@@ -1432,50 +1415,41 @@
             .cta-title { font-size: 32px; }
             .cta-btn-big { width: 100%; justify-content: center; }
             
-            /* FAQ Mobile - Diseño limpio con líneas divisorias y blur */
+            /* FAQ Mobile - Diseño minimalista con línea naranja y blur */
             .faq-list { 
                 grid-template-columns: 1fr; 
-                gap: 0 !important; 
+                gap: 0; 
+                display: flex;
+                flex-direction: column;
             }
             .faq-item { 
+                margin-bottom: 0;
                 border: none !important;
                 border-radius: 0 !important;
                 background: transparent !important;
-                padding: 0 !important;
-                overflow: visible;
-                margin-bottom: 0 !important;
-                margin-top: 0 !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-                transition: none;
+                padding: 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
                 display: block !important;
+                overflow: visible;
             }
             .faq-item:last-child {
-                border-bottom: none !important;
+                border-bottom: none;
             }
             .faq-item:hover { 
+                transform: none;
                 background: transparent !important;
             }
             .faq-item.active { 
                 background: transparent !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            }
-            .faq-answer {
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), padding 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                opacity: 0;
-            }
-            .faq-item.active .faq-answer {
-                max-height: 5000px;
-                opacity: 1;
+                border-color: transparent !important;
             }
             .faq-question { 
-                padding: 22px 0 !important;
+                padding: 20px 0 20px 15px !important;
                 font-size: 16px;
                 gap: 15px;
                 position: relative;
+                padding-right: 0 !important;
                 align-items: center;
-                display: flex !important;
             }
             .faq-question::before {
                 content: "";
@@ -1485,7 +1459,7 @@
                 bottom: 0;
                 width: 3px;
                 background: transparent;
-                transition: background 0.3s ease;
+                transition: background 0.2s ease;
             }
             .faq-item.active .faq-question::before {
                 background: var(--brand-color);
@@ -1494,11 +1468,10 @@
                 flex: 1 1 auto;
                 min-width: 0;
                 padding-right: 15px;
-                padding-left: 15px;
                 word-wrap: break-word;
                 overflow-wrap: break-word;
                 color: #eee;
-                line-height: 1.5;
+                line-height: 1.4;
             }
             .faq-item.active .faq-question span {
                 color: #fff;
@@ -1510,65 +1483,36 @@
                 max-width: 20px !important;
                 flex: 0 0 20px !important;
                 flex-shrink: 0 !important;
-                position: relative !important;
                 opacity: 0.6;
-                transition: opacity 0.3s ease;
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                margin-left: auto;
-            }
-            .faq-toggle-icon::before, .faq-toggle-icon::after {
-                content: "";
-                position: absolute;
-                background-color: var(--brand-color);
-                border-radius: 1px;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                transition: opacity 0.3s ease;
-            }
-            .faq-toggle-icon::before {
-                width: 12px;
-                height: 2px;
-            }
-            .faq-toggle-icon::after {
-                width: 2px;
-                height: 12px;
             }
             .faq-item.active .faq-toggle-icon {
                 opacity: 1;
             }
-            .faq-item.active .faq-toggle-icon::after {
-                opacity: 0;
-            }
             .faq-answer { 
-                padding: 0 0 0 0 !important;
+                padding: 0 0 20px 15px !important;
+                max-height: 0;
+                overflow: hidden;
+                display: none;
             }
             .faq-item.active .faq-answer {
-                padding: 18px 0 22px 0 !important;
+                padding: 0 0 20px 15px !important;
+                max-height: none;
+                display: block;
             }
             .faq-answer p { 
-                padding: 0 15px;
-                margin: 0 0 8px 0;
+                padding: 0;
+                margin: 0;
                 font-size: 14px;
                 color: #aaa;
-                line-height: 1.7;
+                line-height: 1.6;
             }
-            .faq-answer p:first-child {
-                margin-top: 0;
-            }
-            .faq-answer p:last-child {
-                margin-bottom: 0;
-            }
-            .faq-section { padding: 80px 20px 60px 20px !important; }
-            .faq-header-text { margin-bottom: 50px !important; }
+            .faq-section { padding: 60px 20px 40px 20px; }
+            .faq-header-text { margin-bottom: 40px; }
             .faq-title { font-size: 28px; }
-            #hero-canvas { 
-                display: block !important; 
-                opacity: 0.4 !important;
-            }
-            .hero-mist { display: none !important; }
+            .faq-section { padding: 60px 20px 40px 20px; }
+            .faq-header-text { margin-bottom: 40px; }
+            .faq-title { font-size: 28px; }
+            #hero-canvas { position: fixed !important; height: 100vh; width: 100vw !important; max-width: 100vw !important; top: 0; left: 0; z-index: 0; }
             
             .pill-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
             
@@ -1686,8 +1630,8 @@
                 <div class="logo-wrapper" id="tilt-logo">
                     <img src="logo.png" alt="LibertySeller - Agencia Amazon FBA" class="hero-main-logo" loading="eager" fetchpriority="high" width="120" height="30" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<span class=\'hero-main-logo-text\'>LIBERTYSELLER</span>')">
                 </div>
-                <h1 class="hero-title"> Hacemos que vendas más, sin complicaciones</h1>
-                <p class="hero-subtitle">Delega la operativa en nosotros y máximiza tu beneficio. Soluciones probadas tanto para nuevos vendedores como para marcas consolidadas</p>
+                <h1 class="hero-title"> Escala tu facturación en Amazon y olvídate de la operativa</h1>
+                <p class="hero-subtitle">Gestionamos y optimizamos tu cuenta de vendedor para disparar tu rentabilidad. Ya sea que estés lanzando o facturando 6 cifras, llevamos tu marca al siguiente nivel</p>
                 
                 <div class="hero-stats-wrapper">
                     <div class="stats-track">
@@ -1712,7 +1656,7 @@
             </div>
             <div class="hero-form-col">
                 <div class="form-card">
-                    <h3 class="form-title">Nos ponemos en contacto contigo</h3>
+                    <h3 class="form-title">Solicita tu Auditoría o Plan de Lanzamiento</h3>
                     <form id="signup-form" class="smart-form">
                         <input type="hidden" name="selling_duration" id="hero-duration-input">
                         <input type="hidden" name="monthly_revenue" id="hero-revenue-input">
@@ -1746,7 +1690,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="submit-btn" aria-label="Enviar formulario de contacto">EMPEZAR AHORA</button>
+                        <button type="submit" class="submit-btn" aria-label="Enviar formulario de contacto">QUIERO EMPEZAR</button>
                     </form>
                 </div>
             </div>
@@ -2104,6 +2048,35 @@
         setupExpandableForm('form-amazon-seller', 'hero-expandable');
         setupExpandableForm('modal-amazon-seller', 'modal-expandable');
 
+        // --- CAMBIAR TEXTO DEL BOTÓN SEGÚN RESPUESTA AMAZON ---
+        function updateSubmitButtonText() {
+            const amazonCheckbox = document.getElementById('form-amazon-seller');
+            const submitBtn = document.querySelector('#signup-form .submit-btn');
+            
+            if (amazonCheckbox && submitBtn) {
+                if (amazonCheckbox.checked) {
+                    submitBtn.textContent = 'AUDITAR MI CUENTA';
+                } else {
+                    submitBtn.textContent = 'QUIERO EMPEZAR';
+                }
+            }
+        }
+
+        // Aplicar al cargar y escuchar cambios
+        function initSubmitButtonText() {
+            updateSubmitButtonText();
+            const amazonCheckbox = document.getElementById('form-amazon-seller');
+            if (amazonCheckbox) {
+                amazonCheckbox.addEventListener('change', updateSubmitButtonText);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSubmitButtonText);
+        } else {
+            initSubmitButtonText();
+        }
+
         window.selectPill = function(element, inputId, gridId) {
             document.getElementById(inputId).value = element.innerText;
             const grid = document.getElementById(gridId);
@@ -2370,20 +2343,17 @@
             question.addEventListener('click', (e) => {
                 e.preventDefault();
                 
+                const wasActive = item.classList.contains('active');
+                
                 // Cerrar otros items PRIMERO (antes de toggle)
                 faqItems.forEach(other => { 
                     if(other !== item && other.classList.contains('active')) { 
                         other.classList.remove('active');
-                        // Solo aplicar estilos inline en móvil
+                        // En móvil, resetear display de otros items
                         if (isMobile) {
                             const otherAnswer = other.querySelector('.faq-answer');
                             if (otherAnswer) {
-                                otherAnswer.style.maxHeight = '0px';
-                                setTimeout(() => {
-                                    if (!other.classList.contains('active')) {
-                                        otherAnswer.style.display = 'none';
-                                    }
-                                }, 600);
+                                otherAnswer.style.display = 'none';
                             }
                         }
                     } 
@@ -2392,61 +2362,23 @@
                 // Toggle del item actual
                 item.classList.toggle('active');
                 
-                // Solo aplicar estilos inline en móvil - en desktop el CSS maneja todo con grid-template-rows
+                // En móvil: cambio instantáneo SIN animaciones (máxima velocidad)
                 if (isMobile && answer) {
                     if (item.classList.contains('active')) {
-                        // Aplicar display y padding INMEDIATAMENTE
                         answer.style.display = 'block';
-                        answer.style.paddingTop = '18px';
-                        answer.style.paddingBottom = '22px';
-                        answer.style.paddingLeft = '0';
-                        answer.style.paddingRight = '0';
-                        answer.style.opacity = '1';
-                        answer.style.maxHeight = '5000px'; // Valor alto para que no se corte mientras calculamos
-                        
-                        // Forzar múltiples reflows para asegurar renderizado completo
-                        void answer.offsetHeight;
-                        void answer.scrollHeight;
-                        void answer.offsetHeight;
-                        
-                        // Calcular altura usando múltiples métodos y tomar el mayor
-                        const scrollHeight = answer.scrollHeight;
-                        const clientHeight = answer.clientHeight;
-                        const boundingHeight = answer.getBoundingClientRect().height;
-                        
-                        // Usar el mayor valor y añadir margen de seguridad
-                        const maxHeight = Math.max(scrollHeight, clientHeight, boundingHeight) + 20;
-                        answer.style.maxHeight = maxHeight + 'px';
                     } else {
-                        answer.style.maxHeight = '0px';
-                        answer.style.opacity = '0';
-                        setTimeout(() => {
-                            if (!item.classList.contains('active')) {
-                                answer.style.display = 'none';
-                                answer.style.paddingTop = '0';
-                                answer.style.paddingBottom = '0';
-                                answer.style.paddingLeft = '0';
-                                answer.style.paddingRight = '0';
-                            }
-                        }, 600);
+                        answer.style.display = 'none';
                     }
                 }
             }, { passive: false });
         });
 
-        // --- CANVAS LOGIC (PAUSA CUANDO SALES DE HERO) ---
+        // --- CANVAS LOGIC ---
         const canvas = document.getElementById('hero-canvas');
-        const isMobileDevice = window.innerWidth <= 767;
         if (canvas) {
             const ctx = canvas.getContext('2d');
             let width, height, particles = [], mouse = { x: null, y: null };
-            // Menos partículas en móvil para mejor rendimiento
-            const particleCount = isMobileDevice ? 800 : 3000;
-            const mouseConnectDistance = 120; 
-            let animationId = null;
-            let isPaused = false;
-            const heroSection = document.getElementById('hero');
-            
+            const particleCount = 3000, mouseConnectDistance = 120; 
             class Particle { 
                 constructor() { 
                     this.x = Math.random() * width; 
@@ -2457,7 +2389,6 @@
                     this.color = '#FF6600'; 
                 } 
                 update() { 
-                    if (isPaused) return;
                     this.x += this.vx; 
                     this.y += this.vy; 
                     if (this.x < 0 || this.x > width) this.vx = -this.vx; 
@@ -2467,119 +2398,15 @@
                     ctx.beginPath(); 
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
                     ctx.fillStyle = this.color; 
-                    ctx.globalAlpha = isMobileDevice ? 0.5 : 0.7; 
+                    ctx.globalAlpha = 0.5; 
                     ctx.fill(); 
                 } 
             }
-            
-            function initCanvas() { 
-                width = canvas.width = window.innerWidth; 
-                height = canvas.height = window.innerHeight; 
-                particles = []; 
-                for (let i = 0; i < particleCount; i++) { 
-                    particles.push(new Particle()); 
-                } 
-            }
-            
-            function animateCanvas() { 
-                if (isPaused) {
-                    animationId = requestAnimationFrame(animateCanvas);
-                    return;
-                }
-                
-                ctx.clearRect(0, 0, width, height); 
-                for (let i = 0; i < particles.length; i++) { 
-                    let p = particles[i]; 
-                    p.update(); 
-                    p.draw(); 
-                    // Interacción mouse solo en desktop
-                    if (!isMobileDevice && mouse.x != null) { 
-                        let dx = mouse.x - p.x; 
-                        let dy = mouse.y - p.y; 
-                        let distance = Math.sqrt(dx * dx + dy * dy); 
-                        if (distance < mouseConnectDistance) { 
-                            ctx.beginPath(); 
-                            ctx.strokeStyle = `rgba(255, 102, 0, ${1 - distance/mouseConnectDistance})`; 
-                            ctx.lineWidth = 0.5; 
-                            ctx.moveTo(mouse.x, mouse.y); 
-                            ctx.lineTo(p.x, p.y); 
-                            ctx.stroke(); 
-                            const force = (mouseConnectDistance - distance) / mouseConnectDistance; 
-                            p.x -= (dx / distance) * force * 0.5; 
-                            p.y -= (dy / distance) * force * 0.5; 
-                        } 
-                    } 
-                } 
-                animationId = requestAnimationFrame(animateCanvas); 
-            }
-            
-            // Detectar visibilidad de la hero para pausar/reanudar
-            function checkHeroVisibility() {
-                if (!heroSection) return;
-                
-                const rect = heroSection.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                
-                // Si la hero está visible (aunque sea parcialmente)
-                const isVisible = rect.bottom > 0 && rect.top < windowHeight;
-                
-                if (isVisible && isPaused) {
-                    // Reanudar animación
-                    isPaused = false;
-                } else if (!isVisible && !isPaused) {
-                    // Pausar animación
-                    isPaused = true;
-                }
-            }
-            
-            // Usar IntersectionObserver para mejor performance
-            if (heroSection && 'IntersectionObserver' in window) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            isPaused = false;
-                        } else {
-                            isPaused = true;
-                        }
-                    });
-                }, {
-                    root: null,
-                    rootMargin: '0px',
-                    threshold: 0
-                });
-                
-                observer.observe(heroSection);
-                
-                // Verificar estado inicial - si la hero está visible al cargar
-                const initialCheck = heroSection.getBoundingClientRect();
-                if (initialCheck.bottom > 0 && initialCheck.top < window.innerHeight) {
-                    isPaused = false;
-                }
-            } else {
-                // Fallback para navegadores sin IntersectionObserver
-                window.addEventListener('scroll', () => {
-                    checkHeroVisibility();
-                }, { passive: true });
-                
-                // Verificar estado inicial
-                checkHeroVisibility();
-            }
-            
+            function initCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; particles = []; for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); } }
+            function animateCanvas() { ctx.clearRect(0, 0, width, height); for (let i = 0; i < particles.length; i++) { let p = particles[i]; p.update(); p.draw(); if (mouse.x != null) { let dx = mouse.x - p.x; let dy = mouse.y - p.y; let distance = Math.sqrt(dx * dx + dy * dy); if (distance < mouseConnectDistance) { ctx.beginPath(); ctx.strokeStyle = `rgba(255, 102, 0, ${1 - distance/mouseConnectDistance})`; ctx.lineWidth = 0.5; ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(p.x, p.y); ctx.stroke(); const force = (mouseConnectDistance - distance) / mouseConnectDistance; p.x -= (dx / distance) * force * 0.5; p.y -= (dy / distance) * force * 0.5; } } } requestAnimationFrame(animateCanvas); }
             window.addEventListener('resize', initCanvas); 
-            if(window.innerWidth > 991) { 
-                window.addEventListener('mousemove', (e) => { 
-                    mouse.x = e.clientX; 
-                    mouse.y = e.clientY; 
-                }); 
-                window.addEventListener('mouseout', () => { 
-                    mouse.x = null; 
-                    mouse.y = null; 
-                }); 
-            }
-            
-            // Inicializar y empezar animación
-            initCanvas(); 
-            animateCanvas();
+            if(window.innerWidth > 991) { window.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); mouse.x = e.clientX; mouse.y = e.clientY; }); }
+            window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; }); initCanvas(); animateCanvas();
         }
 
         // --- CURTAIN LOGIC ---
@@ -2888,8 +2715,8 @@
         "@type": "ProfessionalService",
         "name": "LibertySeller",
         "description": "Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.",
-        "url": "https://libertyseller.com",
-        "logo": "https://libertyseller.com/logo.png",
+        "url": "https://libertyseller.es",
+        "logo": "https://libertyseller.es/logo.png",
         "serviceType": "Amazon FBA Management",
         "areaServed": {
             "@type": "Country",
@@ -2912,8 +2739,8 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "LibertySeller",
-        "url": "https://libertyseller.com",
-        "logo": "https://libertyseller.com/logo.png",
+        "url": "https://libertyseller.es",
+        "logo": "https://libertyseller.es/logo.png",
         "sameAs": [
             "https://twitter.com/libertyseller",
             "https://linkedin.com/company/libertyseller"
