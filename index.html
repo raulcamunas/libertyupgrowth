@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TF2CN86V');</script>
-    <!-- End Google Tag Manager -->
+    <!-- Google Analytics - Consent Mode (se carga solo con consentimiento) -->
+    <script>
+        // Inicializar dataLayer y Consent Mode
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        
+        // Configurar Consent Mode por defecto (denegado hasta consentimiento)
+        gtag('consent', 'default', {
+            'analytics_storage': 'denied',
+            'ad_storage': 'denied',
+            'wait_for_update': 500
+        });
+    </script>
     
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -1649,6 +1655,122 @@
             .testimonial-popup { width: 90%; }
         }
 
+        /* COOKIE BANNER */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            padding: 20px;
+            background: rgba(15, 15, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.5);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: none;
+        }
+
+        .cookie-banner.show {
+            transform: translateY(0);
+        }
+
+        .cookie-banner-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .cookie-banner-text {
+            flex: 1;
+        }
+
+        .cookie-banner-text p {
+            margin: 0;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .cookie-banner-text a {
+            color: var(--brand-color);
+            text-decoration: underline;
+        }
+
+        .cookie-banner-actions {
+            display: flex;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .cookie-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cookie-btn-accept {
+            background: var(--brand-color);
+            color: white;
+        }
+
+        .cookie-btn-accept:hover {
+            background: #ff7700;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
+        }
+
+        .cookie-btn-reject {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cookie-btn-reject:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 767px) {
+            .cookie-banner {
+                padding: 12px 15px;
+            }
+
+            .cookie-banner-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .cookie-banner-text p {
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .cookie-banner-actions {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .cookie-btn {
+                width: 100%;
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+        }
+
         /* WIDGET FLOTANTE WHATSAPP */
         .whatsapp-widget {
             position: fixed;
@@ -1748,9 +1870,7 @@
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TF2CN86V"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <!-- Google Analytics se carga solo con consentimiento de cookies -->
 
     <section class="hero-section" id="hero" itemscope itemtype="https://schema.org/WebPageElement">
         <canvas id="hero-canvas"></canvas>
@@ -1863,7 +1983,7 @@
                     <div class="header-text dynamic-content" id="header-text-container">
                         <div class="features-label scroll-trigger" id="feature-tagline">Si ya eres vendedor</div>
                         <h2 class="features-title scroll-trigger" id="feature-title">Tu cuenta de Amazon tiene más potencial, vamos a desbloquearlo</h2>
-                        <p class="features-desc scroll-trigger" id="feature-desc">Tienes buen producto, pero el algoritmo es despiadado. Dejamos de lado las intuiciones y aplicamos ingenieria de datos para arreglar lo que falla, reducir tu ACOS y recuperar el control de tu facturación.</p>
+                        <p class="features-desc scroll-trigger" id="feature-desc">Tienes buen producto, pero el algoritmo es despiadado. Dejamos de lado las intuiciones y aplicamos ingeniería de datos para arreglar lo que falla, reducir tu ACOS y recuperar el control de tu facturación.</p>
                         <button class="btn-demo-small scroll-trigger" onclick="scrollToForm(); return false;">TE CONTACTAMOS</button>
                     </div>
 
@@ -1930,7 +2050,7 @@
                         <img src="testimonio3.png" alt="Resultado: Incremento 13% Buy Box" class="scroll-result-img" loading="lazy" width="800" height="600">
                     </div>
                     <div class="scroll-visual-item" data-step="4">
-                        <img src="testimonio4.png" alt="Resultado: Margenes del 20-25% - Marca Privada" class="scroll-result-img" loading="lazy" width="800" height="600">
+                        <img src="testimonio4.png" alt="Resultado: Márgenes del 20-25% - Marca Privada" class="scroll-result-img" loading="lazy" width="800" height="600">
                     </div>
                     <div class="scroll-visual-item" data-step="5">
                         <img src="testimonio5.png" alt="Resultado: +7 paises - Internacionalización" class="scroll-result-img" loading="lazy" width="800" height="600">
@@ -1946,7 +2066,7 @@
                     </div>
                         <div class="right-text-block" id="text-2">
                             <h3 class="right-title">Sin miedo a las PPC's</h3>
-                            <p class="right-desc">Nuestro cliente nos contactó porque tenia autenticos destrozos en sus campañas publicitarias. Nosotros tomamos el control de todo y bajamos el acos a un 16% (y bajanado), consiguiendo para él unas campañas altamente rentable por los margenes de sus productos</p>
+                            <p class="right-desc">Nuestro cliente nos contactó porque tenia autenticos destrozos en sus campañas publicitarias. Nosotros tomamos el control de todo y bajamos el acos a un 16% (y bajando), consiguiendo para él unas campañas altamente rentable por los margenes de sus productos</p>
                             <span class="right-stat-label">EFICIENCIA</span>
                             <span class="right-stat-big">ACOS 16%</span>
                         </div>
@@ -1960,11 +2080,11 @@
                             <h3 class="right-title">Lanzamientos Marca Privada</h3>
                             <p class="right-desc">Varios clientes nos contactan para que lancemos sus tiendas con productos rentables para su venta en amazon. Analizamos productos perfil bajo y armamos una tienda llena de productos con margenes altos y con control absoluto de la situación.</p>
                             <span class="right-stat-label">Marca Privada</span>
-                            <span class="right-stat-big">Margenes del 20-25%</span>
+                            <span class="right-stat-big">Márgenes del 20-25%</span>
                         </div>
                         <div class="right-text-block" id="text-5">
                             <h3 class="right-title">Internacionalización Controlada</h3>
-                            <p class="right-desc">Nuestro plan de escalada cuenta con la internacionalización. Aumenta hasta un x5 tu facturación vendiendo en todos los paises de europa o da el salto a vender tus productos a estados unidos, mexico y canada. Gestionamos tu crecimiento y te acompañamos en todo momento.</p>
+                            <p class="right-desc">Nuestro plan de escalada cuenta con la internacionalización. Aumenta hasta un x5 tu facturación vendiendo en todos los países de Europa o da el salto a vender tus productos a estados unidos, mexico y canada. Gestionamos tu crecimiento y te acompañamos en todo momento.</p>
                             <span class="right-stat-label">Expansión</span>
                             <span class="right-stat-big">+7 paises</span>
                         </div>
@@ -1997,13 +2117,13 @@
                 <div class="mobile-result-card">
                     <h3>Lanzamientos Marca Privada</h3>
                     <p>Varios clientes nos contactan para que lancemos sus tiendas con productos rentables para su venta en amazon. Analizamos productos perfil bajo y armamos una tienda llena de productos con margenes altos y con control absoluto de la situación.</p>
-                    <img src="testimonio4.png" alt="Resultado: Margenes del 20-25% - Marca Privada LibertySeller" class="mobile-result-img" loading="lazy" width="400" height="300">
+                    <img src="testimonio4.png" alt="Resultado: Márgenes del 20-25% - Marca Privada LibertySeller" class="mobile-result-img" loading="lazy" width="400" height="300">
                     <span class="mobile-stat-label">Marca Privada</span>
-                    <span class="mobile-stat-big">Margenes del 20-25%</span>
+                    <span class="mobile-stat-big">Márgenes del 20-25%</span>
                 </div>
                 <div class="mobile-result-card">
                     <h3>Internacionalización controlada</h3>
-                    <p>Nuestro plan de escalada cuenta con la internacionalización. Aumenta hasta un x5 tu facturación vendiendo en todos los paises de europa o da el salto a vender tus productos a estados unidos, mexico y canada. Gestionamos tu crecimiento y te acompañamos en todo momento.</p>
+                    <p>Nuestro plan de escalada cuenta con la internacionalización. Aumenta hasta un x5 tu facturación vendiendo en todos los países de Europa o da el salto a vender tus productos a Estados Unidos, México y Canadá. Gestionamos tu crecimiento y te acompañamos en todo momento.</p>
                     <img src="testimonio5.png" alt="Resultado: +7 paises - Internacionalización LibertySeller" class="mobile-result-img" loading="lazy" width="400" height="300">
                     <span class="mobile-stat-label">Expansión</span>
                     <span class="mobile-stat-big">+7 paises</span>
@@ -2075,7 +2195,7 @@
                         <div class="step-content">
                             <span class="step-num">PASO 04</span>
                             <h3 class="step-title">Escalado</h3>
-                            <p class="step-desc">Miramos nuevas oportunidades de inclusión de productos al catalogo para crecer horizontalmente.</p>
+                            <p class="step-desc">Miramos nuevas oportunidades de inclusión de productos al catálogo para crecer horizontalmente.</p>
                         </div>
                     </div>
 
@@ -2293,7 +2413,7 @@
             { id: 1, name: "Everox", image: "partner_1.png", stat: "Lanzamiento exitoso", desc: "Marca creada desde 0 que llegó a tener 3000€/dia de facturación.", tag: "Marca Privada" },
             { id: 2, name: "Diru", image: "partner_2.png", stat: "Cuenta en crecimiento", desc: "Nuestro cliente decidió confiar en un equipo que le creé la cuenta desde 0 y ya gestiona varios productos rentables con +20% de rentabilidad cada uno.", tag: "Cuenta nueva" },
             { id: 3, name: "IronTechGlobal", image: "partner_3.png", stat: "Optimización de PPC's", desc: "Estudio y gestión activa de campañas de PPC's, el cliente venia gastando 60% de ACOS por culpa de otras agencias y con nosotros bajó a 13% (y bajando...)", tag: "PPC's" },
-            { id: 4, name: "EvoComputer", image: "partner_4.png", stat: "Volcado de Inventario", desc: "Un cliente que tenia un potencial enorme en un catalogo que manejaba y no estaba subido a Amazon, analizamos rentabilidades y aumentamos facturación en pocas semanas.", tag: "Inventario sin explotar" },
+            { id: 4, name: "EvoComputer", image: "partner_4.png", stat: "Volcado de Inventario", desc: "Un cliente que tenia un potencial enorme en un catálogo que manejaba y no estaba subido a Amazon, analizamos rentabilidades y aumentamos facturación en pocas semanas.", tag: "Inventario sin explotar" },
             { id: 5, name: "Creative Toys", image: "partner_5.png", stat: "Marca Reconocida ", desc: "Empresa TOP en el mercado de juegos de mesa que decidió contar con nosotros para crear su cuenta desde 0 en Amazon.", tag: "Creación de cuenta" },
             { id: 6, name: "BSC", image: "partner_6.png", stat: "Gestión 360º", desc: "Cliente que cuenta con nuestra ayuda para poder gestionar su cuenta de manera activa en Amazon. Aumento de Buy Box de 3% a 17%-25%", tag: "Buy Box y gestión." },
             { id: 7, name: "Naranjas Ramblizo", image: "partner_7.png", stat: "Marca con productos de comida", desc: "Trabajamos con este cliente para llevar su negocio de fruta a la venta online, consiguiendo ventas asombrosas cada dia.", tag: "Marca Privada" },
@@ -2569,7 +2689,7 @@
 
         // --- FEATURES SWITCH ---
         const featureData = {
-            orange: { tagline: "Si ya eres vendedor", title: "Tu cuenta de Amazon tiene más potencial, vamos a desbloquearlo", desc: "Tienes buen producto, pero el algoritmo es despiadado. Dejamos de lado las intuiciones y aplicamos ingenieria de datos para arreglar lo que falla, reducir tu ACOS y recuperar el control de tu facturación", cards: [ { icon: "fa-chart-line", title: "Reducción de ACOS", desc: "Dejamos de quemar dinero en PPC's. Optimizamos tus campañas para maximizar el ROAS y eliminar palabras clave que solo generan gasto" }, { icon: "fa-magnifying-glass", title: "SEO y Posicionamiento Orgánico", desc: "No solo buscamos keywords, entendemos la intención de compra. Posicionamos tus productos correctamente." }, { icon: "fa-store", title: "Contenido A+ y Storefront", desc: "Tu marca debe parecer premium para cobrar como premium. Diseñamos fichas y tiendas que disparan la tasa de conversión." }, { icon: "fa-warehouse", title: "Logística FBA Sin Fisuras", desc: "Evitamos roturas de stock y sobrecostes de almacenamiento. Planificamos tus envíos para que Amazon siempre tenga inventario sano." }, { icon: "fa-shield", title: "Protección de Marca", desc: "¿Hijackers? ¿Falsificaciones? Nos encargamos de limpiar tu listado y proteger tu propiedad intelectual con Brand Registry." }, { icon: "fa-globe", title: "Expansión Internacional", desc: "¿Vendes solo en tu pais? Analizamos tu tienda para armar un plan de internacionalización para vender en más paises." }, { icon: "fa-headset", title: "Salud de cuenta y Bloqueos", desc: " Recuperamos cuentas suspendidas y gestionamos casos complejos con el soporte de Amazon (sí, hablamos su idioma)" }, { icon: "fa-chart-bar", title: "Auditoría de Rentabilidad", desc: "Te decimos cuánto ganas realmente. Desglosamos márgenes reales después de comisiones, devoluciones y publicidad." } ] },
+            orange: { tagline: "Si ya eres vendedor", title: "Tu cuenta de Amazon tiene más potencial, vamos a desbloquearlo", desc: "Tienes buen producto, pero el algoritmo es despiadado. Dejamos de lado las intuiciones y aplicamos ingeniería de datos para arreglar lo que falla, reducir tu ACOS y recuperar el control de tu facturación", cards: [ { icon: "fa-chart-line", title: "Reducción de ACOS", desc: "Dejamos de quemar dinero en PPC's. Optimizamos tus campañas para maximizar el ROAS y eliminar palabras clave que solo generan gasto" }, { icon: "fa-magnifying-glass", title: "SEO y Posicionamiento Orgánico", desc: "No solo buscamos keywords, entendemos la intención de compra. Posicionamos tus productos correctamente." }, { icon: "fa-store", title: "Contenido A+ y Storefront", desc: "Tu marca debe parecer premium para cobrar como premium. Diseñamos fichas y tiendas que disparan la tasa de conversión." }, { icon: "fa-warehouse", title: "Logística FBA Sin Fisuras", desc: "Evitamos roturas de stock y sobrecostes de almacenamiento. Planificamos tus envíos para que Amazon siempre tenga inventario sano." }, { icon: "fa-shield", title: "Protección de Marca", desc: "¿Hijackers? ¿Falsificaciones? Nos encargamos de limpiar tu listado y proteger tu propiedad intelectual con Brand Registry." }, { icon: "fa-globe", title: "Expansión Internacional", desc: "¿Vendes solo en tu pais? Analizamos tu tienda para armar un plan de internacionalización para vender en más paises." }, { icon: "fa-headset", title: "Salud de cuenta y Bloqueos", desc: " Recuperamos cuentas suspendidas y gestionamos casos complejos con el soporte de Amazon (sí, hablamos su idioma)" }, { icon: "fa-chart-bar", title: "Auditoría de Rentabilidad", desc: "Te decimos cuánto ganas realmente. Desglosamos márgenes reales después de comisiones, devoluciones y publicidad." } ] },
             blue: { tagline: "Aun no vendes en Amazon", title: 'Empieza a vender en Amazon con una "ventaja injusta"', desc: "La mayoría de nuevos vendedores fracasan por falta de estrategia. Nosotros construimos los cimientos sólidos de tu marca para que te saltes la curva de aprendizaje (y los errores caros) desde el día uno.", cards: [ { icon: "fa-chart-bar", title: "Validación de Mercado", desc: "Antes de gastar un euro en stock, analizamos la demanda y la competencia para asegurarnos de que tu producto tiene hueco" }, { icon: "fa-file-invoice", title: "Burocracia Cero", desc: " Nos ocupamos del alta de cuenta, registros fiscales y normativas de Amazon. Tú olvídate del papeleo aburrido." }, { icon: "fa-rocket", title: "Estrategia de Lanzamiento ", desc: 'Aprovechamos la "Luna de Miel" del algoritmo. Diseñamos una estrategia agresiva para conseguir tracción y reseñas desde el día 1.'}, { icon: "fa-pen-fancy", title: "Copywriting Persuasivo", desc: " Escribimos títulos y viñetas que venden. Transformamos características técnicas en deseos de compra irresistibles." }, { icon: "fa-camera", title: "Fotografía Estratégica", desc: "En Amazon no se toca el producto, se compra por los ojos. Creamos imágenes y renders que destacan frente a la competencia." }, { icon: "fa-ship", title: "Gestión de Importación", desc: "Te asesoramos en la primera entrada de stock a los almacenes de Amazon (FBA) para que no rechacen tu mercancía." }, { icon: "fa-bullhorn", title: "Publicidad de Controlada", desc: " Configuramos tus primeras campañas de PPC para ganar visibilidad inmediata sin desperdiciar presupuesto en pruebas a ciegas." }, { icon: "fa-user-tie", title: "Mentoria 1 a 1", desc: "No estarás solo ante el gigante. Tendrás un canal directo con expertos para resolver dudas y definir el futuro de tu marca." } ] }
         };
         const featuresSection = document.getElementById('features-section');
@@ -3422,6 +3542,19 @@
     }
     </script>
     
+    <!-- Cookie Banner -->
+    <div class="cookie-banner" id="cookie-banner">
+        <div class="cookie-banner-content">
+            <div class="cookie-banner-text">
+                <p>Utilizamos cookies para mejorar tu experiencia y analizar el tráfico del sitio. Al hacer clic en "Aceptar", consientes el uso de cookies para análisis. <a href="#" onclick="return false;">Más información</a></p>
+            </div>
+            <div class="cookie-banner-actions">
+                <button class="cookie-btn cookie-btn-reject" id="cookie-reject">Rechazar</button>
+                <button class="cookie-btn cookie-btn-accept" id="cookie-accept">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Widget Flotante WhatsApp -->
     <div class="whatsapp-widget">
         <div class="whatsapp-message" id="whatsapp-message">
@@ -3467,6 +3600,126 @@
                 }, 7000);
             }
         }, 40000);
+
+        // ===== COOKIE CONSENT BANNER =====
+        const COOKIE_CONSENT_KEY = 'libertyseller_cookie_consent';
+        const GA_ID = 'G-X7537EW6TP';
+        
+        // Inicializar gtag si no existe
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        
+        // Configurar consentimiento por defecto (denegado)
+        gtag('consent', 'default', {
+            'analytics_storage': 'denied',
+            'ad_storage': 'denied'
+        });
+        
+        // Función para cargar Google Analytics
+        function loadGoogleAnalytics() {
+            // Cargar gtag.js
+            const script1 = document.createElement('script');
+            script1.async = true;
+            script1.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+            document.head.appendChild(script1);
+            
+            // Configurar Google Analytics
+            gtag('js', new Date());
+            gtag('config', GA_ID, {
+                'anonymize_ip': true
+            });
+            
+            // Actualizar consentimiento a 'granted'
+            gtag('consent', 'update', {
+                'analytics_storage': 'granted',
+                'ad_storage': 'granted'
+            });
+        }
+        
+        // Función para mostrar el banner
+        function showCookieBanner() {
+            const banner = document.getElementById('cookie-banner');
+            if (banner) {
+                banner.style.display = 'block';
+                // Forzar reflow para que la animación funcione
+                void banner.offsetHeight;
+                setTimeout(() => {
+                    banner.classList.add('show');
+                }, 100);
+            }
+        }
+        
+        // Función para aceptar cookies
+        function acceptCookies() {
+            localStorage.setItem(COOKIE_CONSENT_KEY, 'accepted');
+            const banner = document.getElementById('cookie-banner');
+            if (banner) {
+                banner.classList.remove('show');
+                setTimeout(() => {
+                    banner.style.display = 'none';
+                }, 400);
+            }
+            loadGoogleAnalytics();
+        }
+        
+        // Función para rechazar cookies
+        function rejectCookies() {
+            localStorage.setItem(COOKIE_CONSENT_KEY, 'rejected');
+            const banner = document.getElementById('cookie-banner');
+            if (banner) {
+                banner.classList.remove('show');
+                setTimeout(() => {
+                    banner.style.display = 'none';
+                }, 400);
+            }
+            // Mantener consentimiento denegado
+            if (typeof gtag === 'function') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'denied',
+                    'ad_storage': 'denied'
+                });
+            }
+        }
+        
+        // Verificar consentimiento al cargar
+        function initCookieConsent() {
+            const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+            
+            if (consent === 'accepted') {
+                // Si ya aceptó antes, cargar Analytics directamente
+                loadGoogleAnalytics();
+            } else if (consent === 'rejected') {
+                // Si rechazó, no hacer nada
+                return;
+            } else {
+                // Si no hay consentimiento, mostrar banner
+                showCookieBanner();
+            }
+        }
+        
+        // Inicializar cuando el DOM esté listo
+        function setupCookieBanner() {
+            const acceptBtn = document.getElementById('cookie-accept');
+            const rejectBtn = document.getElementById('cookie-reject');
+            
+            if (acceptBtn) {
+                acceptBtn.addEventListener('click', acceptCookies);
+            }
+            
+            if (rejectBtn) {
+                rejectBtn.addEventListener('click', rejectCookies);
+            }
+            
+            // Inicializar consentimiento
+            initCookieConsent();
+        }
+        
+        // Ejecutar cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupCookieBanner);
+        } else {
+            setupCookieBanner();
+        }
     </script>
 </body>
 </html>
