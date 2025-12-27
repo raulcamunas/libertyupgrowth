@@ -1,9 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import Script from 'next/script'
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (element: HTMLElement, options: any) => string
+      execute: (widgetId: string) => Promise<string>
+      reset: (widgetId: string) => void
+    }
+  }
+}
 
 export default function HeroForm() {
   const [isAmazonSeller, setIsAmazonSeller] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [turnstileReady, setTurnstileReady] = useState(false)
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const turnstileWidgetId = useRef<string | null>(null)
 
   useEffect(() => {
     // Toggle expandable fields
@@ -69,94 +84,247 @@ export default function HeroForm() {
     }
   }, [])
 
+  // Inicializar Turnstile cuando el script esté listo
+  useEffect(() => {
+    if (turnstileReady && turnstileRef.current && !turnstileWidgetId.current && window.turnstile) {
+      const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+      if (siteKey) {
+        const widgetId = window.turnstile.render(turnstileRef.current, {
+          sitekey: siteKey,
+          theme: 'dark',
+          size: 'invisible',
+        })
+        turnstileWidgetId.current = widgetId
+      }
+    }
+  }, [turnstileReady])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    
+    const form = e.currentTarget
+    const formBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement
+    const originalBtnText = formBtn.innerHTML
+
+    try {
+      // Obtener token de Turnstile
+      let turnstileToken = ''
+      if (turnstileWidgetId.current && window.turnstile) {
+        turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
+      } else {
+        throw new Error('Verificación no disponible. Por favor, recarga la página.')
+      }
+
+      const formData = {
+        name: (document.getElementById('form-name') as HTMLInputElement).value.trim(),
+        phone: (document.getElementById('form-phone') as HTMLInputElement).value.trim(),
+        email: (document.getElementById('form-email') as HTMLInputElement).value.trim(),
+        prefix: (document.getElementById('form-prefix') as HTMLSelectElement).value,
+        isSeller: isAmazonSeller,
+        sellingDuration: (document.getElementById('hero-duration-input') as HTMLInputElement)?.value || '',
+        monthlyRevenue: (document.getElementById('hero-revenue-input') as HTMLInputElement)?.value || '',
+        website: (document.getElementById('website-field') as HTMLInputElement)?.value || '', // Honeypot
+        cfTurnstileToken: turnstileToken,
+      }
+
+      // Validación básica del lado del cliente
+      if (!formData.name || formData.name.length < 2) {
+        throw new Error('Por favor, ingresa un nombre válido')
+      }
+      if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        throw new Error('Por favor, ingresa un email válido')
+      }
+      if (!formData.phone || formData.phone.length < 8) {
+        throw new Error('Por favor, ingresa un teléfono válido')
+      }
+      if (isAmazonSeller && (!formData.sellingDuration || !formData.monthlyRevenue)) {
+        throw new Error('Por favor, completa todos los campos requeridos')
+      }
+
+      formBtn.disabled = true
+      formBtn.style.opacity = '0.7'
+      formBtn.textContent = 'Enviando...'
+
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al enviar el formulario')
+      }
+
+      // Éxito
+      formBtn.style.opacity = '1'
+      formBtn.style.backgroundColor = '#CC5200'
+      formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'
+      form.reset()
+      form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'))
+      const expandableFields = form.querySelector('.expandable-fields')
+      if (expandableFields) expandableFields.classList.remove('open')
+      setIsAmazonSeller(false)
+      
+      // Limpiar errores
+      const errorMessages = form.querySelectorAll('.error-message')
+      errorMessages.forEach(el => {
+        el.textContent = ''
+        el.classList.remove('show')
+      })
+      const errorInputs = form.querySelectorAll('.form-input.error')
+      errorInputs.forEach(el => el.classList.remove('error'))
+      
+      setTimeout(() => {
+        formBtn.disabled = false
+        formBtn.style.backgroundColor = 'var(--brand-color)'
+        formBtn.innerHTML = originalBtnText
+      }, 5000)
+
+      // Resetear Turnstile
+      if (turnstileWidgetId.current && window.turnstile) {
+        window.turnstile.reset(turnstileWidgetId.current)
+      }
+    } catch (error: any) {
+      formBtn.style.backgroundColor = '#ff4444'
+      formBtn.textContent = error.message || 'Error. Intenta de nuevo.'
+      setTimeout(() => {
+        formBtn.disabled = false
+        formBtn.style.opacity = '1'
+        formBtn.style.backgroundColor = 'var(--brand-color)'
+        formBtn.innerHTML = originalBtnText
+      }, 3000)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <div className="form-card">
-      <h3 className="form-title">Solicita tu Auditoría o Plan de Lanzamiento</h3>
-      <form id="signup-form" className="smart-form" method="POST">
-        <input type="hidden" name="selling_duration" id="hero-duration-input" />
-        <input type="hidden" name="monthly_revenue" id="hero-revenue-input" />
-        
-        <div className="input-group">
+    <>
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        strategy="lazyOnload"
+        onLoad={() => setTurnstileReady(true)}
+      />
+      
+      <div className="form-card">
+        <h3 className="form-title">Solicita tu Auditoría o Plan de Lanzamiento</h3>
+        <form 
+          id="signup-form" 
+          className="smart-form" 
+          onSubmit={handleSubmit}
+        >
+          <input type="hidden" name="selling_duration" id="hero-duration-input" />
+          <input type="hidden" name="monthly_revenue" id="hero-revenue-input" />
+          
+          {/* Honeypot field - invisible para bots */}
           <input
             type="text"
-            id="form-name"
-            className="form-input"
-            placeholder="Nombre completo"
-            required
+            id="website-field"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            style={{
+              position: 'absolute',
+              left: '-9999px',
+              opacity: 0,
+              pointerEvents: 'none',
+              width: 0,
+              height: 0,
+            }}
           />
-          <div className="error-message" id="name-error"></div>
-        </div>
-        <div className="input-group phone-group">
-          <div className="phone-prefix-wrapper">
-            <div className="country-selector" id="country-selector">
-              <div className="country-flag" id="country-flag">🇪🇸</div>
-              <select id="form-prefix" className="form-prefix-select" required>
-                <option value="+34" data-flag="🇪🇸" defaultChecked>+34</option>
-                <option value="+52" data-flag="🇲🇽">+52</option>
-              </select>
-              <i className="fa-solid fa-chevron-down prefix-arrow"></i>
-            </div>
-          </div>
-          <input
-            type="tel"
-            id="form-phone"
-            className="form-input form-phone-number"
-            placeholder="612 345 678"
-            required
-          />
-          <div className="error-message" id="phone-error"></div>
-        </div>
-        <div className="input-group">
-          <input
-            type="email"
-            id="form-email"
-            className="form-input"
-            placeholder="Correo electrónico"
-            required
-          />
-          <div className="error-message" id="email-error"></div>
-        </div>
-        
-        <div className="amazon-switch-group">
-          <span className="switch-label-text">¿Vendes en Amazon?</span>
-          <label className="toggle-switch">
-            <input
-              type="checkbox"
-              id="form-amazon-seller"
-              checked={isAmazonSeller}
-              onChange={(e) => setIsAmazonSeller(e.target.checked)}
-            />
-            <span className="slider">
-              <span className="txt-no">NO</span>
-              <span className="txt-si">SÍ</span>
-            </span>
-          </label>
-        </div>
-        
-        <div className={`expandable-fields ${isAmazonSeller ? 'open' : ''}`} id="hero-expandable">
-          <span className="pill-label" id="duration-label">¿Cuánto tiempo llevas vendiendo?</span>
-          <div className="pill-grid cols-3" id="hero-duration-grid">
-            <div className="pill-btn" data-value="0-1 año">0-1 año</div>
-            <div className="pill-btn" data-value="2-5 años">2-5 años</div>
-            <div className="pill-btn" data-value="+5 años">+5 años</div>
-          </div>
-          <div className="error-message" id="duration-error"></div>
           
-          <span className="pill-label" id="revenue-label">¿Facturación mensual?</span>
-          <div className="pill-grid cols-4" id="hero-revenue-grid">
-            <div className="pill-btn" data-value="0-5k">0-5k</div>
-            <div className="pill-btn" data-value="5k-20k">5k-20k</div>
-            <div className="pill-btn" data-value="20k-50k">20k-50k</div>
-            <div className="pill-btn" data-value="+50k">+50k</div>
+          <div className="input-group">
+            <input
+              type="text"
+              id="form-name"
+              className="form-input"
+              placeholder="Nombre completo"
+              required
+            />
+            <div className="error-message" id="name-error"></div>
           </div>
-          <div className="error-message" id="revenue-error"></div>
-        </div>
+          <div className="input-group phone-group">
+            <div className="phone-prefix-wrapper">
+              <div className="country-selector" id="country-selector">
+                <div className="country-flag" id="country-flag">🇪🇸</div>
+                <select id="form-prefix" className="form-prefix-select" required>
+                  <option value="+34" data-flag="🇪🇸" defaultChecked>+34</option>
+                  <option value="+52" data-flag="🇲🇽">+52</option>
+                </select>
+                <i className="fa-solid fa-chevron-down prefix-arrow"></i>
+              </div>
+            </div>
+            <input
+              type="tel"
+              id="form-phone"
+              className="form-input form-phone-number"
+              placeholder="612 345 678"
+              required
+            />
+            <div className="error-message" id="phone-error"></div>
+          </div>
+          <div className="input-group">
+            <input
+              type="email"
+              id="form-email"
+              className="form-input"
+              placeholder="Correo electrónico"
+              required
+            />
+            <div className="error-message" id="email-error"></div>
+          </div>
+          
+          <div className="amazon-switch-group">
+            <span className="switch-label-text">¿Vendes en Amazon?</span>
+            <label className="toggle-switch">
+              <input
+                type="checkbox"
+                id="form-amazon-seller"
+                checked={isAmazonSeller}
+                onChange={(e) => setIsAmazonSeller(e.target.checked)}
+              />
+              <span className="slider">
+                <span className="txt-no">NO</span>
+                <span className="txt-si">SÍ</span>
+              </span>
+            </label>
+          </div>
+          
+          <div className={`expandable-fields ${isAmazonSeller ? 'open' : ''}`} id="hero-expandable">
+            <span className="pill-label" id="duration-label">¿Cuánto tiempo llevas vendiendo?</span>
+            <div className="pill-grid cols-3" id="hero-duration-grid">
+              <div className="pill-btn" data-value="0-1 año">0-1 año</div>
+              <div className="pill-btn" data-value="2-5 años">2-5 años</div>
+              <div className="pill-btn" data-value="+5 años">+5 años</div>
+            </div>
+            <div className="error-message" id="duration-error"></div>
+            
+            <span className="pill-label" id="revenue-label">¿Facturación mensual?</span>
+            <div className="pill-grid cols-4" id="hero-revenue-grid">
+              <div className="pill-btn" data-value="0-5k">0-5k</div>
+              <div className="pill-btn" data-value="5k-20k">5k-20k</div>
+              <div className="pill-btn" data-value="20k-50k">20k-50k</div>
+              <div className="pill-btn" data-value="+50k">+50k</div>
+            </div>
+            <div className="error-message" id="revenue-error"></div>
+          </div>
 
-        <button type="submit" className="submit-btn">
-          TE CONTACTAMOS
-        </button>
-      </form>
-    </div>
+          {/* Cloudflare Turnstile widget (invisible) */}
+          <div ref={turnstileRef} style={{ display: 'none' }}></div>
+
+          <button 
+            type="submit" 
+            className="submit-btn"
+            disabled={isSubmitting || !turnstileReady}
+          >
+            {isSubmitting ? 'Enviando...' : 'TE CONTACTAMOS'}
+          </button>
+        </form>
+      </div>
+    </>
   )
 }
 
