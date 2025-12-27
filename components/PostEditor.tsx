@@ -294,7 +294,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
 
       // Insertar imagen en el editor
       if (editor && data.url) {
-        editor.chain().focus().setImage({ src: data.url, style: 'max-width: 100%; height: auto;' }).run()
+        editor.chain().focus().setImage({ src: data.url }).run()
       }
     } catch (error) {
       console.error('Error uploading image:', error)
