@@ -44,10 +44,10 @@ export default function HeroForm() {
     // Attach click handlers to pill buttons
     const pillButtons = document.querySelectorAll('.pill-btn')
     pillButtons.forEach((btn) => {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function(this: HTMLElement) {
         const gridId = this.closest('.pill-grid')?.id
         const inputId = gridId === 'hero-duration-grid' ? 'hero-duration-input' : 'hero-revenue-input'
-        selectPill(this as HTMLElement, inputId, gridId || '')
+        selectPill(this, inputId, gridId || '')
       })
     })
 
@@ -56,7 +56,7 @@ export default function HeroForm() {
     const countryFlag = document.getElementById('country-flag')
     const prefixSelect = document.getElementById('form-prefix') as HTMLSelectElement
 
-    prefixSelect?.addEventListener('change', function() {
+    prefixSelect?.addEventListener('change', function(this: HTMLSelectElement) {
       const selectedOption = this.options[this.selectedIndex]
       const flag = selectedOption.getAttribute('data-flag')
       if (countryFlag && flag) {
