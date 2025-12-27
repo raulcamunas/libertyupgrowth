@@ -133,8 +133,8 @@ export function trackTimeOnPage(): () => void {
 /**
  * Trackear profundidad de scroll
  */
-export function trackScrollDepth(): void {
-  if (typeof window === 'undefined') return
+export function trackScrollDepth(): () => void {
+  if (typeof window === 'undefined') return () => {}
   
   let maxScroll = 0
   const thresholds = [25, 50, 75, 100]

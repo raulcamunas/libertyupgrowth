@@ -30,12 +30,15 @@ export default function AnalyticsTracker({
     const cleanupTimeTracking = trackTimeOnPage()
     
     // Trackear profundidad de scroll
-    trackScrollDepth()
+    const cleanupScrollTracking = trackScrollDepth()
     
     // Cleanup al salir de la página
     return () => {
       if (cleanupTimeTracking) {
         cleanupTimeTracking()
+      }
+      if (cleanupScrollTracking) {
+        cleanupScrollTracking()
       }
     }
   }, [pathname, pageType, postId, postSlug])
