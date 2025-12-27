@@ -56,8 +56,8 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Botón Hamburguesa Minimalista */}
-      <button
+      {/* Botón Hamburguesa Minimalista - OCULTO EN MAIN */}
+      {/* <button
         className={`minimal-menu-toggle ${isOpen ? 'active' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle menu"
@@ -68,10 +68,10 @@ export default function Navbar() {
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
         </div>
-      </button>
+      </button> */}
 
-      {/* Menú Full Screen */}
-      <nav className={`minimal-menu ${isOpen ? 'open' : ''}`}>
+      {/* Menú Full Screen - OCULTO EN MAIN */}
+      <nav className={`minimal-menu ${isOpen ? 'open' : ''}`} style={{ display: 'none' }}>
         <div className="menu-wrapper">
           {/* Header del Menú */}
           <div className="menu-header">
