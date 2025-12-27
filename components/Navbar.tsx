@@ -54,24 +54,7 @@ export default function Navbar() {
     setIsOpen(false)
   }
 
-  return (
-    <>
-      {/* Botón Hamburguesa Minimalista - OCULTO EN MAIN */}
-      {/* <button
-        className={`minimal-menu-toggle ${isOpen ? 'active' : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle menu"
-        aria-expanded={isOpen}
-      >
-        <div className="hamburger-container">
-          <span className="hamburger-line"></span>
-          <span className="hamburger-line"></span>
-          <span className="hamburger-line"></span>
-        </div>
-      </button> */}
-
-      {/* Menú Full Screen - OCULTO EN MAIN */}
-      <nav className={`minimal-menu ${isOpen ? 'open' : ''}`} style={{ display: 'none' }}>
+  return null // Navbar oculta en rama main
         <div className="menu-wrapper">
           {/* Header del Menú */}
           <div className="menu-header">
