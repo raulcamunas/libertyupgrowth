@@ -32,7 +32,7 @@ export default function FAQSection() {
               </div>
               <div className="faq-answer">
                 <p>
-                  Si alguien te garantiza ventas fijas en Amazon, <strong>huye</strong>. Nosotros somos honestos: el mercado fluctúa. Lo que sí garantizamos es una gestión profesional basada en datos y estrategias testadas en nuestras propias cuentas. No somos una agencia que "prueba suerte" con tu dinero, gestionamos tu capital con el mismo cuidado que el nuestro.
+                  Si alguien te garantiza ventas fijas en Amazon, <strong>huye</strong>. Nosotros somos honestos: el mercado fluctúa. Lo que sí garantizamos es una gestión profesional basada en datos y estrategias testadas en nuestras propias cuentas. No somos una agencia que &quot;prueba suerte&quot; con tu dinero, gestionamos tu capital con el mismo cuidado que el nuestro.
                 </p>
               </div>
             </div>
@@ -110,7 +110,7 @@ export default function FAQSection() {
               </div>
               <div className="faq-answer">
                 <p>
-                  Antes de lanzarnos, realizamos una auditoría y análisis de mercado. No se trata de "subir productos", sino de analizar la competencia y los márgenes reales. Si vemos que el producto no es viable, te lo diremos antes de que inviertas. Preferimos perder un cliente a que tú pierdas tus ahorros.
+                  Antes de lanzarnos, realizamos una auditoría y análisis de mercado. No se trata de &quot;subir productos&quot;, sino de analizar la competencia y los márgenes reales. Si vemos que el producto no es viable, te lo diremos antes de que inviertas. Preferimos perder un cliente a que tú pierdas tus ahorros.
                 </p>
               </div>
             </div>

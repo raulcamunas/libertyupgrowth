@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { getAnalyticsStats, AnalyticsStats } from '@/app/actions/analytics'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'

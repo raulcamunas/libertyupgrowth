@@ -237,7 +237,7 @@ export default function ScrollSection() {
               <span className="right-stat-big">+20.000€/mes</span>
             </div>
             <div className="right-text-block" id="text-2">
-              <h3 className="right-title">Sin miedo a las PPC's</h3>
+              <h3 className="right-title">Sin miedo a las PPC&apos;s</h3>
               <p className="right-desc">
                 Nuestro cliente nos contactó porque tenia autenticos destrozos en sus campañas publicitarias. Nosotros tomamos el control de todo y bajamos el acos a un 12% (y bajando), consiguiendo para él unas campañas altamente rentable por los margenes de sus productos
               </p>
@@ -290,7 +290,7 @@ export default function ScrollSection() {
           <span className="mobile-stat-big">+20.000€/mes</span>
         </div>
         <div className="mobile-result-card">
-          <h3>Sin miedo a las PPC's</h3>
+          <h3>Sin miedo a las PPC&apos;s</h3>
           <p>
             Nuestro cliente nos contactó porque tenia autenticos destrozos en sus campañas publicitarias. Nosotros tomamos el control de todo y bajamos el acos a un 12% (y bajanado), consiguiendo para él unas campañas altamente rentable por los margenes de sus productos
           </p>

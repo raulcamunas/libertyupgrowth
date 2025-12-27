@@ -8,7 +8,7 @@ export default function CookieBanner() {
         <div className="cookie-banner-content">
           <div className="cookie-banner-text">
             <p>
-              Utilizamos cookies para mejorar tu experiencia y analizar el tráfico del sitio. Al hacer clic en "Aceptar", consientes el uso de cookies para análisis.{' '}
+              Utilizamos cookies para mejorar tu experiencia y analizar el tráfico del sitio. Al hacer clic en &quot;Aceptar&quot;, consientes el uso de cookies para análisis.{' '}
               <a href="#" id="cookie-info-link">
                 Más información
               </a>
