@@ -2466,6 +2466,14 @@
             transform: translateY(0);
             filter: blur(0);
         }
+        /* Mostrar contenido inicial de resultados inmediatamente */
+        .scroll-section .scroll-intro .scroll-trigger.is-visible,
+        .scroll-section .sticky-wrapper.scroll-trigger.is-visible,
+        .scroll-section .mobile-results-list.scroll-trigger.is-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            filter: blur(0) !important;
+        }
 
         @keyframes textBlurIn {
             0% { opacity: 0; filter: blur(20px); transform: translateY(10px); }

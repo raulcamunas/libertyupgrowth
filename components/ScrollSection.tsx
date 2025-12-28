@@ -133,13 +133,13 @@ export default function ScrollSection() {
     <section className="scroll-section" id="scroll-section">
       <div className="scroll-bg-layer"></div>
       <div className="scroll-intro">
-        <h2 className="scroll-title scroll-trigger">Resultados que hablan por sí solos</h2>
-        <p className="scroll-subtitle scroll-trigger">
+        <h2 className="scroll-title scroll-trigger is-visible">Resultados que hablan por sí solos</h2>
+        <p className="scroll-subtitle scroll-trigger is-visible">
           No nos basamos en promesas vacías. Nuestra metodología basada en datos transforma cuentas estancadas en líderes de categoría.
         </p>
       </div>
 
-      <div className="sticky-wrapper scroll-trigger">
+      <div className="sticky-wrapper scroll-trigger is-visible">
         <div className="sticky-col">
           <div className="scroll-menu">
             <div className="scroll-menu-item active" id="menu-1">
@@ -172,7 +172,8 @@ export default function ScrollSection() {
               className="scroll-result-img"
               width={800}
               height={600}
-              loading="lazy"
+              loading="eager"
+              priority
               style={{ cursor: 'pointer' }}
               onClick={() => handleImageClick('/testimonio1.png', 'Resultado: Incremento a 20.000€ de facturación el 3er mes')}
             />
@@ -272,7 +273,7 @@ export default function ScrollSection() {
         </div>
       </div>
 
-      <div className="mobile-results-list scroll-trigger">
+      <div className="mobile-results-list scroll-trigger is-visible">
         <div className="mobile-result-card">
           <h3>Lanzamiento de una tienda de naranjas</h3>
           <p>Una empresa que vende naranjas nos contactó porque muchas agencias le dijeron que no trabajan con este tipo de negocios.</p>
@@ -282,7 +283,8 @@ export default function ScrollSection() {
             className="mobile-result-img"
             width={400}
             height={300}
-            loading="lazy"
+            loading="eager"
+            priority
             style={{ cursor: 'pointer' }}
             onClick={() => handleImageClick('/testimonio1.png', 'Resultado: +20.000€/mes - Caso de éxito LibertySeller')}
           />
