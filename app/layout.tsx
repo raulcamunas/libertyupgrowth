@@ -139,7 +139,7 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        {/* Cargar CSS de forma no bloqueante */}
+        {/* Cargar CSS de forma no bloqueante usando script inline */}
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -147,9 +147,23 @@ export default function RootLayout({
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
           media="print"
-          onLoad={(e) => {
-            const target = e.target as HTMLLinkElement
-            target.media = 'all'
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var link = document.querySelector('link[href*="font-awesome"]');
+                if (link) {
+                  link.onload = function() { this.media = 'all'; };
+                  // Fallback si onload no se dispara
+                  setTimeout(function() {
+                    if (link.media === 'print') {
+                      link.media = 'all';
+                    }
+                  }, 100);
+                }
+              })();
+            `,
           }}
         />
         <noscript>
