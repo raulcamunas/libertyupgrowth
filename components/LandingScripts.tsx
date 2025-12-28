@@ -25,7 +25,7 @@ export default function LandingScripts() {
     <Script
       id="landing-scripts"
       src="/landing-scripts.js"
-      strategy="afterInteractive"
+      strategy="lazyOnload"
       onLoad={() => {
         // Script cargado correctamente
         if (typeof window !== 'undefined') {
