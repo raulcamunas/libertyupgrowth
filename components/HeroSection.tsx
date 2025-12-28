@@ -119,6 +119,7 @@ export default function HeroSection() {
       const prefetchIframe = document.getElementById('video-prefetch-iframe')
       if (prefetchIframe) {
         prefetchIframe.remove()
+      }
     }
   }
 
