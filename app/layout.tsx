@@ -124,7 +124,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/icon.png" />
         <link rel="apple-touch-icon" href="/icon.png" />
         
-        {/* Font Awesome - Carga optimizada para no bloquear renderizado */}
+        {/* Font Awesome - Preload de fuentes críticas */}
         <link
           rel="preload"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2"
@@ -139,42 +139,36 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        {/* Cargar CSS de forma no bloqueante usando script inline */}
+        {/* Cargar CSS de forma no bloqueante - usando defer implícito */}
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
           integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
-          media="print"
         />
+        {/* Script para activar CSS después de carga (mejora LCP sin romper iconos) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                var link = document.querySelector('link[href*="font-awesome"]');
-                if (link) {
-                  link.onload = function() { this.media = 'all'; };
-                  // Fallback si onload no se dispara
-                  setTimeout(function() {
-                    if (link.media === 'print') {
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', function() {
+                    var link = document.querySelector('link[href*="font-awesome"][rel="stylesheet"]');
+                    if (link && link.media === 'print') {
                       link.media = 'all';
                     }
-                  }, 100);
+                  });
+                } else {
+                  var link = document.querySelector('link[href*="font-awesome"][rel="stylesheet"]');
+                  if (link && link.media === 'print') {
+                    link.media = 'all';
+                  }
                 }
               })();
             `,
           }}
         />
-        <noscript>
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-            integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-            crossOrigin="anonymous"
-            referrerPolicy="no-referrer"
-          />
-        </noscript>
       </head>
       <body className={inter.className}>
         {/* Google Tag Manager (noscript) */}
