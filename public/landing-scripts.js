@@ -598,49 +598,9 @@
         // Hacer la función disponible globalmente
         window.scrollToForm = scrollToForm;
 
-        // ===== PROTECCIÓN ANTI-BOTS Y GEO-BLOQUEO =====
+        // ===== PROTECCIÓN ANTI-BOTS =====
         
-        // 1. DETECCIÓN DE PAÍS (España y México permitidos)
-        const ALLOWED_COUNTRIES = ['ES', 'MX'];
-        let countryChecked = false;
-        let countryAllowed = true; // Por defecto permitir si falla la API
-        
-        async function checkCountryAndBlock() {
-            if (countryChecked) return countryAllowed;
-            
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-                const countryCode = data.country_code;
-                countryChecked = true;
-                
-                if (!ALLOWED_COUNTRIES.includes(countryCode)) {
-                    countryAllowed = false;
-                    // Bloquear acceso
-                    document.body.innerHTML = `
-                        <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: #080808; color: white; font-family: 'Inter', sans-serif; text-align: center; padding: 20px;">
-                            <div>
-                                <h1 style="font-size: 32px; margin-bottom: 20px; color: #FF6600;">Acceso Restringido</h1>
-                                <p style="font-size: 18px; color: #a0a0b0; max-width: 500px; margin: 0 auto;">
-                                    Lo sentimos, nuestros servicios están disponibles únicamente para usuarios de España y México.
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                    return false;
-                }
-                countryAllowed = true;
-                return true;
-            } catch (error) {
-                console.error('Error checking country:', error);
-                // En caso de error, permitir acceso (no bloquear si falla la API)
-                countryChecked = true;
-                countryAllowed = true;
-                return true;
-            }
-        }
-        
-        // 2. RATE LIMITING (máximo 3 envíos por hora)
+        // 1. RATE LIMITING (máximo 3 envíos por hora)
         function checkRateLimit() {
             const RATE_LIMIT_KEY = 'libertyseller_form_submissions';
             const RATE_LIMIT_COUNT = 3;
@@ -955,9 +915,6 @@
             }
         }
         
-        // Verificar país al cargar la página
-        checkCountryAndBlock();
-        
         // Inicializar protecciones cuando el DOM esté listo
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
@@ -991,12 +948,6 @@
                     }
                 }, 3000);
                 return;
-            }
-            
-            // Verificar país
-            const countryOk = await checkCountryAndBlock();
-            if (!countryOk) {
-                return; // Ya está bloqueado visualmente
             }
             
             // Verificar honeypot
