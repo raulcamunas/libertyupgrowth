@@ -64,14 +64,61 @@ export default function HeroSection() {
     }
   }, [])
 
+  // Prefetch del video cuando el usuario hace hover en el botón
+  const prefetchVideo = () => {
+    if (!videoLoadedRef.current && videoIframeRef.current) {
+      const iframe = videoIframeRef.current
+      if (iframe.dataset.src && !iframe.src) {
+        // Prefetch: crear un iframe oculto para precargar el video
+        const hiddenIframe = document.createElement('iframe')
+        hiddenIframe.style.display = 'none'
+        hiddenIframe.style.width = '1px'
+        hiddenIframe.style.height = '1px'
+        hiddenIframe.style.position = 'absolute'
+        hiddenIframe.style.opacity = '0'
+        hiddenIframe.style.pointerEvents = 'none'
+        hiddenIframe.src = iframe.dataset.src
+        hiddenIframe.id = 'video-prefetch-iframe'
+        document.body.appendChild(hiddenIframe)
+        
+        // Cuando el iframe oculto se carga, ya tenemos el video listo
+        hiddenIframe.onload = () => {
+          // El video ya está precargado, solo necesitamos mover el src al iframe visible
+          if (iframe && iframe.dataset.src) {
+            iframe.src = iframe.dataset.src + '&autoplay=1&rel=0'
+            videoLoadedRef.current = true
+            // Remover el iframe oculto después de un momento
+            setTimeout(() => {
+              const prefetchIframe = document.getElementById('video-prefetch-iframe')
+              if (prefetchIframe) {
+                prefetchIframe.remove()
+              }
+            }, 1000)
+          }
+        }
+      }
+    }
+  }
+
   const openVideo = () => {
     if (videoModalRef.current) {
       videoModalRef.current.classList.add('active')
       const iframe = videoIframeRef.current
-      if (iframe && !videoLoadedRef.current && iframe.dataset.src) {
-        iframe.src = iframe.dataset.src + '&autoplay=1'
+      
+      // Si el video ya fue precargado (por hover), solo activar autoplay
+      if (iframe && videoLoadedRef.current && iframe.src) {
+        const currentSrc = iframe.src.split('&autoplay')[0].split('?')[0]
+        iframe.src = currentSrc + '?autoplay=1&rel=0&modestbranding=1'
+      } else if (iframe && !videoLoadedRef.current && iframe.dataset.src) {
+        // Cargar inmediatamente con autoplay si no se precargó
+        iframe.src = iframe.dataset.src + '&autoplay=1&rel=0&modestbranding=1'
         videoLoadedRef.current = true
       }
+      
+      // Remover iframe de prefetch si existe
+      const prefetchIframe = document.getElementById('video-prefetch-iframe')
+      if (prefetchIframe) {
+        prefetchIframe.remove()
     }
   }
 
@@ -153,6 +200,8 @@ export default function HeroSection() {
                 className="btn-watch-video"
                 id="open-video-btn"
                 onClick={openVideo}
+                onMouseEnter={prefetchVideo}
+                onFocus={prefetchVideo}
                 aria-label="Ver video explicativo de LibertySeller"
               >
                 <i className="fa-solid fa-play-circle" aria-hidden="true"></i> Mira como podemos ayudarte
@@ -179,11 +228,12 @@ export default function HeroSection() {
           <iframe
             className="video-iframe"
             src=""
-            data-src="https://www.youtube.com/embed/ZNNf6FIJtiQ?si=JfTEZakmnziKT-JE"
+            data-src="https://www.youtube.com/embed/ZNNf6FIJtiQ?si=JfTEZakmnziKT-JE&rel=0&modestbranding=1"
             title="VSL Video - Cómo funciona LibertySeller"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
+            loading="eager"
             ref={videoIframeRef}
           ></iframe>
         </div>
