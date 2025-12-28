@@ -64,7 +64,7 @@ export default function HeroSection() {
     }
   }, [])
 
-  // Prefetch del video cuando el usuario hace hover en el botón
+  // Prefetch del video - funciona en desktop (hover) y móvil (touchstart + visible)
   const prefetchVideo = () => {
     if (!videoLoadedRef.current && videoIframeRef.current) {
       const iframe = videoIframeRef.current
@@ -99,6 +99,34 @@ export default function HeroSection() {
       }
     }
   }
+
+  // Precargar video cuando el botón está visible (móvil y desktop)
+  useEffect(() => {
+    const videoButton = document.getElementById('open-video-btn')
+    if (!videoButton) return
+
+    // Intersection Observer: precargar cuando el botón es visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !videoLoadedRef.current) {
+            // Precargar después de un pequeño delay para no bloquear el render inicial
+            setTimeout(() => {
+              prefetchVideo()
+            }, 500)
+            observer.disconnect() // Solo precargar una vez
+          }
+        })
+      },
+      { threshold: 0.5 } // Cuando el 50% del botón es visible
+    )
+
+    observer.observe(videoButton)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   const openVideo = () => {
     if (videoModalRef.current) {
@@ -203,6 +231,7 @@ export default function HeroSection() {
                 onClick={openVideo}
                 onMouseEnter={prefetchVideo}
                 onFocus={prefetchVideo}
+                onTouchStart={prefetchVideo}
                 aria-label="Ver video explicativo de LibertySeller"
               >
                 <i className="fa-solid fa-play-circle" aria-hidden="true"></i> Mira como podemos ayudarte
