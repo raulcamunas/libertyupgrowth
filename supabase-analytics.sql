@@ -155,3 +155,4 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- 4. La función get_analytics_stats() proporciona estadísticas agregadas
 -- 5. Puedes ejecutar consultas personalizadas según tus necesidades
 
+
