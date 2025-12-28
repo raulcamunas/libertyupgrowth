@@ -70,8 +70,12 @@ export default function TestimonialsSection() {
         <div className="testimonials-grid scroll-trigger" id="testimonials-grid"></div>
 
         <div className="testimonial-popup" id="testimonial-popup">
-          <button className="popup-close" onClick={() => (window as any).closePopup?.()}>
-            <i className="fa-solid fa-times"></i>
+          <button 
+            className="popup-close" 
+            onClick={() => (window as any).closePopup?.()}
+            aria-label="Cerrar ventana de testimonio"
+          >
+            <i className="fa-solid fa-times" aria-hidden="true"></i>
           </button>
           <div className="popup-image-container" id="popup-image-container">
             <img

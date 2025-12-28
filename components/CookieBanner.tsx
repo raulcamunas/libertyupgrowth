@@ -30,8 +30,12 @@ export default function CookieBanner() {
         <div className="cookie-info-modal-content">
           <div className="cookie-info-modal-header">
             <h2 className="cookie-info-modal-title">Política de Cookies</h2>
-            <button className="cookie-info-modal-close" id="cookie-info-close">
-              <i className="fa-solid fa-times"></i>
+            <button 
+              className="cookie-info-modal-close" 
+              id="cookie-info-close"
+              aria-label="Cerrar política de cookies"
+            >
+              <i className="fa-solid fa-times" aria-hidden="true"></i>
             </button>
           </div>
           <div className="cookie-info-modal-body">

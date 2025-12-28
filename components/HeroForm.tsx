@@ -210,7 +210,7 @@ export default function HeroForm() {
       />
       
       <div className="form-card">
-        <h3 className="form-title">Solicita tu Auditoría o Plan de Lanzamiento</h3>
+        <h2 className="form-title">Solicita tu Auditoría o Plan de Lanzamiento</h2>
         <form 
           id="signup-form" 
           className="smart-form" 
@@ -226,6 +226,8 @@ export default function HeroForm() {
             name="website"
             tabIndex={-1}
             autoComplete="off"
+            aria-hidden="true"
+            aria-label=""
             style={{
               position: 'absolute',
               left: '-9999px',
@@ -247,14 +249,22 @@ export default function HeroForm() {
             <div className="error-message" id="name-error"></div>
           </div>
           <div className="input-group phone-group">
+            <label htmlFor="form-prefix" className="sr-only">
+              Prefijo telefónico
+            </label>
             <div className="phone-prefix-wrapper">
               <div className="country-selector" id="country-selector">
-                <div className="country-flag" id="country-flag">🇪🇸</div>
-                <select id="form-prefix" className="form-prefix-select" required>
+                <div className="country-flag" id="country-flag" aria-hidden="true">🇪🇸</div>
+                <select 
+                  id="form-prefix" 
+                  className="form-prefix-select" 
+                  required
+                  aria-label="Seleccionar prefijo telefónico del país"
+                >
                   <option value="+34" data-flag="🇪🇸" defaultChecked>+34</option>
                   <option value="+52" data-flag="🇲🇽">+52</option>
                 </select>
-                <i className="fa-solid fa-chevron-down prefix-arrow"></i>
+                <i className="fa-solid fa-chevron-down prefix-arrow" aria-hidden="true"></i>
               </div>
             </div>
             <input

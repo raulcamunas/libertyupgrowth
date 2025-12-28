@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Screen reader only - para labels accesibles ocultos */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 /* ========================================
    TIPTAP EDITOR STYLES
    ======================================== */
@@ -4305,7 +4318,7 @@
         }
 
         .cookie-btn-accept {
-            background: var(--brand-color);
+            background: #E65100; /* Naranja más oscuro para mejor contraste WCAG AA */
             color: white;
         }
 
