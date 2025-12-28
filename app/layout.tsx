@@ -139,36 +139,43 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        {/* Cargar CSS de forma no bloqueante - usando defer implícito */}
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-        {/* Script para activar CSS después de carga (mejora LCP sin romper iconos) */}
+        {/* Cargar Font Awesome CSS de forma ASÍNCRONA - no bloquea renderizado */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // Cargar CSS después de que el contenido crítico se haya renderizado
+                function loadFontAwesome() {
+                  var link = document.createElement('link');
+                  link.rel = 'stylesheet';
+                  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+                  link.integrity = 'sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==';
+                  link.crossOrigin = 'anonymous';
+                  link.referrerPolicy = 'no-referrer';
+                  document.head.appendChild(link);
+                }
+                // Cargar después de que el DOM esté listo pero sin bloquear
                 if (document.readyState === 'loading') {
                   document.addEventListener('DOMContentLoaded', function() {
-                    var link = document.querySelector('link[href*="font-awesome"][rel="stylesheet"]');
-                    if (link && link.media === 'print') {
-                      link.media = 'all';
-                    }
+                    // Pequeño delay para no bloquear el renderizado inicial
+                    setTimeout(loadFontAwesome, 50);
                   });
                 } else {
-                  var link = document.querySelector('link[href*="font-awesome"][rel="stylesheet"]');
-                  if (link && link.media === 'print') {
-                    link.media = 'all';
-                  }
+                  setTimeout(loadFontAwesome, 50);
                 }
               })();
             `,
           }}
         />
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
+          />
+        </noscript>
       </head>
       <body className={inter.className}>
         {/* Google Tag Manager (noscript) */}
