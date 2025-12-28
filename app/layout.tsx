@@ -147,7 +147,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
           media="print"
-          onLoad="this.media='all'"
+          onLoad={(e) => {
+            const target = e.target as HTMLLinkElement
+            target.media = 'all'
+          }}
         />
         <noscript>
           <link
