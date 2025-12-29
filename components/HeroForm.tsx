@@ -166,6 +166,11 @@ export default function HeroForm() {
         isExecutingTurnstile.current = false
       }
 
+      // Verificar que el token se obtuvo correctamente antes de continuar
+      if (!turnstileToken || turnstileToken.trim() === '') {
+        throw new Error('No se pudo obtener el token de verificación. Por favor, intenta de nuevo.')
+      }
+
       const formData = {
         name: (document.getElementById('form-name') as HTMLInputElement).value.trim(),
         phone: (document.getElementById('form-phone') as HTMLInputElement).value.trim(),
@@ -176,6 +181,12 @@ export default function HeroForm() {
         monthlyRevenue: (document.getElementById('hero-revenue-input') as HTMLInputElement)?.value || '',
         website: (document.getElementById('website-field') as HTMLInputElement)?.value || '', // Honeypot
         cfTurnstileToken: turnstileToken,
+      }
+      
+      // Verificación final antes de enviar
+      if (!formData.cfTurnstileToken) {
+        console.error('❌ Token no incluido en formData')
+        throw new Error('Error de verificación. Por favor, recarga la página e intenta de nuevo.')
       }
 
       // Validación básica del lado del cliente
