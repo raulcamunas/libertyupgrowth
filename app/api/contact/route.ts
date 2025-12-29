@@ -51,49 +51,6 @@ function validateFormData(data: any): { valid: boolean; error?: string } {
   return { valid: true }
 }
 
-async function verifyTurnstile(token: string, ip: string): Promise<{ valid: boolean; error?: string }> {
-  const secret = process.env.CLOUDFLARE_TURNSTILE_SECRET
-  
-  if (!secret) {
-    console.warn('⚠️ Cloudflare Turnstile secret not configured - allowing request')
-    return { valid: true } // Permitir si no está configurado (modo desarrollo)
-  }
-  
-  try {
-    const response = await fetch(
-      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          secret,
-          response: token,
-          remoteip: ip,
-        }),
-      }
-    )
-    
-    const data = await response.json()
-    console.log('🔐 Turnstile verification response:', { success: data.success, errors: data['error-codes'] })
-    
-    if (data.success === true) {
-      return { valid: true }
-    } else {
-      // Error 110200: invalid-input-response o invalid-site-key
-      const errorCodes = data['error-codes'] || []
-      const errorMessage = errorCodes.includes('invalid-input-response') 
-        ? 'Token inválido. Por favor, intenta de nuevo.'
-        : errorCodes.includes('invalid-site-key')
-        ? 'Configuración de Turnstile incorrecta.'
-        : 'Verificación fallida. Por favor, intenta de nuevo.'
-      
-      return { valid: false, error: errorMessage }
-    }
-  } catch (error: any) {
-    console.error('❌ Turnstile verification error:', error)
-    return { valid: false, error: 'Error al verificar. Por favor, intenta de nuevo.' }
-  }
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -118,26 +75,7 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // 2. Verificar Cloudflare Turnstile
-    if (body.cfTurnstileToken) {
-      const verification = await verifyTurnstile(body.cfTurnstileToken, ip)
-      console.log('🔐 Turnstile verification:', verification.valid ? '✅ Valid' : `❌ Invalid: ${verification.error}`)
-      if (!verification.valid) {
-        return NextResponse.json(
-          { error: verification.error || 'Verification failed. Please try again.' },
-          { status: 400 }
-        )
-      }
-    } else {
-      // Si no hay token, rechazar (requerido)
-      console.log('❌ No Turnstile token provided')
-      return NextResponse.json(
-        { error: 'Verification required' },
-        { status: 400 }
-      )
-    }
-    
-    // 3. Validar datos del formulario
+    // 2. Validar datos del formulario
     const validation = validateFormData(body)
     if (!validation.valid) {
       console.log('❌ Form validation failed:', validation.error)

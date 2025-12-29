@@ -1,25 +1,10 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
-import Script from 'next/script'
-
-declare global {
-  interface Window {
-    turnstile?: {
-      render: (element: HTMLElement, options: any) => string
-      execute: (widgetId: string) => Promise<string>
-      reset: (widgetId: string) => void
-    }
-  }
-}
+import { useEffect, useState } from 'react'
 
 export default function HeroForm() {
   const [isAmazonSeller, setIsAmazonSeller] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [turnstileReady, setTurnstileReady] = useState(false)
-  const turnstileRef = useRef<HTMLDivElement>(null)
-  const turnstileWidgetId = useRef<string | null>(null)
-  const isExecutingTurnstile = useRef<boolean>(false)
 
   useEffect(() => {
     // Toggle expandable fields
@@ -134,92 +119,6 @@ export default function HeroForm() {
     const originalBtnText = formBtn.innerHTML
 
     try {
-      // Obtener token de Turnstile - RESETEAR antes de ejecutar para obtener token fresco
-      let turnstileToken = ''
-      
-      console.log('🔐 Turnstile check:', {
-        hasWidgetId: !!turnstileWidgetId.current,
-        hasTurnstile: !!window.turnstile,
-        turnstileReady: turnstileReady
-      })
-      
-      if (!turnstileWidgetId.current) {
-        throw new Error('Widget no inicializado. Por favor, recarga la página.')
-      }
-      
-      if (!window.turnstile) {
-        throw new Error('Turnstile no disponible. Por favor, recarga la página.')
-      }
-      
-      // Evitar ejecutar si ya está en proceso
-      if (isExecutingTurnstile.current) {
-        throw new Error('Verificación en proceso. Por favor, espera un momento.')
-      }
-      
-      isExecutingTurnstile.current = true
-      
-      try {
-        // Resetear el widget antes de ejecutar para obtener un token fresco
-        try {
-          window.turnstile.reset(turnstileWidgetId.current)
-          // Esperar más tiempo para asegurar que el reset se complete completamente
-          await new Promise(resolve => setTimeout(resolve, 500))
-        } catch (resetError: any) {
-          console.warn('⚠️ Error al resetear Turnstile:', resetError)
-          // Si el reset falla, esperar un poco más antes de continuar
-          await new Promise(resolve => setTimeout(resolve, 500))
-        }
-        
-        console.log('🔄 Ejecutando Turnstile...')
-        
-        // Intentar ejecutar con timeout
-        const executePromise = window.turnstile.execute(turnstileWidgetId.current)
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout al ejecutar Turnstile')), 10000)
-        )
-        
-        turnstileToken = await Promise.race([executePromise, timeoutPromise]) as string
-        
-        if (!turnstileToken || turnstileToken.trim() === '') {
-          throw new Error('No se pudo obtener el token de verificación. Por favor, intenta de nuevo.')
-        }
-        
-        console.log('✅ Token obtenido:', turnstileToken.substring(0, 20) + '...')
-      } catch (error: any) {
-        console.error('❌ Error al ejecutar Turnstile:', error)
-        
-        // Si es el error 110200, es un problema de configuración
-        if (error?.message?.includes('110200') || error?.code === '110200') {
-          throw new Error('Error de configuración de Turnstile. Por favor, contacta al administrador.')
-        }
-        
-        // Si es timeout, intentar una vez más
-        if (error?.message?.includes('Timeout')) {
-          console.log('🔄 Reintentando Turnstile después de timeout...')
-          await new Promise(resolve => setTimeout(resolve, 1000))
-          try {
-            window.turnstile.reset(turnstileWidgetId.current)
-            await new Promise(resolve => setTimeout(resolve, 500))
-            turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
-            if (!turnstileToken || turnstileToken.trim() === '') {
-              throw new Error('No se pudo obtener el token después del reintento.')
-            }
-            console.log('✅ Token obtenido en reintento:', turnstileToken.substring(0, 20) + '...')
-          } catch (retryError) {
-            throw new Error('No se pudo obtener el token de verificación. Por favor, recarga la página e intenta de nuevo.')
-          }
-        } else {
-          throw error
-        }
-      } finally {
-        isExecutingTurnstile.current = false
-      }
-
-      // Verificar que el token se obtuvo correctamente antes de continuar
-      if (!turnstileToken || turnstileToken.trim() === '') {
-        throw new Error('No se pudo obtener el token de verificación. Por favor, intenta de nuevo.')
-      }
-
       const formData = {
         name: (document.getElementById('form-name') as HTMLInputElement).value.trim(),
         phone: (document.getElementById('form-phone') as HTMLInputElement).value.trim(),
@@ -229,13 +128,6 @@ export default function HeroForm() {
         sellingDuration: (document.getElementById('hero-duration-input') as HTMLInputElement)?.value || '',
         monthlyRevenue: (document.getElementById('hero-revenue-input') as HTMLInputElement)?.value || '',
         website: (document.getElementById('website-field') as HTMLInputElement)?.value || '', // Honeypot
-        cfTurnstileToken: turnstileToken,
-      }
-      
-      // Verificación final antes de enviar
-      if (!formData.cfTurnstileToken) {
-        console.error('❌ Token no incluido en formData')
-        throw new Error('Error de verificación. Por favor, recarga la página e intenta de nuevo.')
       }
 
       // Validación básica del lado del cliente
@@ -256,8 +148,6 @@ export default function HeroForm() {
       formBtn.style.opacity = '0.7'
       formBtn.textContent = 'Enviando...'
 
-      console.log('📤 Enviando formulario con token:', !!formData.cfTurnstileToken)
-      
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -265,8 +155,6 @@ export default function HeroForm() {
       })
 
       const data = await response.json()
-      
-      console.log('📥 Respuesta del servidor:', response.status, data)
 
       if (!response.ok) {
         throw new Error(data.error || 'Error al enviar el formulario')
@@ -296,11 +184,6 @@ export default function HeroForm() {
         formBtn.style.backgroundColor = 'var(--brand-color)'
         formBtn.innerHTML = originalBtnText
       }, 5000)
-
-      // Resetear Turnstile
-      if (turnstileWidgetId.current && window.turnstile) {
-        window.turnstile.reset(turnstileWidgetId.current)
-      }
     } catch (error: any) {
       formBtn.style.backgroundColor = '#ff4444'
       formBtn.textContent = error.message || 'Error. Intenta de nuevo.'
