@@ -415,8 +415,18 @@ export default function HeroForm() {
             <div className="error-message" id="revenue-error"></div>
           </div>
 
-          {/* Cloudflare Turnstile widget (invisible) */}
-          <div ref={turnstileRef} style={{ display: 'none' }}></div>
+          {/* Cloudflare Turnstile widget (invisible pero presente en DOM) */}
+          <div 
+            ref={turnstileRef} 
+            style={{ 
+              position: 'absolute',
+              width: '1px',
+              height: '1px',
+              opacity: 0,
+              pointerEvents: 'none',
+              overflow: 'hidden'
+            }}
+          ></div>
 
           <button 
             type="submit" 
