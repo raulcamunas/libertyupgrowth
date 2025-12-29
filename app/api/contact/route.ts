@@ -60,7 +60,6 @@ export async function POST(request: NextRequest) {
                'unknown'
     
     console.log('📥 Form submission received:', {
-      hasToken: !!body.cfTurnstileToken,
       name: body.name,
       email: body.email,
       ip: ip
