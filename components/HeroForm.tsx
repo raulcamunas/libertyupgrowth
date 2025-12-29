@@ -87,26 +87,41 @@ export default function HeroForm() {
 
   // Inicializar Turnstile cuando el script esté listo
   useEffect(() => {
-    if (turnstileReady && turnstileRef.current && !turnstileWidgetId.current && window.turnstile) {
-      const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
-      console.log('🔧 Inicializando Turnstile:', { hasSiteKey: !!siteKey, hasRef: !!turnstileRef.current })
-      
-      if (!siteKey) {
-        console.error('❌ NEXT_PUBLIC_TURNSTILE_SITE_KEY no está configurado')
-        return
-      }
-      
-      try {
-        const widgetId = window.turnstile.render(turnstileRef.current, {
-          sitekey: siteKey,
-          theme: 'dark',
-          size: 'invisible',
+    const initTurnstile = () => {
+      if (turnstileReady && turnstileRef.current && !turnstileWidgetId.current && window.turnstile) {
+        const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+        console.log('🔧 Inicializando Turnstile:', { 
+          hasSiteKey: !!siteKey, 
+          hasRef: !!turnstileRef.current,
+          siteKeyValue: siteKey?.substring(0, 10) + '...'
         })
-        turnstileWidgetId.current = widgetId
-        console.log('✅ Turnstile widget inicializado:', widgetId)
-      } catch (error) {
-        console.error('❌ Error al inicializar Turnstile:', error)
+        
+        if (!siteKey) {
+          console.error('❌ NEXT_PUBLIC_TURNSTILE_SITE_KEY no está configurado')
+          return
+        }
+        
+        try {
+          const widgetId = window.turnstile.render(turnstileRef.current, {
+            sitekey: siteKey,
+            theme: 'dark',
+            size: 'invisible',
+          })
+          turnstileWidgetId.current = widgetId
+          console.log('✅ Turnstile widget inicializado:', widgetId)
+        } catch (error) {
+          console.error('❌ Error al inicializar Turnstile:', error)
+        }
       }
+    }
+    
+    // Intentar inicializar inmediatamente
+    initTurnstile()
+    
+    // Si no se inicializó, intentar de nuevo después de un pequeño delay
+    if (!turnstileWidgetId.current && turnstileReady) {
+      const timer = setTimeout(initTurnstile, 200)
+      return () => clearTimeout(timer)
     }
   }, [turnstileReady])
 
@@ -270,10 +285,17 @@ export default function HeroForm() {
     <>
       <Script
         src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         onLoad={() => {
           console.log('✅ Turnstile script cargado')
-          setTurnstileReady(true)
+          // Pequeño delay para asegurar que window.turnstile esté disponible
+          setTimeout(() => {
+            if (window.turnstile) {
+              setTurnstileReady(true)
+            } else {
+              console.error('❌ window.turnstile no disponible después de cargar el script')
+            }
+          }, 100)
         }}
         onError={(e) => {
           console.error('❌ Error al cargar Turnstile script:', e)
