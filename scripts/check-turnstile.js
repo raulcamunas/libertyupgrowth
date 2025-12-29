@@ -71,3 +71,5 @@ console.log('   2. Verifica que ambas variables estén configuradas');
 console.log('   3. Abre la consola del navegador y busca "turnstile"');
 console.log('   4. Intenta enviar el formulario y revisa la pestaña Network');
 
+
+

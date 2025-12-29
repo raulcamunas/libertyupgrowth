@@ -108,9 +108,13 @@ export default function HeroForm() {
     const originalBtnText = formBtn.innerHTML
 
     try {
-      // Obtener token de Turnstile
+      // Obtener token de Turnstile - RESETEAR antes de ejecutar para obtener token fresco
       let turnstileToken = ''
       if (turnstileWidgetId.current && window.turnstile) {
+        // Resetear el widget antes de ejecutar para obtener un token fresco
+        window.turnstile.reset(turnstileWidgetId.current)
+        // Pequeño delay para asegurar que el reset se complete
+        await new Promise(resolve => setTimeout(resolve, 100))
         turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
       } else {
         throw new Error('Verificación no disponible. Por favor, recarga la página.')

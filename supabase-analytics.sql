@@ -156,3 +156,5 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- 5. Puedes ejecutar consultas personalizadas según tus necesidades
 
 
+
+

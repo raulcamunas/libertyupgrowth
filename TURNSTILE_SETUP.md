@@ -62,3 +62,5 @@ CLOUDFLARE_TURNSTILE_SECRET=tu_secret_key_aqui
 - El rate limiting se resetea cada hora por IP
 - Los datos se validan tanto en cliente como en servidor
 
+
+

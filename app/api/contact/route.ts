@@ -88,8 +88,16 @@ export async function POST(request: NextRequest) {
                request.headers.get('x-real-ip') || 
                'unknown'
     
+    console.log('📥 Form submission received:', {
+      hasToken: !!body.cfTurnstileToken,
+      name: body.name,
+      email: body.email,
+      ip: ip
+    })
+    
     // 1. Verificar rate limit
     if (!checkRateLimit(ip)) {
+      console.log('❌ Rate limit exceeded for IP:', ip)
       return NextResponse.json(
         { error: 'Rate limit exceeded. Please try again later.' },
         { status: 429 }
@@ -99,14 +107,16 @@ export async function POST(request: NextRequest) {
     // 2. Verificar Cloudflare Turnstile
     if (body.cfTurnstileToken) {
       const isValid = await verifyTurnstile(body.cfTurnstileToken, ip)
+      console.log('🔐 Turnstile verification:', isValid ? '✅ Valid' : '❌ Invalid')
       if (!isValid) {
         return NextResponse.json(
-          { error: 'Verification failed' },
+          { error: 'Verification failed. Please try again.' },
           { status: 400 }
         )
       }
     } else {
       // Si no hay token, rechazar (requerido)
+      console.log('❌ No Turnstile token provided')
       return NextResponse.json(
         { error: 'Verification required' },
         { status: 400 }
@@ -116,6 +126,7 @@ export async function POST(request: NextRequest) {
     // 3. Validar datos del formulario
     const validation = validateFormData(body)
     if (!validation.valid) {
+      console.log('❌ Form validation failed:', validation.error)
       return NextResponse.json(
         { error: validation.error || 'Invalid form data' },
         { status: 400 }
@@ -135,6 +146,8 @@ export async function POST(request: NextRequest) {
       ip: ip,
     }
     
+    console.log('📤 Sending to webhook:', webhookData)
+    
     const webhookResponse = await fetch(
       'https://n8n-n8n.hyonwd.easypanel.host/webhook/08ef2386-67c2-46e0-9bd8-5084f6908215',
       {
@@ -145,16 +158,21 @@ export async function POST(request: NextRequest) {
     )
     
     if (!webhookResponse.ok) {
-      throw new Error('Webhook failed')
+      const errorText = await webhookResponse.text()
+      console.error('❌ Webhook failed:', webhookResponse.status, errorText)
+      throw new Error(`Webhook failed: ${webhookResponse.status}`)
     }
     
+    console.log('✅ Form submitted successfully')
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Contact form error:', error)
+  } catch (error: any) {
+    console.error('❌ Contact form error:', error.message || error)
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: error.message || 'Internal server error' },
+      { status: error.message?.includes('Webhook') ? 502 : 500 }
     )
   }
 }
+
+
 
