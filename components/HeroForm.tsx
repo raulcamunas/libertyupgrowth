@@ -19,6 +19,7 @@ export default function HeroForm() {
   const [turnstileReady, setTurnstileReady] = useState(false)
   const turnstileRef = useRef<HTMLDivElement>(null)
   const turnstileWidgetId = useRef<string | null>(null)
+  const isExecutingTurnstile = useRef<boolean>(false)
 
   useEffect(() => {
     // Toggle expandable fields
@@ -135,24 +136,35 @@ export default function HeroForm() {
         throw new Error('Turnstile no disponible. Por favor, recarga la página.')
       }
       
-      // Resetear el widget antes de ejecutar para obtener un token fresco
+      // Evitar ejecutar si ya está en proceso
+      if (isExecutingTurnstile.current) {
+        throw new Error('Verificación en proceso. Por favor, espera un momento.')
+      }
+      
+      isExecutingTurnstile.current = true
+      
       try {
-        window.turnstile.reset(turnstileWidgetId.current)
-        // Pequeño delay para asegurar que el reset se complete
-        await new Promise(resolve => setTimeout(resolve, 200))
-      } catch (resetError) {
-        console.warn('⚠️ Error al resetear Turnstile:', resetError)
-        // Continuar de todas formas
+        // Resetear el widget antes de ejecutar para obtener un token fresco
+        try {
+          window.turnstile.reset(turnstileWidgetId.current)
+          // Pequeño delay para asegurar que el reset se complete
+          await new Promise(resolve => setTimeout(resolve, 300))
+        } catch (resetError) {
+          console.warn('⚠️ Error al resetear Turnstile:', resetError)
+          // Continuar de todas formas
+        }
+        
+        console.log('🔄 Ejecutando Turnstile...')
+        turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
+        
+        if (!turnstileToken || turnstileToken.trim() === '') {
+          throw new Error('No se pudo obtener el token de verificación. Por favor, intenta de nuevo.')
+        }
+        
+        console.log('✅ Token obtenido:', turnstileToken.substring(0, 20) + '...')
+      } finally {
+        isExecutingTurnstile.current = false
       }
-      
-      console.log('🔄 Ejecutando Turnstile...')
-      turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
-      
-      if (!turnstileToken || turnstileToken.trim() === '') {
-        throw new Error('No se pudo obtener el token de verificación. Por favor, intenta de nuevo.')
-      }
-      
-      console.log('✅ Token obtenido:', turnstileToken.substring(0, 20) + '...')
 
       const formData = {
         name: (document.getElementById('form-name') as HTMLInputElement).value.trim(),
