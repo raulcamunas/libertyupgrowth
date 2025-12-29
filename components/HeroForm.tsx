@@ -88,13 +88,23 @@ export default function HeroForm() {
   useEffect(() => {
     if (turnstileReady && turnstileRef.current && !turnstileWidgetId.current && window.turnstile) {
       const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
-      if (siteKey) {
+      console.log('🔧 Inicializando Turnstile:', { hasSiteKey: !!siteKey, hasRef: !!turnstileRef.current })
+      
+      if (!siteKey) {
+        console.error('❌ NEXT_PUBLIC_TURNSTILE_SITE_KEY no está configurado')
+        return
+      }
+      
+      try {
         const widgetId = window.turnstile.render(turnstileRef.current, {
           sitekey: siteKey,
           theme: 'dark',
           size: 'invisible',
         })
         turnstileWidgetId.current = widgetId
+        console.log('✅ Turnstile widget inicializado:', widgetId)
+      } catch (error) {
+        console.error('❌ Error al inicializar Turnstile:', error)
       }
     }
   }, [turnstileReady])
@@ -110,15 +120,39 @@ export default function HeroForm() {
     try {
       // Obtener token de Turnstile - RESETEAR antes de ejecutar para obtener token fresco
       let turnstileToken = ''
-      if (turnstileWidgetId.current && window.turnstile) {
-        // Resetear el widget antes de ejecutar para obtener un token fresco
+      
+      console.log('🔐 Turnstile check:', {
+        hasWidgetId: !!turnstileWidgetId.current,
+        hasTurnstile: !!window.turnstile,
+        turnstileReady: turnstileReady
+      })
+      
+      if (!turnstileWidgetId.current) {
+        throw new Error('Widget no inicializado. Por favor, recarga la página.')
+      }
+      
+      if (!window.turnstile) {
+        throw new Error('Turnstile no disponible. Por favor, recarga la página.')
+      }
+      
+      // Resetear el widget antes de ejecutar para obtener un token fresco
+      try {
         window.turnstile.reset(turnstileWidgetId.current)
         // Pequeño delay para asegurar que el reset se complete
-        await new Promise(resolve => setTimeout(resolve, 100))
-        turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
-      } else {
-        throw new Error('Verificación no disponible. Por favor, recarga la página.')
+        await new Promise(resolve => setTimeout(resolve, 200))
+      } catch (resetError) {
+        console.warn('⚠️ Error al resetear Turnstile:', resetError)
+        // Continuar de todas formas
       }
+      
+      console.log('🔄 Ejecutando Turnstile...')
+      turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
+      
+      if (!turnstileToken || turnstileToken.trim() === '') {
+        throw new Error('No se pudo obtener el token de verificación. Por favor, intenta de nuevo.')
+      }
+      
+      console.log('✅ Token obtenido:', turnstileToken.substring(0, 20) + '...')
 
       const formData = {
         name: (document.getElementById('form-name') as HTMLInputElement).value.trim(),
@@ -150,6 +184,8 @@ export default function HeroForm() {
       formBtn.style.opacity = '0.7'
       formBtn.textContent = 'Enviando...'
 
+      console.log('📤 Enviando formulario con token:', !!formData.cfTurnstileToken)
+      
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -157,6 +193,8 @@ export default function HeroForm() {
       })
 
       const data = await response.json()
+      
+      console.log('📥 Respuesta del servidor:', response.status, data)
 
       if (!response.ok) {
         throw new Error(data.error || 'Error al enviar el formulario')
@@ -210,7 +248,13 @@ export default function HeroForm() {
       <Script
         src="https://challenges.cloudflare.com/turnstile/v0/api.js"
         strategy="lazyOnload"
-        onLoad={() => setTurnstileReady(true)}
+        onLoad={() => {
+          console.log('✅ Turnstile script cargado')
+          setTurnstileReady(true)
+        }}
+        onError={(e) => {
+          console.error('❌ Error al cargar Turnstile script:', e)
+        }}
       />
       
       <div className="form-card">
