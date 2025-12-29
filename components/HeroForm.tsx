@@ -162,21 +162,55 @@ export default function HeroForm() {
         // Resetear el widget antes de ejecutar para obtener un token fresco
         try {
           window.turnstile.reset(turnstileWidgetId.current)
-          // Pequeño delay para asegurar que el reset se complete
-          await new Promise(resolve => setTimeout(resolve, 300))
-        } catch (resetError) {
+          // Esperar más tiempo para asegurar que el reset se complete completamente
+          await new Promise(resolve => setTimeout(resolve, 500))
+        } catch (resetError: any) {
           console.warn('⚠️ Error al resetear Turnstile:', resetError)
-          // Continuar de todas formas
+          // Si el reset falla, esperar un poco más antes de continuar
+          await new Promise(resolve => setTimeout(resolve, 500))
         }
         
         console.log('🔄 Ejecutando Turnstile...')
-        turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
+        
+        // Intentar ejecutar con timeout
+        const executePromise = window.turnstile.execute(turnstileWidgetId.current)
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout al ejecutar Turnstile')), 10000)
+        )
+        
+        turnstileToken = await Promise.race([executePromise, timeoutPromise]) as string
         
         if (!turnstileToken || turnstileToken.trim() === '') {
           throw new Error('No se pudo obtener el token de verificación. Por favor, intenta de nuevo.')
         }
         
         console.log('✅ Token obtenido:', turnstileToken.substring(0, 20) + '...')
+      } catch (error: any) {
+        console.error('❌ Error al ejecutar Turnstile:', error)
+        
+        // Si es el error 110200, es un problema de configuración
+        if (error?.message?.includes('110200') || error?.code === '110200') {
+          throw new Error('Error de configuración de Turnstile. Por favor, contacta al administrador.')
+        }
+        
+        // Si es timeout, intentar una vez más
+        if (error?.message?.includes('Timeout')) {
+          console.log('🔄 Reintentando Turnstile después de timeout...')
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          try {
+            window.turnstile.reset(turnstileWidgetId.current)
+            await new Promise(resolve => setTimeout(resolve, 500))
+            turnstileToken = await window.turnstile.execute(turnstileWidgetId.current)
+            if (!turnstileToken || turnstileToken.trim() === '') {
+              throw new Error('No se pudo obtener el token después del reintento.')
+            }
+            console.log('✅ Token obtenido en reintento:', turnstileToken.substring(0, 20) + '...')
+          } catch (retryError) {
+            throw new Error('No se pudo obtener el token de verificación. Por favor, recarga la página e intenta de nuevo.')
+          }
+        } else {
+          throw error
+        }
       } finally {
         isExecutingTurnstile.current = false
       }
