@@ -70,45 +70,6 @@ export default function HeroForm() {
     }
   }, [])
 
-  // Inicializar Turnstile cuando el script esté listo
-  useEffect(() => {
-    const initTurnstile = () => {
-      if (turnstileReady && turnstileRef.current && !turnstileWidgetId.current && window.turnstile) {
-        const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
-        console.log('🔧 Inicializando Turnstile:', { 
-          hasSiteKey: !!siteKey, 
-          hasRef: !!turnstileRef.current,
-          siteKeyValue: siteKey?.substring(0, 10) + '...'
-        })
-        
-        if (!siteKey) {
-          console.error('❌ NEXT_PUBLIC_TURNSTILE_SITE_KEY no está configurado')
-          return
-        }
-        
-        try {
-          const widgetId = window.turnstile.render(turnstileRef.current, {
-            sitekey: siteKey,
-            theme: 'dark',
-            size: 'invisible',
-          })
-          turnstileWidgetId.current = widgetId
-          console.log('✅ Turnstile widget inicializado:', widgetId)
-        } catch (error) {
-          console.error('❌ Error al inicializar Turnstile:', error)
-        }
-      }
-    }
-    
-    // Intentar inicializar inmediatamente
-    initTurnstile()
-    
-    // Si no se inicializó, intentar de nuevo después de un pequeño delay
-    if (!turnstileWidgetId.current && turnstileReady) {
-      const timer = setTimeout(initTurnstile, 200)
-      return () => clearTimeout(timer)
-    }
-  }, [turnstileReady])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -199,27 +160,7 @@ export default function HeroForm() {
   }
 
   return (
-    <>
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          console.log('✅ Turnstile script cargado')
-          // Pequeño delay para asegurar que window.turnstile esté disponible
-          setTimeout(() => {
-            if (window.turnstile) {
-              setTurnstileReady(true)
-            } else {
-              console.error('❌ window.turnstile no disponible después de cargar el script')
-            }
-          }, 100)
-        }}
-        onError={(e) => {
-          console.error('❌ Error al cargar Turnstile script:', e)
-        }}
-      />
-      
-      <div className="form-card">
+    <div className="form-card">
         <h2 className="form-title">Solicita tu Auditoría o Plan de Lanzamiento</h2>
         <form 
           id="signup-form" 
@@ -332,29 +273,15 @@ export default function HeroForm() {
             <div className="error-message" id="revenue-error"></div>
           </div>
 
-          {/* Cloudflare Turnstile widget (invisible pero presente en DOM) */}
-          <div 
-            ref={turnstileRef} 
-            style={{ 
-              position: 'absolute',
-              width: '1px',
-              height: '1px',
-              opacity: 0,
-              pointerEvents: 'none',
-              overflow: 'hidden'
-            }}
-          ></div>
-
           <button 
             type="submit" 
             className="submit-btn"
-            disabled={isSubmitting || !turnstileReady}
+            disabled={isSubmitting}
           >
             {isSubmitting ? 'Enviando...' : 'TE CONTACTAMOS'}
           </button>
         </form>
       </div>
-    </>
   )
 }
 
