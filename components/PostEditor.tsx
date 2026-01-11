@@ -335,23 +335,48 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           try {
             const { view } = editor
             const editorElement = editor.view.dom
-            const editorRect = editorElement.getBoundingClientRect()
             
-            // Obtener coordenadas de la selección
-            const start = view.coordsAtPos(from)
-            const end = view.coordsAtPos(to)
+            // Intentar obtener coordenadas usando la API de selección del navegador
+            const selection = window.getSelection()
+            let selectionRect: DOMRect | null = null
+            
+            if (selection && selection.rangeCount > 0) {
+              const range = selection.getRangeAt(0)
+              selectionRect = range.getBoundingClientRect()
+            }
+            
+            // Si no hay selección del navegador, usar coordsAtPos de TipTap
+            let startX = 0
+            let startY = 0
+            let endX = 0
+            let endY = 0
+            
+            if (selectionRect && selectionRect.width > 0 && selectionRect.height > 0) {
+              // Usar las coordenadas de la selección del navegador
+              startX = selectionRect.left
+              startY = selectionRect.top
+              endX = selectionRect.right
+              endY = selectionRect.bottom
+            } else {
+              // Fallback: usar coordsAtPos de TipTap
+              const start = view.coordsAtPos(from)
+              const end = view.coordsAtPos(to)
+              startX = start.left
+              startY = start.top
+              endX = end.right
+              endY = end.bottom
+            }
             
             // Obtener el ancho real del toolbar (si ya existe)
             const toolbarWidth = floatingToolbarRef.current?.offsetWidth || 400
             const toolbarHeight = 50
             
             // Calcular posición centrada horizontalmente sobre la selección
-            // Usar el centro de la selección como punto de referencia
-            const selectionCenterX = (start.left + end.left) / 2
+            const selectionCenterX = (startX + endX) / 2
             let x = selectionCenterX // Ya que usamos transform: translateX(-50%)
             
             // Posición vertical: arriba de la selección
-            let y = start.top - toolbarHeight - 12
+            let y = startY - toolbarHeight - 12
 
             // Ajustar horizontalmente si se sale de la pantalla
             const padding = 20
@@ -366,7 +391,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
             // Ajustar verticalmente si se sale de la pantalla
             if (y < padding) {
               // Si no cabe arriba, ponerlo abajo de la selección
-              y = end.bottom + 12
+              y = endY + 12
             }
             
             // Verificar que no se salga por abajo
