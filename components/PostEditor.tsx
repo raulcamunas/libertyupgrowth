@@ -272,37 +272,6 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML())
     },
-    onSelectionUpdate: ({ editor }) => {
-      const { from, to } = editor.state.selection
-      if (from === to) {
-        // No hay selección, ocultar toolbar
-        setFloatingToolbar(null)
-        return
-      }
-
-      // Obtener la posición de la selección
-      const { view } = editor
-      const start = view.coordsAtPos(from)
-      const end = view.coordsAtPos(to)
-      
-      // Calcular posición del toolbar (arriba del texto seleccionado)
-      const toolbarHeight = 50
-      const toolbarWidth = 400
-      let x = (start.left + end.left) / 2 - toolbarWidth / 2
-      let y = start.top - toolbarHeight - 10
-
-      // Ajustar si se sale de la pantalla
-      if (x < 10) x = 10
-      if (x + toolbarWidth > window.innerWidth - 10) {
-        x = window.innerWidth - toolbarWidth - 10
-      }
-      if (y < 10) {
-        // Si no cabe arriba, ponerlo abajo
-        y = end.bottom + 10
-      }
-
-      setFloatingToolbar({ x, y })
-    },
     editorProps: {
       attributes: {
         class: 'prose prose-invert max-w-none focus:outline-none min-h-[500px] p-6',
@@ -346,6 +315,101 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
       }
     }
   }
+
+  // Detectar selección y mostrar toolbar flotante
+  useEffect(() => {
+    if (!editor) return
+
+    const updateToolbarPosition = () => {
+      try {
+        const { from, to } = editor.state.selection
+        
+        if (from === to) {
+          // No hay selección, ocultar toolbar
+          setFloatingToolbar(null)
+          return
+        }
+
+        // Usar requestAnimationFrame para asegurar que el DOM esté actualizado
+        requestAnimationFrame(() => {
+          try {
+            const { view } = editor
+            const start = view.coordsAtPos(from)
+            const end = view.coordsAtPos(to)
+            
+            // Calcular posición del toolbar (arriba del texto seleccionado)
+            const toolbarHeight = 50
+            const toolbarWidth = 400
+            let x = (start.left + end.left) / 2 - toolbarWidth / 2
+            let y = start.top - toolbarHeight - 10
+
+            // Ajustar si se sale de la pantalla
+            if (x < 10) x = 10
+            if (x + toolbarWidth > window.innerWidth - 10) {
+              x = window.innerWidth - toolbarWidth - 10
+            }
+            if (y < 10) {
+              // Si no cabe arriba, ponerlo abajo
+              y = end.bottom + 10
+            }
+
+            setFloatingToolbar({ x, y })
+          } catch (error) {
+            console.error('Error calculating toolbar position:', error)
+            setFloatingToolbar(null)
+          }
+        })
+      } catch (error) {
+        // Si hay error, ocultar toolbar
+        setFloatingToolbar(null)
+      }
+    }
+
+    // Escuchar eventos del DOM directamente
+    const editorElement = editor.view.dom
+    
+    const handleMouseUp = (e: MouseEvent) => {
+      // Pequeño delay para que la selección se actualice
+      setTimeout(() => {
+        updateToolbarPosition()
+      }, 10)
+    }
+    
+    const handleKeyUp = () => {
+      setTimeout(() => {
+        updateToolbarPosition()
+      }, 10)
+    }
+
+    const handleMouseMove = () => {
+      // Solo actualizar si hay una selección activa (arrastrando)
+      if (window.getSelection()?.toString().length) {
+        setTimeout(() => {
+          updateToolbarPosition()
+        }, 10)
+      }
+    }
+
+    // Escuchar eventos de selección
+    editorElement.addEventListener('mouseup', handleMouseUp)
+    editorElement.addEventListener('keyup', handleKeyUp)
+    editorElement.addEventListener('mousemove', handleMouseMove)
+    
+    // También usar un intervalo para verificar la selección periódicamente
+    const intervalId = setInterval(() => {
+      const { from, to } = editor.state.selection
+      if (from !== to) {
+        updateToolbarPosition()
+      }
+    }, 100)
+
+    return () => {
+      editorElement.removeEventListener('mouseup', handleMouseUp)
+      editorElement.removeEventListener('keyup', handleKeyUp)
+      editorElement.removeEventListener('mousemove', handleMouseMove)
+      clearInterval(intervalId)
+    }
+  }, [editor])
 
   // Ocultar toolbar al hacer clic fuera
   useEffect(() => {
