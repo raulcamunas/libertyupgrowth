@@ -334,23 +334,44 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
         requestAnimationFrame(() => {
           try {
             const { view } = editor
+            const editorElement = editor.view.dom
+            const editorRect = editorElement.getBoundingClientRect()
+            
+            // Obtener coordenadas de la selección
             const start = view.coordsAtPos(from)
             const end = view.coordsAtPos(to)
             
-            // Calcular posición del toolbar (arriba del texto seleccionado)
+            // Obtener el ancho real del toolbar (si ya existe)
+            const toolbarWidth = floatingToolbarRef.current?.offsetWidth || 400
             const toolbarHeight = 50
-            const toolbarWidth = 400
-            let x = (start.left + end.left) / 2 - toolbarWidth / 2
-            let y = start.top - toolbarHeight - 10
+            
+            // Calcular posición centrada horizontalmente sobre la selección
+            // Usar el centro de la selección como punto de referencia
+            const selectionCenterX = (start.left + end.left) / 2
+            let x = selectionCenterX // Ya que usamos transform: translateX(-50%)
+            
+            // Posición vertical: arriba de la selección
+            let y = start.top - toolbarHeight - 12
 
-            // Ajustar si se sale de la pantalla
-            if (x < 10) x = 10
-            if (x + toolbarWidth > window.innerWidth - 10) {
-              x = window.innerWidth - toolbarWidth - 10
+            // Ajustar horizontalmente si se sale de la pantalla
+            const padding = 20
+            const halfToolbarWidth = toolbarWidth / 2
+            
+            if (x - halfToolbarWidth < padding) {
+              x = padding + halfToolbarWidth
+            } else if (x + halfToolbarWidth > window.innerWidth - padding) {
+              x = window.innerWidth - padding - halfToolbarWidth
             }
-            if (y < 10) {
-              // Si no cabe arriba, ponerlo abajo
-              y = end.bottom + 10
+
+            // Ajustar verticalmente si se sale de la pantalla
+            if (y < padding) {
+              // Si no cabe arriba, ponerlo abajo de la selección
+              y = end.bottom + 12
+            }
+            
+            // Verificar que no se salga por abajo
+            if (y + toolbarHeight > window.innerHeight - padding) {
+              y = window.innerHeight - toolbarHeight - padding
             }
 
             setFloatingToolbar({ x, y })
@@ -598,6 +619,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
             left: `${floatingToolbar.x}px`,
             top: `${floatingToolbar.y}px`,
             zIndex: 1000,
+            transform: 'translateX(-50%)',
           }}
           onMouseDown={(e) => e.preventDefault()}
         >
