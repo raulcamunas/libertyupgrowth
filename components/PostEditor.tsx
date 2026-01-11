@@ -12,15 +12,15 @@ interface PostEditorProps {
   onChange: (content: string) => void
 }
 
-interface ContextMenuPosition {
+interface FloatingToolbarPosition {
   x: number
   y: number
 }
 
 export default function PostEditor({ content, onChange }: PostEditorProps) {
   const [isUploading, setIsUploading] = useState(false)
-  const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
-  const contextMenuRef = useRef<HTMLDivElement>(null)
+  const [floatingToolbar, setFloatingToolbar] = useState<FloatingToolbarPosition | null>(null)
+  const floatingToolbarRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
@@ -272,6 +272,37 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML())
     },
+    onSelectionUpdate: ({ editor }) => {
+      const { from, to } = editor.state.selection
+      if (from === to) {
+        // No hay selección, ocultar toolbar
+        setFloatingToolbar(null)
+        return
+      }
+
+      // Obtener la posición de la selección
+      const { view } = editor
+      const start = view.coordsAtPos(from)
+      const end = view.coordsAtPos(to)
+      
+      // Calcular posición del toolbar (arriba del texto seleccionado)
+      const toolbarHeight = 50
+      const toolbarWidth = 400
+      let x = (start.left + end.left) / 2 - toolbarWidth / 2
+      let y = start.top - toolbarHeight - 10
+
+      // Ajustar si se sale de la pantalla
+      if (x < 10) x = 10
+      if (x + toolbarWidth > window.innerWidth - 10) {
+        x = window.innerWidth - toolbarWidth - 10
+      }
+      if (y < 10) {
+        // Si no cabe arriba, ponerlo abajo
+        y = end.bottom + 10
+      }
+
+      setFloatingToolbar({ x, y })
+    },
     editorProps: {
       attributes: {
         class: 'prose prose-invert max-w-none focus:outline-none min-h-[500px] p-6',
@@ -316,82 +347,28 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
     }
   }
 
-  // Manejar menú contextual
+  // Ocultar toolbar al hacer clic fuera
   useEffect(() => {
-    if (!editor) return
-
-    const handleContextMenu = (e: MouseEvent) => {
-      // Solo mostrar si hay texto seleccionado
-      const { from, to } = editor.state.selection
-      if (from === to) {
-        return // No hay selección
-      }
-
-      e.preventDefault()
-      
-      // Calcular posición ajustada para evitar que se salga de la pantalla
-      const menuWidth = 240
-      const menuHeight = 400 // Aproximado
-      let x = e.clientX
-      let y = e.clientY
-      
-      // Ajustar horizontalmente
-      if (x + menuWidth > window.innerWidth) {
-        x = window.innerWidth - menuWidth - 10
-      }
-      if (x < 10) {
-        x = 10
-      }
-      
-      // Ajustar verticalmente
-      if (y + menuHeight > window.innerHeight) {
-        y = window.innerHeight - menuHeight - 10
-      }
-      if (y < 10) {
-        y = 10
-      }
-      
-      setContextMenu({ x, y })
-    }
-
     const handleClickOutside = (e: MouseEvent) => {
-      if (contextMenuRef.current && !contextMenuRef.current.contains(e.target as Node)) {
-        setContextMenu(null)
+      if (floatingToolbarRef.current && !floatingToolbarRef.current.contains(e.target as Node)) {
+        // Solo ocultar si no hay selección
+        if (editor) {
+          const { from, to } = editor.state.selection
+          if (from === to) {
+            setFloatingToolbar(null)
+          }
+        }
       }
     }
 
-    const editorElement = editor.view.dom
-    editorElement.addEventListener('contextmenu', handleContextMenu)
-    document.addEventListener('click', handleClickOutside)
-
-    return () => {
-      editorElement.removeEventListener('contextmenu', handleContextMenu)
-      document.removeEventListener('click', handleClickOutside)
+    if (floatingToolbar) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [editor])
-
-  // Cerrar menú con Escape
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setContextMenu(null)
-      }
-    }
-
-    if (contextMenu) {
-      document.addEventListener('keydown', handleEscape)
-      return () => document.removeEventListener('keydown', handleEscape)
-    }
-  }, [contextMenu])
+  }, [floatingToolbar, editor])
 
   if (!editor) {
     return <div className="text-gray-400">Cargando editor...</div>
-  }
-
-  const handleContextMenuAction = (action: () => void) => {
-    action()
-    setContextMenu(null)
-    editor.chain().focus().run()
   }
 
   return (
@@ -547,149 +524,128 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
         <EditorContent editor={editor} />
       </div>
 
-      {/* Menú Contextual */}
-      {contextMenu && (
+      {/* Toolbar Flotante */}
+      {floatingToolbar && (
         <div
-          ref={contextMenuRef}
-          className="admin-context-menu"
+          ref={floatingToolbarRef}
+          className="admin-floating-toolbar"
           style={{
             position: 'fixed',
-            left: `${contextMenu.x}px`,
-            top: `${contextMenu.y}px`,
+            left: `${floatingToolbar.x}px`,
+            top: `${floatingToolbar.y}px`,
             zIndex: 1000,
           }}
+          onMouseDown={(e) => e.preventDefault()}
         >
-          <div className="admin-context-menu-section">
-            <div className="admin-context-menu-label">Formato de texto</div>
+          <div className="admin-floating-toolbar-group">
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleBold().run())}
-              className={`admin-context-menu-item ${editor.isActive('bold') ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('bold') ? 'active' : ''}`}
+              title="Negrita (Ctrl+B)"
             >
               <i className="fa-solid fa-bold"></i>
-              <span>Negrita</span>
-              <span className="admin-context-menu-shortcut">Ctrl+B</span>
             </button>
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleItalic().run())}
-              className={`admin-context-menu-item ${editor.isActive('italic') ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('italic') ? 'active' : ''}`}
+              title="Cursiva (Ctrl+I)"
             >
               <i className="fa-solid fa-italic"></i>
-              <span>Cursiva</span>
-              <span className="admin-context-menu-shortcut">Ctrl+I</span>
             </button>
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleStrike().run())}
-              className={`admin-context-menu-item ${editor.isActive('strike') ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('strike') ? 'active' : ''}`}
+              title="Tachado"
             >
               <i className="fa-solid fa-strikethrough"></i>
-              <span>Tachado</span>
             </button>
           </div>
 
-          <div className="admin-context-menu-divider"></div>
+          <div className="admin-floating-toolbar-divider"></div>
 
-          <div className="admin-context-menu-section">
-            <div className="admin-context-menu-label">Encabezados</div>
+          <div className="admin-floating-toolbar-group">
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleHeading({ level: 1 }).run())}
-              className={`admin-context-menu-item ${editor.isActive('heading', { level: 1 }) ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('heading', { level: 1 }) ? 'active' : ''}`}
+              title="Título 1"
             >
-              <span className="admin-context-menu-heading">H1</span>
-              <span>Título 1</span>
+              H1
             </button>
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleHeading({ level: 2 }).run())}
-              className={`admin-context-menu-item ${editor.isActive('heading', { level: 2 }) ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('heading', { level: 2 }) ? 'active' : ''}`}
+              title="Título 2"
             >
-              <span className="admin-context-menu-heading">H2</span>
-              <span>Título 2</span>
+              H2
             </button>
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleHeading({ level: 3 }).run())}
-              className={`admin-context-menu-item ${editor.isActive('heading', { level: 3 }) ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('heading', { level: 3 }) ? 'active' : ''}`}
+              title="Título 3"
             >
-              <span className="admin-context-menu-heading">H3</span>
-              <span>Título 3</span>
+              H3
             </button>
           </div>
 
-          <div className="admin-context-menu-divider"></div>
+          <div className="admin-floating-toolbar-divider"></div>
 
-          <div className="admin-context-menu-section">
-            <div className="admin-context-menu-label">Listas</div>
+          <div className="admin-floating-toolbar-group">
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleBulletList().run())}
-              className={`admin-context-menu-item ${editor.isActive('bulletList') ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('bulletList') ? 'active' : ''}`}
+              title="Lista con viñetas"
             >
               <i className="fa-solid fa-list-ul"></i>
-              <span>Lista con viñetas</span>
             </button>
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleOrderedList().run())}
-              className={`admin-context-menu-item ${editor.isActive('orderedList') ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('orderedList') ? 'active' : ''}`}
+              title="Lista numerada"
             >
               <i className="fa-solid fa-list-ol"></i>
-              <span>Lista numerada</span>
             </button>
           </div>
 
-          <div className="admin-context-menu-divider"></div>
+          <div className="admin-floating-toolbar-divider"></div>
 
-          <div className="admin-context-menu-section">
+          <div className="admin-floating-toolbar-group">
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleBlockquote().run())}
-              className={`admin-context-menu-item ${editor.isActive('blockquote') ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleBlockquote().run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('blockquote') ? 'active' : ''}`}
+              title="Cita"
             >
               <i className="fa-solid fa-quote-left"></i>
-              <span>Cita</span>
             </button>
             <button
               type="button"
-              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleCode().run())}
-              className={`admin-context-menu-item ${editor.isActive('code') ? 'active' : ''}`}
+              onClick={() => editor.chain().focus().toggleCode().run()}
+              className={`admin-floating-toolbar-button ${editor.isActive('code') ? 'active' : ''}`}
+              title="Código"
             >
               <i className="fa-solid fa-code"></i>
-              <span>Código</span>
             </button>
-          </div>
-
-          <div className="admin-context-menu-divider"></div>
-
-          <div className="admin-context-menu-section">
             <button
               type="button"
               onClick={() => {
                 const url = window.prompt('Introduce la URL:')
                 if (url) {
-                  handleContextMenuAction(() => editor.chain().focus().setLink({ href: url }).run())
-                } else {
-                  setContextMenu(null)
+                  editor.chain().focus().setLink({ href: url }).run()
                 }
               }}
-              className={`admin-context-menu-item ${editor.isActive('link') ? 'active' : ''}`}
+              className={`admin-floating-toolbar-button ${editor.isActive('link') ? 'active' : ''}`}
+              title="Enlace"
             >
               <i className="fa-solid fa-link"></i>
-              <span>Enlace</span>
             </button>
-            {editor.isActive('link') && (
-              <button
-                type="button"
-                onClick={() => handleContextMenuAction(() => editor.chain().focus().unsetLink().run())}
-                className="admin-context-menu-item"
-              >
-                <i className="fa-solid fa-unlink"></i>
-                <span>Quitar enlace</span>
-              </button>
-            )}
           </div>
         </div>
       )}
