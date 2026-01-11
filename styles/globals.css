@@ -817,6 +817,106 @@
     padding: 32px;
 }
 
+/* Menú Contextual */
+.admin-context-menu {
+    background: linear-gradient(135deg, 
+        rgba(20, 20, 20, 0.98) 0%,
+        rgba(15, 15, 15, 0.98) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 8px;
+    min-width: 240px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 102, 0, 0.1);
+    backdrop-filter: blur(20px);
+    animation: contextMenuFadeIn 0.15s ease-out;
+}
+
+@keyframes contextMenuFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.admin-context-menu-section {
+    padding: 4px 0;
+}
+
+.admin-context-menu-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 8px 12px 4px 12px;
+    margin-bottom: 4px;
+}
+
+.admin-context-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.admin-context-menu-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.admin-context-menu-item.active {
+    background: rgba(255, 102, 0, 0.15);
+    color: #FF6600;
+}
+
+.admin-context-menu-item.active:hover {
+    background: rgba(255, 102, 0, 0.25);
+}
+
+.admin-context-menu-item i {
+    width: 18px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.admin-context-menu-item span {
+    flex: 1;
+}
+
+.admin-context-menu-heading {
+    font-weight: 700;
+    font-size: 13px;
+    color: #FF6600;
+    min-width: 32px;
+}
+
+.admin-context-menu-shortcut {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'Courier New', monospace;
+    margin-left: auto;
+}
+
+.admin-context-menu-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 8px 0;
+}
+
 /* Modal Premium */
 .admin-modal-overlay {
     position: fixed;

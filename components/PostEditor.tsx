@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import React from 'react'
 
 interface PostEditorProps {
@@ -12,8 +12,16 @@ interface PostEditorProps {
   onChange: (content: string) => void
 }
 
+interface ContextMenuPosition {
+  x: number
+  y: number
+}
+
 export default function PostEditor({ content, onChange }: PostEditorProps) {
   const [isUploading, setIsUploading] = useState(false)
+  const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
+  const contextMenuRef = useRef<HTMLDivElement>(null)
+  const editorRef = useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
     extensions: [
@@ -308,12 +316,86 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
     }
   }
 
+  // Manejar menú contextual
+  useEffect(() => {
+    if (!editor) return
+
+    const handleContextMenu = (e: MouseEvent) => {
+      // Solo mostrar si hay texto seleccionado
+      const { from, to } = editor.state.selection
+      if (from === to) {
+        return // No hay selección
+      }
+
+      e.preventDefault()
+      
+      // Calcular posición ajustada para evitar que se salga de la pantalla
+      const menuWidth = 240
+      const menuHeight = 400 // Aproximado
+      let x = e.clientX
+      let y = e.clientY
+      
+      // Ajustar horizontalmente
+      if (x + menuWidth > window.innerWidth) {
+        x = window.innerWidth - menuWidth - 10
+      }
+      if (x < 10) {
+        x = 10
+      }
+      
+      // Ajustar verticalmente
+      if (y + menuHeight > window.innerHeight) {
+        y = window.innerHeight - menuHeight - 10
+      }
+      if (y < 10) {
+        y = 10
+      }
+      
+      setContextMenu({ x, y })
+    }
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (contextMenuRef.current && !contextMenuRef.current.contains(e.target as Node)) {
+        setContextMenu(null)
+      }
+    }
+
+    const editorElement = editor.view.dom
+    editorElement.addEventListener('contextmenu', handleContextMenu)
+    document.addEventListener('click', handleClickOutside)
+
+    return () => {
+      editorElement.removeEventListener('contextmenu', handleContextMenu)
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [editor])
+
+  // Cerrar menú con Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setContextMenu(null)
+      }
+    }
+
+    if (contextMenu) {
+      document.addEventListener('keydown', handleEscape)
+      return () => document.removeEventListener('keydown', handleEscape)
+    }
+  }, [contextMenu])
+
   if (!editor) {
     return <div className="text-gray-400">Cargando editor...</div>
   }
 
+  const handleContextMenuAction = (action: () => void) => {
+    action()
+    setContextMenu(null)
+    editor.chain().focus().run()
+  }
+
   return (
-    <div className="admin-editor-container">
+    <div className="admin-editor-container" ref={editorRef}>
       {/* Toolbar */}
       <div className="admin-editor-toolbar">
         {/* Text Formatting */}
@@ -464,6 +546,153 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
       <div className="admin-editor-content">
         <EditorContent editor={editor} />
       </div>
+
+      {/* Menú Contextual */}
+      {contextMenu && (
+        <div
+          ref={contextMenuRef}
+          className="admin-context-menu"
+          style={{
+            position: 'fixed',
+            left: `${contextMenu.x}px`,
+            top: `${contextMenu.y}px`,
+            zIndex: 1000,
+          }}
+        >
+          <div className="admin-context-menu-section">
+            <div className="admin-context-menu-label">Formato de texto</div>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleBold().run())}
+              className={`admin-context-menu-item ${editor.isActive('bold') ? 'active' : ''}`}
+            >
+              <i className="fa-solid fa-bold"></i>
+              <span>Negrita</span>
+              <span className="admin-context-menu-shortcut">Ctrl+B</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleItalic().run())}
+              className={`admin-context-menu-item ${editor.isActive('italic') ? 'active' : ''}`}
+            >
+              <i className="fa-solid fa-italic"></i>
+              <span>Cursiva</span>
+              <span className="admin-context-menu-shortcut">Ctrl+I</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleStrike().run())}
+              className={`admin-context-menu-item ${editor.isActive('strike') ? 'active' : ''}`}
+            >
+              <i className="fa-solid fa-strikethrough"></i>
+              <span>Tachado</span>
+            </button>
+          </div>
+
+          <div className="admin-context-menu-divider"></div>
+
+          <div className="admin-context-menu-section">
+            <div className="admin-context-menu-label">Encabezados</div>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleHeading({ level: 1 }).run())}
+              className={`admin-context-menu-item ${editor.isActive('heading', { level: 1 }) ? 'active' : ''}`}
+            >
+              <span className="admin-context-menu-heading">H1</span>
+              <span>Título 1</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleHeading({ level: 2 }).run())}
+              className={`admin-context-menu-item ${editor.isActive('heading', { level: 2 }) ? 'active' : ''}`}
+            >
+              <span className="admin-context-menu-heading">H2</span>
+              <span>Título 2</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleHeading({ level: 3 }).run())}
+              className={`admin-context-menu-item ${editor.isActive('heading', { level: 3 }) ? 'active' : ''}`}
+            >
+              <span className="admin-context-menu-heading">H3</span>
+              <span>Título 3</span>
+            </button>
+          </div>
+
+          <div className="admin-context-menu-divider"></div>
+
+          <div className="admin-context-menu-section">
+            <div className="admin-context-menu-label">Listas</div>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleBulletList().run())}
+              className={`admin-context-menu-item ${editor.isActive('bulletList') ? 'active' : ''}`}
+            >
+              <i className="fa-solid fa-list-ul"></i>
+              <span>Lista con viñetas</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleOrderedList().run())}
+              className={`admin-context-menu-item ${editor.isActive('orderedList') ? 'active' : ''}`}
+            >
+              <i className="fa-solid fa-list-ol"></i>
+              <span>Lista numerada</span>
+            </button>
+          </div>
+
+          <div className="admin-context-menu-divider"></div>
+
+          <div className="admin-context-menu-section">
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleBlockquote().run())}
+              className={`admin-context-menu-item ${editor.isActive('blockquote') ? 'active' : ''}`}
+            >
+              <i className="fa-solid fa-quote-left"></i>
+              <span>Cita</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleContextMenuAction(() => editor.chain().focus().toggleCode().run())}
+              className={`admin-context-menu-item ${editor.isActive('code') ? 'active' : ''}`}
+            >
+              <i className="fa-solid fa-code"></i>
+              <span>Código</span>
+            </button>
+          </div>
+
+          <div className="admin-context-menu-divider"></div>
+
+          <div className="admin-context-menu-section">
+            <button
+              type="button"
+              onClick={() => {
+                const url = window.prompt('Introduce la URL:')
+                if (url) {
+                  handleContextMenuAction(() => editor.chain().focus().setLink({ href: url }).run())
+                } else {
+                  setContextMenu(null)
+                }
+              }}
+              className={`admin-context-menu-item ${editor.isActive('link') ? 'active' : ''}`}
+            >
+              <i className="fa-solid fa-link"></i>
+              <span>Enlace</span>
+            </button>
+            {editor.isActive('link') && (
+              <button
+                type="button"
+                onClick={() => handleContextMenuAction(() => editor.chain().focus().unsetLink().run())}
+                className="admin-context-menu-item"
+              >
+                <i className="fa-solid fa-unlink"></i>
+                <span>Quitar enlace</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
