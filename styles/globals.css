@@ -814,7 +814,10 @@
 .admin-editor-content {
     background: #080808;
     min-height: 500px;
+    max-height: 70vh;
     padding: 32px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* Toolbar Flotante */

@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import React from 'react'
 
 interface PostEditorProps {
@@ -12,16 +12,8 @@ interface PostEditorProps {
   onChange: (content: string) => void
 }
 
-interface FloatingToolbarPosition {
-  x: number
-  y: number
-}
-
 export default function PostEditor({ content, onChange }: PostEditorProps) {
   const [isUploading, setIsUploading] = useState(false)
-  const [floatingToolbar, setFloatingToolbar] = useState<FloatingToolbarPosition | null>(null)
-  const floatingToolbarRef = useRef<HTMLDivElement>(null)
-  const editorRef = useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
     extensions: [
@@ -316,203 +308,13 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
     }
   }
 
-  // Detectar selección y mostrar toolbar flotante
-  useEffect(() => {
-    if (!editor) return
-
-    const updateToolbarPosition = () => {
-      try {
-        const { from, to } = editor.state.selection
-        
-        if (from === to) {
-          // No hay selección, ocultar toolbar
-          setFloatingToolbar(null)
-          return
-        }
-
-        // Usar doble requestAnimationFrame para asegurar que el DOM y el toolbar estén renderizados
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            try {
-              const { view } = editor
-              
-              // Obtener coordenadas usando la API de selección del navegador (más preciso)
-              const selection = window.getSelection()
-              let selectionRect: DOMRect | null = null
-              
-              if (selection && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0)
-                // Verificar que el range esté dentro del editor
-                const editorElement = view.dom
-                if (editorElement.contains(range.commonAncestorContainer)) {
-                  selectionRect = range.getBoundingClientRect()
-                }
-              }
-              
-              // Si no hay selección válida del navegador, usar coordsAtPos de TipTap
-              let selectionCenterX = 0
-              let selectionTop = 0
-              let selectionBottom = 0
-              
-              if (selectionRect && selectionRect.width > 0 && selectionRect.height > 0) {
-                // Usar las coordenadas de la selección del navegador (ya están en viewport)
-                selectionCenterX = selectionRect.left + selectionRect.width / 2
-                selectionTop = selectionRect.top
-                selectionBottom = selectionRect.bottom
-              } else {
-                // Fallback: usar coordsAtPos de TipTap
-                const start = view.coordsAtPos(from)
-                const end = view.coordsAtPos(to)
-                selectionCenterX = (start.left + end.left) / 2
-                selectionTop = start.top
-                selectionBottom = end.bottom
-              }
-              
-              // Obtener el ancho real del toolbar después de renderizarse
-              const toolbarElement = floatingToolbarRef.current
-              const toolbarWidth = toolbarElement?.offsetWidth || 380
-              const toolbarHeight = toolbarElement?.offsetHeight || 50
-              
-              // Calcular posición centrada horizontalmente sobre la selección
-              let x = selectionCenterX
-              
-              // Posición vertical: intentar arriba primero
-              let y = selectionTop - toolbarHeight - 12
-
-              // Ajustar horizontalmente si se sale de la pantalla
-              const padding = 16
-              const halfToolbarWidth = toolbarWidth / 2
-              const viewportWidth = window.innerWidth
-              const viewportHeight = window.innerHeight
-              
-              // Asegurar que el toolbar no se salga por los lados
-              if (x - halfToolbarWidth < padding) {
-                x = padding + halfToolbarWidth
-              } else if (x + halfToolbarWidth > viewportWidth - padding) {
-                x = viewportWidth - padding - halfToolbarWidth
-              }
-
-              // Ajustar verticalmente si se sale de la pantalla
-              if (y < padding) {
-                // Si no cabe arriba, ponerlo abajo de la selección
-                y = selectionBottom + 12
-              }
-              
-              // Verificar que no se salga por abajo
-              if (y + toolbarHeight > viewportHeight - padding) {
-                // Si tampoco cabe abajo, ponerlo arriba aunque se salga un poco
-                y = Math.max(padding, selectionTop - toolbarHeight - 12)
-              }
-
-              // Asegurar que las coordenadas sean válidas
-              x = Math.max(padding + halfToolbarWidth, Math.min(x, viewportWidth - padding - halfToolbarWidth))
-              y = Math.max(padding, Math.min(y, viewportHeight - toolbarHeight - padding))
-
-              setFloatingToolbar({ x, y })
-            } catch (error) {
-              console.error('Error calculating toolbar position:', error)
-              setFloatingToolbar(null)
-            }
-          })
-        })
-      } catch (error) {
-        // Si hay error, ocultar toolbar
-        setFloatingToolbar(null)
-      }
-    }
-
-    // Escuchar eventos del DOM directamente
-    const editorElement = editor.view.dom
-    
-    const handleMouseUp = (e: MouseEvent) => {
-      // Pequeño delay para que la selección se actualice
-      setTimeout(() => {
-        updateToolbarPosition()
-      }, 10)
-    }
-    
-    const handleKeyUp = () => {
-      setTimeout(() => {
-        updateToolbarPosition()
-      }, 10)
-    }
-
-    const handleMouseMove = () => {
-      // Solo actualizar si hay una selección activa (arrastrando)
-      if (window.getSelection()?.toString().length) {
-        setTimeout(() => {
-          updateToolbarPosition()
-        }, 10)
-      }
-    }
-
-    // Escuchar eventos de selección
-    editorElement.addEventListener('mouseup', handleMouseUp)
-    editorElement.addEventListener('keyup', handleKeyUp)
-    editorElement.addEventListener('mousemove', handleMouseMove)
-    
-    // Actualizar posición cuando cambia el tamaño de la ventana o se hace scroll
-    const handleResize = () => {
-      const { from, to } = editor.state.selection
-      if (from !== to) {
-        updateToolbarPosition()
-      }
-    }
-    
-    const handleScroll = () => {
-      const { from, to } = editor.state.selection
-      if (from !== to) {
-        updateToolbarPosition()
-      }
-    }
-    
-    window.addEventListener('resize', handleResize)
-    window.addEventListener('scroll', handleScroll, true) // true para capturar scroll en todos los elementos
-    
-    // También usar un intervalo para verificar la selección periódicamente
-    const intervalId = setInterval(() => {
-      const { from, to } = editor.state.selection
-      if (from !== to) {
-        updateToolbarPosition()
-      }
-    }, 100)
-
-    return () => {
-      editorElement.removeEventListener('mouseup', handleMouseUp)
-      editorElement.removeEventListener('keyup', handleKeyUp)
-      editorElement.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('resize', handleResize)
-      window.removeEventListener('scroll', handleScroll, true)
-      clearInterval(intervalId)
-    }
-  }, [editor])
-
-  // Ocultar toolbar al hacer clic fuera
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (floatingToolbarRef.current && !floatingToolbarRef.current.contains(e.target as Node)) {
-        // Solo ocultar si no hay selección
-        if (editor) {
-          const { from, to } = editor.state.selection
-          if (from === to) {
-            setFloatingToolbar(null)
-          }
-        }
-      }
-    }
-
-    if (floatingToolbar) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [floatingToolbar, editor])
 
   if (!editor) {
     return <div className="text-gray-400">Cargando editor...</div>
   }
 
   return (
-    <div className="admin-editor-container" ref={editorRef}>
+    <div className="admin-editor-container">
       {/* Toolbar */}
       <div className="admin-editor-toolbar">
         {/* Text Formatting */}
@@ -663,133 +465,6 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
       <div className="admin-editor-content">
         <EditorContent editor={editor} />
       </div>
-
-      {/* Toolbar Flotante */}
-      {floatingToolbar && (
-        <div
-          ref={floatingToolbarRef}
-          className="admin-floating-toolbar"
-          style={{
-            position: 'fixed',
-            left: `${floatingToolbar.x}px`,
-            top: `${floatingToolbar.y}px`,
-            zIndex: 1000,
-            transform: 'translateX(-50%)',
-          }}
-          onMouseDown={(e) => e.preventDefault()}
-        >
-          <div className="admin-floating-toolbar-group">
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleBold().run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('bold') ? 'active' : ''}`}
-              title="Negrita (Ctrl+B)"
-            >
-              <i className="fa-solid fa-bold"></i>
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleItalic().run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('italic') ? 'active' : ''}`}
-              title="Cursiva (Ctrl+I)"
-            >
-              <i className="fa-solid fa-italic"></i>
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleStrike().run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('strike') ? 'active' : ''}`}
-              title="Tachado"
-            >
-              <i className="fa-solid fa-strikethrough"></i>
-            </button>
-          </div>
-
-          <div className="admin-floating-toolbar-divider"></div>
-
-          <div className="admin-floating-toolbar-group">
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('heading', { level: 1 }) ? 'active' : ''}`}
-              title="Título 1"
-            >
-              H1
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('heading', { level: 2 }) ? 'active' : ''}`}
-              title="Título 2"
-            >
-              H2
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('heading', { level: 3 }) ? 'active' : ''}`}
-              title="Título 3"
-            >
-              H3
-            </button>
-          </div>
-
-          <div className="admin-floating-toolbar-divider"></div>
-
-          <div className="admin-floating-toolbar-group">
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleBulletList().run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('bulletList') ? 'active' : ''}`}
-              title="Lista con viñetas"
-            >
-              <i className="fa-solid fa-list-ul"></i>
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleOrderedList().run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('orderedList') ? 'active' : ''}`}
-              title="Lista numerada"
-            >
-              <i className="fa-solid fa-list-ol"></i>
-            </button>
-          </div>
-
-          <div className="admin-floating-toolbar-divider"></div>
-
-          <div className="admin-floating-toolbar-group">
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleBlockquote().run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('blockquote') ? 'active' : ''}`}
-              title="Cita"
-            >
-              <i className="fa-solid fa-quote-left"></i>
-            </button>
-            <button
-              type="button"
-              onClick={() => editor.chain().focus().toggleCode().run()}
-              className={`admin-floating-toolbar-button ${editor.isActive('code') ? 'active' : ''}`}
-              title="Código"
-            >
-              <i className="fa-solid fa-code"></i>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                const url = window.prompt('Introduce la URL:')
-                if (url) {
-                  editor.chain().focus().setLink({ href: url }).run()
-                }
-              }}
-              className={`admin-floating-toolbar-button ${editor.isActive('link') ? 'active' : ''}`}
-              title="Enlace"
-            >
-              <i className="fa-solid fa-link"></i>
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
