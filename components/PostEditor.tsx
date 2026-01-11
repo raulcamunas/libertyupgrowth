@@ -330,80 +330,90 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           return
         }
 
-        // Usar requestAnimationFrame para asegurar que el DOM esté actualizado
+        // Usar doble requestAnimationFrame para asegurar que el DOM y el toolbar estén renderizados
         requestAnimationFrame(() => {
-          try {
-            const { view } = editor
-            const editorElement = editor.view.dom
-            
-            // Intentar obtener coordenadas usando la API de selección del navegador
-            const selection = window.getSelection()
-            let selectionRect: DOMRect | null = null
-            
-            if (selection && selection.rangeCount > 0) {
-              const range = selection.getRangeAt(0)
-              selectionRect = range.getBoundingClientRect()
-            }
-            
-            // Si no hay selección del navegador, usar coordsAtPos de TipTap
-            let startX = 0
-            let startY = 0
-            let endX = 0
-            let endY = 0
-            
-            if (selectionRect && selectionRect.width > 0 && selectionRect.height > 0) {
-              // Usar las coordenadas de la selección del navegador
-              startX = selectionRect.left
-              startY = selectionRect.top
-              endX = selectionRect.right
-              endY = selectionRect.bottom
-            } else {
-              // Fallback: usar coordsAtPos de TipTap
-              const start = view.coordsAtPos(from)
-              const end = view.coordsAtPos(to)
-              startX = start.left
-              startY = start.top
-              endX = end.right
-              endY = end.bottom
-            }
-            
-            // Obtener el ancho real del toolbar (si ya existe)
-            const toolbarWidth = floatingToolbarRef.current?.offsetWidth || 400
-            const toolbarHeight = 50
-            
-            // Calcular posición centrada horizontalmente sobre la selección
-            const selectionCenterX = (startX + endX) / 2
-            let x = selectionCenterX // Ya que usamos transform: translateX(-50%)
-            
-            // Posición vertical: arriba de la selección
-            let y = startY - toolbarHeight - 12
+          requestAnimationFrame(() => {
+            try {
+              const { view } = editor
+              
+              // Obtener coordenadas usando la API de selección del navegador (más preciso)
+              const selection = window.getSelection()
+              let selectionRect: DOMRect | null = null
+              
+              if (selection && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0)
+                // Verificar que el range esté dentro del editor
+                const editorElement = view.dom
+                if (editorElement.contains(range.commonAncestorContainer)) {
+                  selectionRect = range.getBoundingClientRect()
+                }
+              }
+              
+              // Si no hay selección válida del navegador, usar coordsAtPos de TipTap
+              let selectionCenterX = 0
+              let selectionTop = 0
+              let selectionBottom = 0
+              
+              if (selectionRect && selectionRect.width > 0 && selectionRect.height > 0) {
+                // Usar las coordenadas de la selección del navegador (ya están en viewport)
+                selectionCenterX = selectionRect.left + selectionRect.width / 2
+                selectionTop = selectionRect.top
+                selectionBottom = selectionRect.bottom
+              } else {
+                // Fallback: usar coordsAtPos de TipTap
+                const start = view.coordsAtPos(from)
+                const end = view.coordsAtPos(to)
+                selectionCenterX = (start.left + end.left) / 2
+                selectionTop = start.top
+                selectionBottom = end.bottom
+              }
+              
+              // Obtener el ancho real del toolbar después de renderizarse
+              const toolbarElement = floatingToolbarRef.current
+              const toolbarWidth = toolbarElement?.offsetWidth || 380
+              const toolbarHeight = toolbarElement?.offsetHeight || 50
+              
+              // Calcular posición centrada horizontalmente sobre la selección
+              let x = selectionCenterX
+              
+              // Posición vertical: intentar arriba primero
+              let y = selectionTop - toolbarHeight - 12
 
-            // Ajustar horizontalmente si se sale de la pantalla
-            const padding = 20
-            const halfToolbarWidth = toolbarWidth / 2
-            
-            if (x - halfToolbarWidth < padding) {
-              x = padding + halfToolbarWidth
-            } else if (x + halfToolbarWidth > window.innerWidth - padding) {
-              x = window.innerWidth - padding - halfToolbarWidth
-            }
+              // Ajustar horizontalmente si se sale de la pantalla
+              const padding = 16
+              const halfToolbarWidth = toolbarWidth / 2
+              const viewportWidth = window.innerWidth
+              const viewportHeight = window.innerHeight
+              
+              // Asegurar que el toolbar no se salga por los lados
+              if (x - halfToolbarWidth < padding) {
+                x = padding + halfToolbarWidth
+              } else if (x + halfToolbarWidth > viewportWidth - padding) {
+                x = viewportWidth - padding - halfToolbarWidth
+              }
 
-            // Ajustar verticalmente si se sale de la pantalla
-            if (y < padding) {
-              // Si no cabe arriba, ponerlo abajo de la selección
-              y = endY + 12
-            }
-            
-            // Verificar que no se salga por abajo
-            if (y + toolbarHeight > window.innerHeight - padding) {
-              y = window.innerHeight - toolbarHeight - padding
-            }
+              // Ajustar verticalmente si se sale de la pantalla
+              if (y < padding) {
+                // Si no cabe arriba, ponerlo abajo de la selección
+                y = selectionBottom + 12
+              }
+              
+              // Verificar que no se salga por abajo
+              if (y + toolbarHeight > viewportHeight - padding) {
+                // Si tampoco cabe abajo, ponerlo arriba aunque se salga un poco
+                y = Math.max(padding, selectionTop - toolbarHeight - 12)
+              }
 
-            setFloatingToolbar({ x, y })
-          } catch (error) {
-            console.error('Error calculating toolbar position:', error)
-            setFloatingToolbar(null)
-          }
+              // Asegurar que las coordenadas sean válidas
+              x = Math.max(padding + halfToolbarWidth, Math.min(x, viewportWidth - padding - halfToolbarWidth))
+              y = Math.max(padding, Math.min(y, viewportHeight - toolbarHeight - padding))
+
+              setFloatingToolbar({ x, y })
+            } catch (error) {
+              console.error('Error calculating toolbar position:', error)
+              setFloatingToolbar(null)
+            }
+          })
         })
       } catch (error) {
         // Si hay error, ocultar toolbar
@@ -441,6 +451,24 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
     editorElement.addEventListener('keyup', handleKeyUp)
     editorElement.addEventListener('mousemove', handleMouseMove)
     
+    // Actualizar posición cuando cambia el tamaño de la ventana o se hace scroll
+    const handleResize = () => {
+      const { from, to } = editor.state.selection
+      if (from !== to) {
+        updateToolbarPosition()
+      }
+    }
+    
+    const handleScroll = () => {
+      const { from, to } = editor.state.selection
+      if (from !== to) {
+        updateToolbarPosition()
+      }
+    }
+    
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', handleScroll, true) // true para capturar scroll en todos los elementos
+    
     // También usar un intervalo para verificar la selección periódicamente
     const intervalId = setInterval(() => {
       const { from, to } = editor.state.selection
@@ -453,6 +481,8 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
       editorElement.removeEventListener('mouseup', handleMouseUp)
       editorElement.removeEventListener('keyup', handleKeyUp)
       editorElement.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', handleScroll, true)
       clearInterval(intervalId)
     }
   }, [editor])
