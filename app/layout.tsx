@@ -124,12 +124,6 @@ export default function RootLayout({
           }}
         />
         
-        {/* Metricool Tracking Pixel */}
-        <img 
-          src="https://tracker.metricool.com/c3po.jpg?hash=b6dd3a44243032207684cc5e12b106b" 
-          alt="" 
-          style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none' }}
-        />
         
         {/* Favicon y Apple Touch Icon */}
         <link rel="icon" type="image/png" href="/icon.png" />
@@ -198,6 +192,12 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
+        {/* Metricool Tracking Pixel */}
+        <img 
+          src="https://tracker.metricool.com/c3po.jpg?hash=b6dd3a44243032207684cc5e12b106b" 
+          alt="" 
+          style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none' }}
+        />
         <Navbar />
         {children}
         <CookieBanner />
