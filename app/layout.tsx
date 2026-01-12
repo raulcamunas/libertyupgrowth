@@ -124,20 +124,11 @@ export default function RootLayout({
           }}
         />
         
-        {/* Metricool Tracking Script */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              function loadScript() {
-                var script = document.createElement('script');
-                script.src = 'https://tracker.metricool.com/resources/be.js';
-                script.async = true;
-                document.head.appendChild(script);
-                beTracker.t({ hash: 'b6dd3a44243032207684cc5e12b106b' });
-              }
-              loadScript();
-            `,
-          }}
+        {/* Metricool Tracking Pixel */}
+        <img 
+          src="https://tracker.metricool.com/c3po.jpg?hash=b6dd3a44243032207684cc5e12b106b" 
+          alt="" 
+          style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none' }}
         />
         
         {/* Favicon y Apple Touch Icon */}
