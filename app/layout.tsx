@@ -79,10 +79,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
         <link rel="preconnect" href="https://www.youtube.com" />
         <link rel="preconnect" href="https://i.ytimg.com" />
+        <link rel="preconnect" href="https://tracker.metricool.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
         <link rel="dns-prefetch" href="https://www.youtube.com" />
         <link rel="dns-prefetch" href="https://i.ytimg.com" />
+        <link rel="dns-prefetch" href="https://tracker.metricool.com" />
         
         {/* Google Tag Manager - Carga diferida para mejorar LCP */}
         <script
@@ -118,6 +120,22 @@ export default function RootLayout({
                   })(window,document,'script','dataLayer','GTM-TF2CN86V');
                 }, 2000);
               }
+            `,
+          }}
+        />
+        
+        {/* Metricool Tracking Script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              function loadScript() {
+                var script = document.createElement('script');
+                script.src = 'https://tracker.metricool.com/resources/be.js';
+                script.async = true;
+                document.head.appendChild(script);
+                beTracker.t({ hash: 'b6dd3a44243032207684cc5e12b106b' });
+              }
+              loadScript();
             `,
           }}
         />
