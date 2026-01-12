@@ -54,5 +54,74 @@ export default function Navbar() {
     setIsOpen(false)
   }
 
-  return null // Navbar oculta en rama main
+  return (
+    <>
+      {/* Botón Hamburguesa */}
+      <button
+        className={`minimal-menu-toggle ${isOpen ? 'active' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle menu"
+        aria-expanded={isOpen}
+      >
+        <div className="hamburger-container">
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+        </div>
+      </button>
+
+      {/* Menú Full Screen */}
+      <div className={`minimal-menu ${isOpen ? 'open' : ''}`}>
+        <div className="menu-wrapper">
+          {/* Header del Menú */}
+          <div className="menu-header">
+            <div className="menu-status">
+              <span className="status-dot"></span>
+              <span className="status-text">MENU</span>
+            </div>
+          </div>
+
+          {/* Separador */}
+          <div className="menu-divider"></div>
+
+          {/* Lista de Navegación */}
+          <ul className="minimal-menu-list">
+            {menuItems.map((item, index) => {
+              const isActive = pathname === item.href || (item.href === '/' && pathname === '/')
+              return (
+                <li 
+                  key={item.href} 
+                  className="minimal-menu-item"
+                  style={{ '--delay': `${index * 0.08}s` } as React.CSSProperties}
+                >
+                  <Link
+                    href={item.href}
+                    className={`minimal-menu-link ${isActive ? 'active' : ''}`}
+                    onClick={(e) => handleLinkClick(item.href, e)}
+                  >
+                    {isActive && <span className="menu-indicator"></span>}
+                    <span className="menu-link-label">{item.label}</span>
+                  </Link>
+                  {index < menuItems.length - 1 && <div className="menu-item-divider"></div>}
+                </li>
+              )
+            })}
+          </ul>
+
+          {/* Contact Section */}
+          <div className="menu-contact">
+            <div className="contact-section">
+              <div className="contact-label">(EMAIL)</div>
+              <div className="contact-links">
+                <a href="mailto:business@libertyseller.com" className="contact-link" aria-label="Email">
+                  <i className="fa-solid fa-envelope"></i>
+                  <span>business@libertyseller.com</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
