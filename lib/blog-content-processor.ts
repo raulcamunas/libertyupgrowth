@@ -26,39 +26,40 @@ export function processBlogContent(content: string): string {
   let processed = content
 
   // Procesar títulos H1, H2, H3, H4
-  processed = processed.replace(/\[H1\](.*?)\[\/H1\]/gis, '<h1>$1</h1>')
-  processed = processed.replace(/\[H2\](.*?)\[\/H2\]/gis, '<h2>$1</h2>')
-  processed = processed.replace(/\[H3\](.*?)\[\/H3\]/gis, '<h3>$1</h3>')
-  processed = processed.replace(/\[H4\](.*?)\[\/H4\]/gis, '<h4>$1</h4>')
+  // Usamos [\s\S] en lugar de . para compatibilidad con versiones anteriores (sin flag 's')
+  processed = processed.replace(/\[H1\]([\s\S]*?)\[\/H1\]/gi, '<h1>$1</h1>')
+  processed = processed.replace(/\[H2\]([\s\S]*?)\[\/H2\]/gi, '<h2>$1</h2>')
+  processed = processed.replace(/\[H3\]([\s\S]*?)\[\/H3\]/gi, '<h3>$1</h3>')
+  processed = processed.replace(/\[H4\]([\s\S]*?)\[\/H4\]/gi, '<h4>$1</h4>')
 
   // Procesar negritas
-  processed = processed.replace(/\[BOLD\](.*?)\[\/BOLD\]/gis, '<strong>$1</strong>')
-  processed = processed.replace(/\[B\](.*?)\[\/B\]/gis, '<strong>$1</strong>')
+  processed = processed.replace(/\[BOLD\]([\s\S]*?)\[\/BOLD\]/gi, '<strong>$1</strong>')
+  processed = processed.replace(/\[B\]([\s\S]*?)\[\/B\]/gi, '<strong>$1</strong>')
 
   // Procesar cursivas
-  processed = processed.replace(/\[ITALIC\](.*?)\[\/ITALIC\]/gis, '<em>$1</em>')
-  processed = processed.replace(/\[I\](.*?)\[\/I\]/gis, '<em>$1</em>')
+  processed = processed.replace(/\[ITALIC\]([\s\S]*?)\[\/ITALIC\]/gi, '<em>$1</em>')
+  processed = processed.replace(/\[I\]([\s\S]*?)\[\/I\]/gi, '<em>$1</em>')
 
   // Procesar citas/blockquotes
-  processed = processed.replace(/\[CITA\](.*?)\[\/CITA\]/gis, '<blockquote>$1</blockquote>')
-  processed = processed.replace(/\[QUOTE\](.*?)\[\/QUOTE\]/gis, '<blockquote>$1</blockquote>')
+  processed = processed.replace(/\[CITA\]([\s\S]*?)\[\/CITA\]/gi, '<blockquote>$1</blockquote>')
+  processed = processed.replace(/\[QUOTE\]([\s\S]*?)\[\/QUOTE\]/gi, '<blockquote>$1</blockquote>')
 
   // Procesar listas no ordenadas
-  processed = processed.replace(/\[LISTA\](.*?)\[\/LISTA\]/gis, (match, items) => {
+  processed = processed.replace(/\[LISTA\]([\s\S]*?)\[\/LISTA\]/gi, (match, items) => {
     const itemList = items.split('|').filter((item: string) => item.trim())
     const listItems = itemList.map((item: string) => `<li>${item.trim()}</li>`).join('')
     return `<ul>${listItems}</ul>`
   })
 
   // Procesar listas ordenadas
-  processed = processed.replace(/\[LISTA-NUM\](.*?)\[\/LISTA-NUM\]/gis, (match, items) => {
+  processed = processed.replace(/\[LISTA-NUM\]([\s\S]*?)\[\/LISTA-NUM\]/gi, (match, items) => {
     const itemList = items.split('|').filter((item: string) => item.trim())
     const listItems = itemList.map((item: string) => `<li>${item.trim()}</li>`).join('')
     return `<ol>${listItems}</ol>`
   })
 
   // Procesar enlaces [LINK] texto|url [/LINK]
-  processed = processed.replace(/\[LINK\](.*?)\[\/LINK\]/gis, (match, content) => {
+  processed = processed.replace(/\[LINK\]([\s\S]*?)\[\/LINK\]/gi, (match, content) => {
     const parts = content.split('|')
     if (parts.length === 2) {
       const text = parts[0].trim()
@@ -69,7 +70,7 @@ export function processBlogContent(content: string): string {
   })
 
   // Procesar código
-  processed = processed.replace(/\[CODE\](.*?)\[\/CODE\]/gis, '<code>$1</code>')
+  processed = processed.replace(/\[CODE\]([\s\S]*?)\[\/CODE\]/gi, '<code>$1</code>')
 
   // Procesar saltos de línea y líneas horizontales
   processed = processed.replace(/\[BR\]/gi, '<br />')
