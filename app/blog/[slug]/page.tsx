@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Metadata } from 'next'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
+import { processBlogContent } from '@/lib/blog-content-processor'
 
 interface BlogPostPageProps {
   params: {
@@ -144,7 +145,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="blog-post-content">
           <div 
             className="blog-post-body"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: processBlogContent(post.content) }}
           />
         </div>
 
