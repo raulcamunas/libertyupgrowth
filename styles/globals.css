@@ -1955,8 +1955,12 @@
         
         /* Blog Card Upcoming (Bloqueado) */
         .blog-card-upcoming {
-            opacity: 0.85;
+            opacity: 0.9;
             cursor: not-allowed;
+        }
+        
+        .blog-card-upcoming .blog-card-image {
+            filter: brightness(0.4) contrast(0.9);
         }
         
         .blog-card-upcoming:hover {
@@ -1972,10 +1976,8 @@
         }
         
         .blog-card-overlay-blocked {
-            background: linear-gradient(180deg, 
-                transparent 0%,
-                rgba(0, 0, 0, 0.5) 70%,
-                rgba(0, 0, 0, 0.8) 100%);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(2px);
         }
         
         .blog-card-lock-overlay {
