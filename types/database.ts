@@ -13,6 +13,7 @@ export interface Post {
   published_at: string | null
   seo_title: string | null
   seo_description: string | null
+  reading_time: number | null
   user_id: string
 }
 
@@ -26,6 +27,7 @@ export interface PostInsert {
   published_at?: string | null
   seo_title?: string | null
   seo_description?: string | null
+  reading_time?: number | null
 }
 
 export interface PostUpdate extends Partial<PostInsert> {

@@ -29,6 +29,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
       : '',
     seo_title: post.seo_title || '',
     seo_description: post.seo_description || '',
+    reading_time: post.reading_time || null,
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -178,6 +179,26 @@ export default function EditPostForm({ post }: EditPostFormProps) {
               className="admin-form-input"
               placeholder="https://ejemplo.com/imagen.jpg"
             />
+          </div>
+
+          {/* Tiempo de Lectura */}
+          <div className="admin-form-group">
+            <label className="admin-form-label">
+              <i className="fa-solid fa-clock mr-2 text-[#FF6600]"></i>
+              Tiempo de Lectura (minutos)
+            </label>
+            <input
+              type="number"
+              min="1"
+              value={formData.reading_time || ''}
+              onChange={(e) => setFormData({ ...formData, reading_time: e.target.value ? parseInt(e.target.value) : null })}
+              className="admin-form-input"
+              placeholder="Ej: 5"
+            />
+            <p className="admin-form-hint">
+              <i className="fa-solid fa-info-circle mr-1.5"></i>
+              Tiempo estimado de lectura en minutos
+            </p>
           </div>
 
           {/* Estado y Fecha de Publicación */}

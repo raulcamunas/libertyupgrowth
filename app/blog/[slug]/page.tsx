@@ -116,6 +116,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <i className="fa-solid fa-calendar"></i>
               {formatDate(post.published_at)}
             </span>
+            {post.reading_time && (
+              <span className="blog-post-reading-time">
+                <i className="fa-solid fa-clock"></i>
+                Tiempo de lectura: {post.reading_time} min
+              </span>
+            )}
           </div>
           
           <h1 className="blog-post-title">{post.title}</h1>

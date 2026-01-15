@@ -90,6 +90,12 @@ export default async function BlogPage() {
                         <i className="fa-solid fa-calendar"></i>
                         {formatDate(post.published_at)}
                       </span>
+                      {post.reading_time && (
+                        <span className="blog-card-reading-time">
+                          <i className="fa-solid fa-clock"></i>
+                          {post.reading_time} min
+                        </span>
+                      )}
                     </div>
                     <h2 className="blog-card-title">{post.title}</h2>
                     {post.seo_description && (
