@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import PostEditor from '@/components/PostEditor'
 import { createPost } from '@/app/actions/posts'
 import Link from 'next/link'
+import ImageUpload from '@/components/ImageUpload'
 
 export default function NewPostPage() {
   const router = useRouter()
@@ -146,23 +147,11 @@ export default function NewPostPage() {
           </div>
 
           {/* Imagen Destacada */}
-          <div className="admin-form-group">
-            <label className="admin-form-label">
-              <i className="fa-solid fa-image mr-2 text-[#FF6600]"></i>
-              Imagen Destacada (URL)
-            </label>
-            <input
-              type="url"
-              value={formData.featured_image}
-              onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-              className="admin-form-input"
-              placeholder="https://ejemplo.com/imagen.jpg"
-            />
-            <p className="admin-form-hint">
-              <i className="fa-solid fa-info-circle mr-1.5"></i>
-              Puedes subir una imagen desde el editor o pegar una URL
-            </p>
-          </div>
+          <ImageUpload
+            value={formData.featured_image}
+            onChange={(url) => setFormData({ ...formData, featured_image: url })}
+            label="Imagen Destacada"
+          />
 
           {/* Tiempo de Lectura */}
           <div className="admin-form-group">

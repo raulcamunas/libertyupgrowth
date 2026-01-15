@@ -6,6 +6,7 @@ import PostEditor from '@/components/PostEditor'
 import { updatePost, deletePost } from '@/app/actions/posts'
 import { Post } from '@/types/database'
 import Link from 'next/link'
+import ImageUpload from '@/components/ImageUpload'
 
 interface EditPostFormProps {
   post: Post
@@ -167,19 +168,11 @@ export default function EditPostForm({ post }: EditPostFormProps) {
           </div>
 
           {/* Imagen Destacada */}
-          <div className="admin-form-group">
-            <label className="admin-form-label">
-              <i className="fa-solid fa-image mr-2 text-[#FF6600]"></i>
-              Imagen Destacada (URL)
-            </label>
-            <input
-              type="url"
-              value={formData.featured_image}
-              onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-              className="admin-form-input"
-              placeholder="https://ejemplo.com/imagen.jpg"
-            />
-          </div>
+          <ImageUpload
+            value={formData.featured_image}
+            onChange={(url) => setFormData({ ...formData, featured_image: url })}
+            label="Imagen Destacada"
+          />
 
           {/* Tiempo de Lectura */}
           <div className="admin-form-group">
