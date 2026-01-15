@@ -1857,7 +1857,7 @@
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
             transition: all 0.3s ease;
         }
         
@@ -1873,8 +1873,14 @@
         .blog-post-meta {
             display: flex;
             gap: 24px;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             flex-wrap: wrap;
+        }
+        
+        .blog-post-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .blog-post-date,
@@ -1887,7 +1893,8 @@
             font-size: 48px;
             font-weight: 800;
             color: white;
-            margin-bottom: 20px;
+            margin-top: 0;
+            margin-bottom: 24px;
             line-height: 1.2;
             letter-spacing: -1.5px;
         }
