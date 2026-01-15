@@ -2270,11 +2270,55 @@
             background: rgba(255, 102, 0, 0.05);
         }
         
-        /* Related Posts Section */
-        .blog-related-section {
+        /* Bottom Section - Dos columnas en desktop */
+        .blog-bottom-section {
             margin-top: 80px;
             padding-top: 60px;
             border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 60px;
+        }
+        
+        @media (min-width: 1024px) {
+            .blog-bottom-section {
+                grid-template-columns: 1fr 1fr;
+                gap: 80px;
+                align-items: start;
+            }
+        }
+        
+        /* Bottom Section - Dos columnas en desktop */
+        .blog-bottom-section {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            margin-top: 80px;
+        }
+        
+        @media (min-width: 1024px) {
+            .blog-bottom-section {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 60px;
+            }
+            
+            .blog-related-section {
+                flex: 1;
+            }
+            
+            .blog-post-form-section {
+                flex: 0 0 500px;
+                position: sticky;
+                top: 100px;
+            }
+        }
+        
+        /* Related Posts Section */
+        .blog-related-section {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
         }
         
         .blog-related-title {
@@ -2282,8 +2326,14 @@
             font-weight: 700;
             color: white;
             margin-bottom: 40px;
-            text-align: center;
+            text-align: left;
             letter-spacing: -1px;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-related-title {
+                text-align: center;
+            }
         }
         
         .blog-related-grid {
@@ -2355,13 +2405,13 @@
         
         /* Form Section en Blog */
         .blog-post-form-section {
-            margin-top: 80px;
+            margin-top: 0;
             margin-bottom: 40px;
         }
         
         .blog-form-card {
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
         }
         
         /* CTA Section */
@@ -2501,12 +2551,18 @@
                 margin-bottom: 12px;
             }
             
+            .blog-bottom-section {
+                flex-direction: column;
+                gap: 40px;
+                margin-top: 60px;
+            }
+            
             .blog-related-grid {
                 grid-template-columns: 1fr;
             }
             
             .blog-post-form-section {
-                margin-top: 60px;
+                margin-top: 0;
             }
             
             .blog-form-card {
