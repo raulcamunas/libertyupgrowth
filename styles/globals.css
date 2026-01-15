@@ -1987,6 +1987,29 @@
             letter-spacing: 0.01em;
         }
         
+        .blog-post-body h1 {
+            font-size: 48px;
+            font-weight: 800;
+            color: white;
+            margin-top: 0;
+            margin-bottom: 32px;
+            line-height: 1.2;
+            letter-spacing: -2px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .blog-post-body h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6600, rgba(255, 102, 0, 0.3));
+            border-radius: 2px;
+        }
+        
         .blog-post-body h2 {
             font-size: 36px;
             font-weight: 800;
@@ -2427,6 +2450,18 @@
             
             .blog-post-body {
                 font-size: 17px;
+            }
+            
+            .blog-post-body h1 {
+                font-size: 36px;
+                margin-top: 0;
+                margin-bottom: 24px;
+                letter-spacing: -1.5px;
+            }
+            
+            .blog-post-body h1::after {
+                width: 60px;
+                height: 3px;
             }
             
             .blog-post-body h2 {
