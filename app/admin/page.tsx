@@ -217,7 +217,7 @@ export default async function AdminDashboard() {
                     >
                       <i className="fa-solid fa-edit"></i>
                     </Link>
-                    {post.status === 'published' && (
+                    {post.status === 'published' ? (
                       <Link
                         href={`/blog/${post.slug}`}
                         target="_blank"
@@ -225,6 +225,15 @@ export default async function AdminDashboard() {
                         title="Ver en el blog"
                       >
                         <i className="fa-solid fa-external-link"></i>
+                      </Link>
+                    ) : (
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        target="_blank"
+                        className="admin-action-button admin-action-preview"
+                        title="Vista previa"
+                      >
+                        <i className="fa-solid fa-eye"></i>
                       </Link>
                     )}
                   </div>

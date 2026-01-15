@@ -13,10 +13,11 @@ interface BlogPostPageProps {
   }
 }
 
-async function getPostBySlug(slug: string): Promise<Post | null> {
+async function getPostBySlug(slug: string, allowPreview: boolean = false): Promise<Post | null> {
   const supabase = await createClient()
   
-  const { data, error } = await supabase
+  // Primero intentar obtener post publicado
+  const { data: publishedData, error: publishedError } = await supabase
     .from('posts')
     .select('*')
     .eq('slug', slug)
@@ -24,11 +25,32 @@ async function getPostBySlug(slug: string): Promise<Post | null> {
     .lte('published_at', new Date().toISOString())
     .single()
 
-  if (error || !data) {
-    return null
+  if (publishedData && !publishedError) {
+    return publishedData as Post
   }
 
-  return data as Post
+  // Si no se encuentra publicado y allowPreview es true, buscar posts programados o borradores
+  if (allowPreview) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (user) {
+      // Usuario autenticado puede ver posts programados o borradores
+      const { data: previewData, error: previewError } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('slug', slug)
+        .in('status', ['scheduled', 'draft'])
+        .single()
+
+      if (previewData && !previewError) {
+        return previewData as Post
+      }
+    }
+  }
+
+  return null
 }
 
 async function getRelatedPosts(currentPostId: string, limit: number = 3): Promise<Post[]> {
@@ -51,7 +73,7 @@ async function getRelatedPosts(currentPostId: string, limit: number = 3): Promis
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug)
+  const post = await getPostBySlug(params.slug, true)
 
   if (!post) {
     return {
@@ -89,15 +111,45 @@ function formatDate(dateString: string | null): string {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getPostBySlug(params.slug)
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  
+  const post = await getPostBySlug(params.slug, true)
   const relatedPosts = post ? await getRelatedPosts(post.id) : []
+  const isPreview = post && user && (post.status === 'scheduled' || post.status === 'draft')
 
   if (!post) {
     notFound()
   }
 
+  // Si el post está programado o en borrador y el usuario no está autenticado, no permitir acceso
+  if ((post.status === 'scheduled' || post.status === 'draft') && !user) {
+    notFound()
+  }
+
   return (
     <div className="blog-post-page">
+      {isPreview && (
+        <div className="blog-preview-banner">
+          <div className="blog-preview-content">
+            <i className="fa-solid fa-eye"></i>
+            <span>Vista previa - Este post está {post.status === 'scheduled' ? 'programado' : 'en borrador'}</span>
+            {post.status === 'scheduled' && post.published_at && (
+              <span className="blog-preview-date">
+                Se publicará el {new Date(post.published_at).toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
       <AnalyticsTracker 
         pageType="blog_post" 
         postId={post.id}
