@@ -58,10 +58,20 @@ export async function POST(request: NextRequest) {
 
       // Convertir a WebP para mejor compresión (excepto GIFs animados)
       if (file.type === 'image/gif' && metadata.pages && metadata.pages > 1) {
-        // Mantener GIF animado sin convertir
-        processedBuffer = await resizedImage.gif({ quality: 85 }).toBuffer()
+        // Mantener GIF animado sin convertir (solo redimensionar si es necesario)
+        processedBuffer = await resizedImage.gif().toBuffer()
         outputFormat = 'gif'
         contentType = 'image/gif'
+      } else if (file.type === 'image/gif') {
+        // GIF estático: convertir a WebP
+        processedBuffer = await resizedImage
+          .webp({ 
+            quality: 85,
+            effort: 6,
+          })
+          .toBuffer()
+        outputFormat = 'webp'
+        contentType = 'image/webp'
       } else {
         // Convertir a WebP para mejor compresión
         processedBuffer = await resizedImage
