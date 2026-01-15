@@ -34,11 +34,12 @@ export default function Navbar() {
   ]
 
   const handleLinkClick = (href: string, e?: React.MouseEvent<HTMLAnchorElement>) => {
-    if (e) {
-      e.preventDefault()
-    }
-    
+    // Solo interceptar enlaces con hash (#)
     if (href.startsWith('/#')) {
+      if (e) {
+        e.preventDefault()
+      }
+      
       // Si estamos en la home, hacer scroll directamente
       if (pathname === '/') {
         const id = href.substring(2)
@@ -51,6 +52,8 @@ export default function Navbar() {
         window.location.href = href
       }
     }
+    // Para enlaces normales (como /blog), dejar que Next.js maneje la navegación
+    // Solo cerramos el menú
     setIsOpen(false)
   }
 
