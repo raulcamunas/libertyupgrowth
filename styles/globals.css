@@ -2330,6 +2330,17 @@
             line-height: 1.6;
         }
         
+        /* Form Section en Blog */
+        .blog-post-form-section {
+            margin-top: 80px;
+            margin-bottom: 40px;
+        }
+        
+        .blog-form-card {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
         /* CTA Section */
         .blog-post-cta {
             margin-top: 80px;
@@ -2457,6 +2468,14 @@
             
             .blog-related-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .blog-post-form-section {
+                margin-top: 60px;
+            }
+            
+            .blog-form-card {
+                max-width: 100%;
             }
             
             .blog-post-cta {
