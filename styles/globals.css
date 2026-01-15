@@ -2305,10 +2305,16 @@
             
             .blog-related-section {
                 flex: 1;
+                min-width: 0; /* Permite que el flex item se encoja */
+            }
+            
+            .blog-related-grid {
+                grid-template-columns: 1fr; /* Una columna en el layout de dos columnas */
             }
             
             .blog-post-form-section {
                 flex: 0 0 500px;
+                max-width: 500px;
                 position: sticky;
                 top: 100px;
             }
