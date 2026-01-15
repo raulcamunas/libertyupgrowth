@@ -2271,29 +2271,13 @@
         }
         
         /* Bottom Section - Dos columnas en desktop */
-        .blog-bottom-section {
-            margin-top: 80px;
-            padding-top: 60px;
-            border-top: 1px solid var(--border-color);
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 60px;
-        }
-        
-        @media (min-width: 1024px) {
-            .blog-bottom-section {
-                grid-template-columns: 1fr 1fr;
-                gap: 80px;
-                align-items: start;
-            }
-        }
-        
-        /* Bottom Section - Dos columnas en desktop */
         .blog-post-container .blog-bottom-section {
             display: flex;
             flex-direction: column;
             gap: 60px;
             margin-top: 80px;
+            padding-top: 60px;
+            border-top: 1px solid var(--border-color);
         }
         
         @media (min-width: 1024px) {
