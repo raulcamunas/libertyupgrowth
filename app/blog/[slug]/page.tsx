@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
 import { processBlogContent } from '@/lib/blog-content-processor'
-import BlogForm from '@/components/BlogForm'
 
 interface BlogPostPageProps {
   params: {
@@ -150,6 +149,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           />
         </div>
 
+        {/* CTA Section */}
+        <div className="blog-post-cta">
+          <div className="blog-post-cta-content">
+            <h3 className="blog-post-cta-title">¿Listo para escalar tu cuenta de Amazon?</h3>
+            <p className="blog-post-cta-text">
+              Contacta con nosotros y descubre cómo podemos ayudarte a alcanzar tus objetivos.
+            </p>
+            <Link href="/#hero" className="blog-post-cta-button">
+              <span>Empezar Ahora</span>
+              <i className="fa-solid fa-arrow-right"></i>
+            </Link>
+          </div>
+        </div>
+
         {/* Artículos Relacionados */}
         {relatedPosts.length > 0 && (
           <section className="blog-related-section">
@@ -185,11 +198,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           </section>
         )}
-
-        {/* Form Section */}
-        <div className="blog-post-form-section">
-          <BlogForm />
-        </div>
       </div>
     </div>
   )
