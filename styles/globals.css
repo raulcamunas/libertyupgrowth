@@ -1691,8 +1691,14 @@
         .blog-card-meta {
             display: flex;
             gap: 20px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
+        }
+        
+        .blog-card-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .blog-card-date,
@@ -1705,7 +1711,8 @@
             font-size: 24px;
             font-weight: 700;
             color: white;
-            margin-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 16px;
             line-height: 1.3;
             letter-spacing: -0.5px;
             transition: color 0.3s ease;
