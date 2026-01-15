@@ -2289,7 +2289,7 @@
         }
         
         /* Bottom Section - Dos columnas en desktop */
-        .blog-bottom-section {
+        .blog-post-container .blog-bottom-section {
             display: flex;
             flex-direction: column;
             gap: 60px;
@@ -2297,22 +2297,22 @@
         }
         
         @media (min-width: 1024px) {
-            .blog-bottom-section {
-                flex-direction: row;
+            .blog-post-container .blog-bottom-section {
+                flex-direction: row !important;
                 align-items: flex-start;
                 gap: 60px;
             }
             
-            .blog-related-section {
+            .blog-post-container .blog-related-section {
                 flex: 1;
                 min-width: 0; /* Permite que el flex item se encoja */
             }
             
-            .blog-related-grid {
-                grid-template-columns: 1fr; /* Una columna en el layout de dos columnas */
+            .blog-post-container .blog-related-grid {
+                grid-template-columns: 1fr !important; /* Una columna en el layout de dos columnas */
             }
             
-            .blog-post-form-section {
+            .blog-post-container .blog-post-form-section {
                 flex: 0 0 500px;
                 max-width: 500px;
                 position: sticky;
