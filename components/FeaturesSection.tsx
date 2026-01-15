@@ -41,7 +41,7 @@ export default function FeaturesSection() {
     let currentTheme = 'orange'
     let isAnimating = false
 
-    const featuresSection = document.getElementById('features-section')
+    const featuresSection = document.getElementById('servicios')
     const featuresGrid = document.getElementById('features-grid')
     const headerTextContainer = document.getElementById('header-text-container')
 
@@ -121,7 +121,7 @@ export default function FeaturesSection() {
   }, [])
 
   return (
-    <section className="features-section theme-orange" id="features-section">
+    <section className="features-section theme-orange" id="servicios">
       <div className="features-container">
         <div className="features-header">
           <div className="header-text dynamic-content" id="header-text-container">
