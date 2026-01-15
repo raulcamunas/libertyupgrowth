@@ -422,6 +422,54 @@
     display: inline-block;
 }
 
+.admin-schedule-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-schedule-countdown {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(255, 102, 0, 0.15);
+    border: 1px solid rgba(255, 102, 0, 0.3);
+    color: #FF6600;
+    transition: all 0.3s ease;
+}
+
+.admin-schedule-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .admin-schedule-info {
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .admin-schedule-countdown,
+    .admin-schedule-date {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+}
+
 .admin-post-date {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.5);

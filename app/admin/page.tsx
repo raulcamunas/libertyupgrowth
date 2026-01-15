@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { Post } from '@/types/database'
 import LogoutButton from '@/components/LogoutButton'
+import ScheduleCountdown from '@/components/ScheduleCountdown'
 
 async function getPosts() {
   const supabase = await createClient()
@@ -188,11 +189,14 @@ export default async function AdminDashboard() {
                 <div className="admin-post-card-header">
                   <div className="flex-1 min-w-0">
                     <h3 className="admin-post-title">{post.title}</h3>
-                    <div className="flex items-center gap-3 mt-3">
+                    <div className="flex items-center gap-3 mt-3 flex-wrap">
                       <span className={`admin-status-badge ${getStatusColor(post.status)}`}>
                         <span className="admin-status-dot"></span>
                         {getStatusLabel(post.status)}
                       </span>
+                      {post.status === 'scheduled' && post.published_at && (
+                        <ScheduleCountdown publishedAt={post.published_at} />
+                      )}
                       <span className="admin-post-date">
                         <i className="fa-solid fa-calendar text-xs mr-1.5"></i>
                         {new Date(post.created_at).toLocaleDateString('es-ES', { 
