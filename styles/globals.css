@@ -1960,7 +1960,7 @@
         }
         
         .blog-card-upcoming .blog-card-image {
-            filter: brightness(0.4) contrast(0.9);
+            filter: brightness(0.6) contrast(0.95);
         }
         
         .blog-card-upcoming:hover {
@@ -1976,8 +1976,8 @@
         }
         
         .blog-card-overlay-blocked {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(1px);
         }
         
         .blog-card-lock-overlay {
