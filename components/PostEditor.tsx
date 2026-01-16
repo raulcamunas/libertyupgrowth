@@ -484,7 +484,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
             <div className="admin-link-modal-body">
               <label className="admin-link-modal-label">
                 URL del enlace:
-                {editor.getAttributes('link').href && (
+                {editor && editor.getAttributes('link').href && (
                   <span className="admin-link-modal-current">
                     Enlace actual: <code>{editor.getAttributes('link').href}</code>
                   </span>
@@ -532,7 +532,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
   )
 
   function handleLinkSubmit() {
-    if (linkUrl.trim()) {
+    if (linkUrl.trim() && editor) {
       editor.chain().focus().setLink({ href: linkUrl.trim() }).run()
       setShowLinkModal(false)
       setLinkUrl('')
