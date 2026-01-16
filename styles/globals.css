@@ -1180,6 +1180,200 @@
     justify-content: center;
 }
 
+/* Link Modal */
+.admin-link-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+}
+
+.admin-link-modal {
+    background: linear-gradient(135deg, 
+        rgba(20, 20, 20, 0.98) 0%,
+        rgba(15, 15, 15, 0.98) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+.admin-link-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 24px 0 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+}
+
+.admin-link-modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+}
+
+.admin-link-modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.admin-link-modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.admin-link-modal-body {
+    padding: 0 24px 24px 24px;
+}
+
+.admin-link-modal-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 12px;
+}
+
+.admin-link-modal-current {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-link-modal-current code {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 4px 8px;
+    background: rgba(255, 102, 0, 0.1);
+    border: 1px solid rgba(255, 102, 0, 0.2);
+    border-radius: 6px;
+    color: #FF6600;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+}
+
+.admin-link-modal-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.admin-link-modal-input:focus {
+    outline: none;
+    border-color: #FF6600;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+}
+
+.admin-link-modal-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.admin-link-modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 20px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.admin-link-modal-cancel,
+.admin-link-modal-submit {
+    flex: 1;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid;
+}
+
+.admin-link-modal-cancel {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.admin-link-modal-cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.admin-link-modal-submit {
+    background: rgba(255, 102, 0, 0.1);
+    border-color: rgba(255, 102, 0, 0.3);
+    color: #FF6600;
+}
+
+.admin-link-modal-submit:hover:not(:disabled) {
+    background: rgba(255, 102, 0, 0.2);
+    border-color: #FF6600;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+}
+
+.admin-link-modal-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Responsive Admin */
 @media (max-width: 768px) {
     .admin-stat-card {
@@ -1206,6 +1400,29 @@
     .admin-form-actions .admin-secondary-button {
         width: 100%;
         justify-content: center;
+    }
+    
+    .admin-link-modal {
+        max-width: 100%;
+        margin: 20px;
+    }
+    
+    .admin-link-modal-header {
+        padding: 20px 20px 0 20px;
+    }
+    
+    .admin-link-modal-body {
+        padding: 0 20px 20px 20px;
+    }
+    
+    .admin-link-modal-footer {
+        flex-direction: column;
+        padding: 16px 20px;
+    }
+    
+    .admin-link-modal-cancel,
+    .admin-link-modal-submit {
+        width: 100%;
     }
 }
 

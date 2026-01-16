@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import React from 'react'
 
 interface PostEditorProps {
@@ -14,6 +14,8 @@ interface PostEditorProps {
 
 export default function PostEditor({ content, onChange }: PostEditorProps) {
   const [isUploading, setIsUploading] = useState(false)
+  const [showLinkModal, setShowLinkModal] = useState(false)
+  const [linkUrl, setLinkUrl] = useState('')
 
   const editor = useEditor({
     extensions: [
@@ -422,10 +424,9 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           <button
             type="button"
             onClick={() => {
-              const url = window.prompt('Introduce la URL:')
-              if (url) {
-                editor.chain().focus().setLink({ href: url }).run()
-              }
+              const currentLink = editor.getAttributes('link').href || ''
+              setLinkUrl(currentLink)
+              setShowLinkModal(true)
             }}
             className={`admin-toolbar-button ${editor.isActive('link') ? 'active' : ''}`}
             title="Enlace"
@@ -465,8 +466,78 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
       <div className="admin-editor-content">
         <EditorContent editor={editor} />
       </div>
+
+      {/* Link Modal */}
+      {showLinkModal && (
+        <div className="admin-link-modal-overlay" onClick={() => setShowLinkModal(false)}>
+          <div className="admin-link-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-link-modal-header">
+              <h3 className="admin-link-modal-title">Añadir/Editar Enlace</h3>
+              <button
+                type="button"
+                onClick={() => setShowLinkModal(false)}
+                className="admin-link-modal-close"
+              >
+                <i className="fa-solid fa-times"></i>
+              </button>
+            </div>
+            <div className="admin-link-modal-body">
+              <label className="admin-link-modal-label">
+                URL del enlace:
+                {editor.getAttributes('link').href && (
+                  <span className="admin-link-modal-current">
+                    Enlace actual: <code>{editor.getAttributes('link').href}</code>
+                  </span>
+                )}
+              </label>
+              <input
+                type="url"
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                placeholder="https://ejemplo.com"
+                className="admin-link-modal-input"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleLinkSubmit()
+                  }
+                  if (e.key === 'Escape') {
+                    setShowLinkModal(false)
+                  }
+                }}
+              />
+            </div>
+            <div className="admin-link-modal-footer">
+              <button
+                type="button"
+                onClick={() => setShowLinkModal(false)}
+                className="admin-link-modal-cancel"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleLinkSubmit}
+                className="admin-link-modal-submit"
+                disabled={!linkUrl.trim()}
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
+
+  function handleLinkSubmit() {
+    if (linkUrl.trim()) {
+      editor.chain().focus().setLink({ href: linkUrl.trim() }).run()
+      setShowLinkModal(false)
+      setLinkUrl('')
+    }
+  }
 }
 
 
