@@ -18,7 +18,6 @@ async function getPost(id: string): Promise<Post | null> {
     .from('posts')
     .select('*')
     .eq('id', id)
-    .eq('user_id', user.id)
     .single()
 
   if (error || !data) {
@@ -41,6 +40,10 @@ export default async function EditPostPage({
 
   return <EditPostForm post={post} />
 }
+
+
+
+
 
 
 

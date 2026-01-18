@@ -45,7 +45,6 @@ export async function updatePost(id: string, data: PostUpdate) {
     .from('posts')
     .update({ ...data, updated_at: new Date().toISOString() })
     .eq('id', id)
-    .eq('user_id', user.id)
     .select()
     .single()
 
@@ -74,7 +73,6 @@ export async function deletePost(id: string) {
     .from('posts')
     .delete()
     .eq('id', id)
-    .eq('user_id', user.id)
 
   if (error) {
     return { error: error.message }
@@ -84,6 +82,10 @@ export async function deletePost(id: string) {
   revalidatePath('/blog')
   return { success: true }
 }
+
+
+
+
 
 
 
