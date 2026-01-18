@@ -54,23 +54,26 @@ CREATE POLICY "Users can create posts" ON posts
   FOR INSERT 
   WITH CHECK (auth.role() = 'authenticated');
 
--- Política: Usuarios pueden ver sus propios posts (cualquier estado)
+-- Política: Todos los usuarios autenticados pueden ver todos los posts
 DROP POLICY IF EXISTS "Users can view own posts" ON posts;
-CREATE POLICY "Users can view own posts" ON posts
+DROP POLICY IF EXISTS "Authenticated users can view all posts" ON posts;
+CREATE POLICY "Authenticated users can view all posts" ON posts
   FOR SELECT 
-  USING (auth.uid() = user_id);
+  USING (auth.role() = 'authenticated');
 
--- Política: Usuarios pueden actualizar sus propios posts
+-- Política: Todos los usuarios autenticados pueden actualizar todos los posts
 DROP POLICY IF EXISTS "Users can update own posts" ON posts;
-CREATE POLICY "Users can update own posts" ON posts
+DROP POLICY IF EXISTS "Authenticated users can update all posts" ON posts;
+CREATE POLICY "Authenticated users can update all posts" ON posts
   FOR UPDATE 
-  USING (auth.uid() = user_id);
+  USING (auth.role() = 'authenticated');
 
--- Política: Usuarios pueden eliminar sus propios posts
+-- Política: Todos los usuarios autenticados pueden eliminar todos los posts
 DROP POLICY IF EXISTS "Users can delete own posts" ON posts;
-CREATE POLICY "Users can delete own posts" ON posts
+DROP POLICY IF EXISTS "Authenticated users can delete all posts" ON posts;
+CREATE POLICY "Authenticated users can delete all posts" ON posts
   FOR DELETE 
-  USING (auth.uid() = user_id);
+  USING (auth.role() = 'authenticated');
 
 -- Política: Posts publicados son visibles para todos (público)
 DROP POLICY IF EXISTS "Published posts are public" ON posts;
