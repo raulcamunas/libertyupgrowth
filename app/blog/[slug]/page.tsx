@@ -214,7 +214,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <p className="blog-post-cta-text">
               Contacta con nosotros y descubre cómo podemos ayudarte a alcanzar tus objetivos.
             </p>
-            <Link href="/#hero" className="blog-post-cta-button">
+            <Link href="https://libertyseller.com/#hero" className="blog-post-cta-button">
               <span>Empezar Ahora</span>
               <i className="fa-solid fa-arrow-right"></i>
             </Link>
