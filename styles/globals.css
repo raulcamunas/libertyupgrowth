@@ -3221,38 +3221,6 @@
                 font-size: 32px;
             }
             
-            /* Tipografía más pequeña en móvil para mejor lectura */
-            .blog-post-body p {
-                font-size: 16px;
-                line-height: 1.75;
-            }
-            
-            .blog-post-body h1 {
-                font-size: 32px;
-            }
-            
-            .blog-post-body h2 {
-                font-size: 26px;
-            }
-            
-            .blog-post-body h3 {
-                font-size: 21px;
-            }
-            
-            .blog-post-body h4 {
-                font-size: 18px;
-            }
-            
-            .blog-post-body ul li,
-            .blog-post-body ol li {
-                font-size: 16px;
-            }
-            
-            .blog-post-body blockquote {
-                font-size: 17px;
-                padding: 24px 32px 24px 40px;
-            }
-            
             .blog-post-excerpt {
                 font-size: 18px;
             }
@@ -3270,12 +3238,14 @@
                 padding: 32px 24px;
             }
             
-            .blog-post-body {
-                font-size: 17px;
+            /* Tipografía más pequeña en móvil para mejor lectura */
+            .blog-post-body p {
+                font-size: 16px;
+                line-height: 1.75;
             }
             
             .blog-post-body h1 {
-                font-size: 36px;
+                font-size: 32px;
                 margin-top: 0;
                 margin-bottom: 24px;
                 letter-spacing: -1.5px;
@@ -3287,7 +3257,7 @@
             }
             
             .blog-post-body h2 {
-                font-size: 28px;
+                font-size: 26px;
                 margin-top: 40px;
             }
             
@@ -3297,7 +3267,7 @@
             }
             
             .blog-post-body h3 {
-                font-size: 22px;
+                font-size: 21px;
                 margin-top: 32px;
             }
             
@@ -3309,7 +3279,7 @@
             .blog-post-body blockquote {
                 padding: 24px 28px 24px 36px;
                 margin: 36px 0;
-                font-size: 18px;
+                font-size: 17px;
             }
             
             .blog-post-body blockquote::before {
@@ -3321,6 +3291,7 @@
             .blog-post-body ul li,
             .blog-post-body ol li {
                 margin-bottom: 12px;
+                font-size: 16px;
             }
             
             .blog-bottom-section {
