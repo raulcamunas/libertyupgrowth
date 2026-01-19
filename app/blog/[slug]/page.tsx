@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
 import { processBlogContent } from '@/lib/blog-content-processor'
+import BlogCTA from '@/components/BlogCTA'
 
 interface BlogPostPageProps {
   params: {
@@ -208,18 +209,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
 
         {/* CTA Section */}
-        <div className="blog-post-cta">
-          <div className="blog-post-cta-content">
-            <h3 className="blog-post-cta-title">¿Listo para escalar tu cuenta de Amazon?</h3>
-            <p className="blog-post-cta-text">
-              Contacta con nosotros y descubre cómo podemos ayudarte a alcanzar tus objetivos.
-            </p>
-            <Link href="https://libertyseller.com/" className="blog-post-cta-button">
-              <span>Empezar Ahora</span>
-              <i className="fa-solid fa-arrow-right"></i>
-            </Link>
-          </div>
-        </div>
+        <BlogCTA />
 
         {/* Artículos Relacionados */}
         {relatedPosts.length > 0 && (
