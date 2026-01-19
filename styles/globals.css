@@ -1391,6 +1391,8 @@
     padding: 20px;
     animation: fadeIn 0.3s ease;
     overflow-y: auto;
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height para móvil */
 }
 
 .contact-modal {
@@ -1474,11 +1476,19 @@
 
 /* Responsive Contact Modal */
 @media (max-width: 768px) {
+    .contact-modal-overlay {
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
     .contact-modal {
         max-width: 100%;
-        max-height: 95vh;
-        border-radius: 20px 20px 0 0;
-        margin-top: auto;
+        max-height: 90vh;
+        max-height: 90dvh; /* Dynamic viewport height para móvil */
+        border-radius: 24px;
+        margin: auto;
+        width: calc(100% - 20px);
     }
 
     .contact-modal-header {
@@ -1497,6 +1507,9 @@
 
     .contact-modal-body {
         padding: 20px;
+        max-height: calc(90vh - 80px);
+        max-height: calc(90dvh - 80px);
+        overflow-y: auto;
     }
 }
 
@@ -2462,6 +2475,12 @@
                 gap: 30px;
             }
             
+            /* Asegurar que el post programado se muestre en móvil */
+            .blog-card-upcoming {
+                display: block !important;
+                opacity: 0.9;
+            }
+            
             .blog-card-image-wrapper {
                 height: 200px;
             }
@@ -2697,11 +2716,11 @@
         }
         
         .blog-post-body h1 {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: 800;
             color: white;
             margin-top: 0;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
             line-height: 1.2;
             letter-spacing: -2px;
             position: relative;
@@ -2720,11 +2739,11 @@
         }
         
         .blog-post-body h2 {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 800;
             color: white;
-            margin-top: 56px;
-            margin-bottom: 24px;
+            margin-top: 48px;
+            margin-bottom: 20px;
             line-height: 1.2;
             letter-spacing: -1px;
             position: relative;
@@ -2747,17 +2766,17 @@
         }
         
         .blog-post-body h3 {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: #FF6600;
-            margin-top: 44px;
-            margin-bottom: 20px;
+            margin-top: 40px;
+            margin-bottom: 18px;
             line-height: 1.3;
             letter-spacing: -0.3px;
         }
         
         .blog-post-body h4 {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.95);
             margin-top: 32px;
@@ -2768,8 +2787,8 @@
         .blog-post-body p {
             margin-bottom: 24px;
             color: rgba(255, 255, 255, 0.85);
-            font-size: 19px;
-            line-height: 1.85;
+            font-size: 17px;
+            line-height: 1.8;
         }
         
         .blog-post-body p:last-child {
@@ -3200,6 +3219,38 @@
             
             .blog-post-title {
                 font-size: 32px;
+            }
+            
+            /* Tipografía más pequeña en móvil para mejor lectura */
+            .blog-post-body p {
+                font-size: 16px;
+                line-height: 1.75;
+            }
+            
+            .blog-post-body h1 {
+                font-size: 32px;
+            }
+            
+            .blog-post-body h2 {
+                font-size: 26px;
+            }
+            
+            .blog-post-body h3 {
+                font-size: 21px;
+            }
+            
+            .blog-post-body h4 {
+                font-size: 18px;
+            }
+            
+            .blog-post-body ul li,
+            .blog-post-body ol li {
+                font-size: 16px;
+            }
+            
+            .blog-post-body blockquote {
+                font-size: 17px;
+                padding: 24px 32px 24px 40px;
             }
             
             .blog-post-excerpt {
