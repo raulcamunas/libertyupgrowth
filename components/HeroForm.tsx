@@ -126,6 +126,17 @@ export default function HeroForm() {
       formBtn.style.backgroundColor = '#CC5200'
       formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'
       form.reset()
+      
+      // Disparar evento de conversión para Google Tag Manager
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          'event': 'form_submit',
+          'form_id': 'signup-form',
+          'form_name': 'hero_form',
+          'conversion_type': 'form_submission'
+        })
+      }
+      
       form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'))
       const expandableFields = form.querySelector('.expandable-fields')
       if (expandableFields) expandableFields.classList.remove('open')
