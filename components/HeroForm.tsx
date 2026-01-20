@@ -129,14 +129,28 @@ export default function HeroForm() {
       form.reset()
       
       // Disparar evento de conversión para Google Tag Manager (solo una vez)
+      // Usar timestamp para evitar duplicación incluso si se ejecuta dos veces
+      const eventKey = `form_submit_${Date.now()}`
       if (!eventSent && typeof window !== 'undefined' && (window as any).dataLayer) {
-        (window as any).dataLayer.push({
-          'event': 'form_submit',
-          'form_id': 'signup-form',
-          'form_name': 'hero_form',
-          'conversion_type': 'form_submission'
-        })
-        setEventSent(true)
+        // Verificar que no se haya enviado un evento similar en los últimos 2 segundos
+        const recentEvents = (window as any).dataLayer.filter((e: any) => 
+          e.event === 'form_submit' && 
+          e.form_id === 'signup-form' &&
+          e._timestamp && 
+          (Date.now() - e._timestamp) < 2000
+        )
+        
+        if (recentEvents.length === 0) {
+          (window as any).dataLayer.push({
+            'event': 'form_submit',
+            'form_id': 'signup-form',
+            'form_name': 'hero_form',
+            'conversion_type': 'form_submission',
+            '_timestamp': Date.now(),
+            '_eventKey': eventKey
+          })
+          setEventSent(true)
+        }
       }
       
       form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'))
