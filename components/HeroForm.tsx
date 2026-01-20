@@ -128,8 +128,8 @@ export default function HeroForm() {
       form.reset()
       
       // Disparar evento de conversión para Google Tag Manager
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        (window as any).dataLayer.push({
           'event': 'form_submit',
           'form_id': 'signup-form',
           'form_name': 'hero_form',

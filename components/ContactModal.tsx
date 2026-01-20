@@ -148,8 +148,8 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       form.reset()
       
       // Disparar evento de conversión para Google Tag Manager
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        (window as any).dataLayer.push({
           'event': 'form_submit',
           'form_id': 'modal-signup-form',
           'form_name': 'modal_form',

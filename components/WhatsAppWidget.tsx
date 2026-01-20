@@ -8,8 +8,8 @@ export default function WhatsAppWidget() {
     
     const handleWhatsAppClick = () => {
       // Disparar evento de conversión para Google Tag Manager
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        (window as any).dataLayer.push({
           'event': 'whatsapp_click',
           'conversion_type': 'whatsapp_contact',
           'button_location': 'floating_widget'
