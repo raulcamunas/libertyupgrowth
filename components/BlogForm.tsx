@@ -132,26 +132,23 @@ export default function BlogForm() {
       form.reset()
       
       // Disparar evento de conversión para Google Tag Manager (solo una vez)
-      // Usar timestamp para evitar duplicación incluso si se ejecuta dos veces
-      const eventKey = `form_submit_${Date.now()}`
-      if (!eventSent && typeof window !== 'undefined' && (window as any).dataLayer) {
-        // Verificar que no se haya enviado un evento similar en los últimos 2 segundos
-        const recentEvents = (window as any).dataLayer.filter((e: any) => 
-          e.event === 'form_submit' && 
-          e.form_id === 'blog-signup-form' &&
-          e._timestamp && 
-          (Date.now() - e._timestamp) < 2000
-        )
+      // Usar sessionStorage para prevenir duplicación incluso si el componente se monta dos veces
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        const eventKey = `form_submit_blog-signup-form_${Date.now()}`
+        const lastEventKey = sessionStorage.getItem('last_form_submit_event')
+        const lastEventTime = sessionStorage.getItem('last_form_submit_time')
+        const now = Date.now()
         
-        if (recentEvents.length === 0) {
+        // Solo enviar si no se envió un evento similar en los últimos 3 segundos
+        if (!lastEventKey || !lastEventTime || (now - parseInt(lastEventTime)) > 3000) {
           (window as any).dataLayer.push({
             'event': 'form_submit',
             'form_id': 'blog-signup-form',
             'form_name': 'blog_form',
-            'conversion_type': 'form_submission',
-            '_timestamp': Date.now(),
-            '_eventKey': eventKey
+            'conversion_type': 'form_submission'
           })
+          sessionStorage.setItem('last_form_submit_event', eventKey)
+          sessionStorage.setItem('last_form_submit_time', now.toString())
           setEventSent(true)
         }
       }
