@@ -1,28 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
-
 export default function WhatsAppWidget() {
-  useEffect(() => {
-    const whatsappButton = document.querySelector('.whatsapp-button')
-    
-    const handleWhatsAppClick = () => {
-      // Disparar evento de conversión para Google Tag Manager
-      if (typeof window !== 'undefined' && (window as any).dataLayer) {
-        (window as any).dataLayer.push({
-          'event': 'whatsapp_click',
-          'conversion_type': 'whatsapp_contact',
-          'button_location': 'floating_widget'
-        })
-      }
-    }
-    
-    whatsappButton?.addEventListener('click', handleWhatsAppClick)
-    
-    return () => {
-      whatsappButton?.removeEventListener('click', handleWhatsAppClick)
-    }
-  }, [])
+  // Nota: El evento de WhatsApp se captura automáticamente por GTM
+  // mediante el trigger "Activador - Click Whatsapp" que detecta URLs con wa.me
+  // No necesitamos enviar un evento personalizado adicional para evitar duplicación
 
   return (
     <div className="whatsapp-widget">

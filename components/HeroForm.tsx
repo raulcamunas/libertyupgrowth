@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 export default function HeroForm() {
   const [isAmazonSeller, setIsAmazonSeller] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [eventSent, setEventSent] = useState(false)
 
   useEffect(() => {
     // Toggle expandable fields
@@ -127,14 +128,15 @@ export default function HeroForm() {
       formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'
       form.reset()
       
-      // Disparar evento de conversión para Google Tag Manager
-      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      // Disparar evento de conversión para Google Tag Manager (solo una vez)
+      if (!eventSent && typeof window !== 'undefined' && (window as any).dataLayer) {
         (window as any).dataLayer.push({
           'event': 'form_submit',
           'form_id': 'signup-form',
           'form_name': 'hero_form',
           'conversion_type': 'form_submission'
         })
+        setEventSent(true)
       }
       
       form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'))
@@ -155,6 +157,7 @@ export default function HeroForm() {
         formBtn.disabled = false
         formBtn.style.backgroundColor = 'var(--brand-color)'
         formBtn.innerHTML = originalBtnText
+        setEventSent(false) // Reset para permitir otro envío
       }, 5000)
     } catch (error: any) {
       formBtn.style.backgroundColor = '#ff4444'
