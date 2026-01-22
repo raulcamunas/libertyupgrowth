@@ -104,13 +104,25 @@ export default function NewsletterForm() {
                         <div className="entry__field">
                           <input 
                             className="input" 
-                            type="text" 
+                            type="email" 
                             id="EMAIL" 
                             name="EMAIL" 
-                            autoComplete="off" 
+                            autoComplete="email" 
                             placeholder="tu@email.com" 
                             data-required="true" 
                             required 
+                            style={{
+                              width: '100%',
+                              padding: '15px 20px',
+                              background: 'rgba(255, 255, 255, 0.05)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              borderRadius: '12px',
+                              color: 'white',
+                              fontSize: '15px',
+                              outline: 'none',
+                              transition: 'all 0.3s ease',
+                              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+                            }}
                           />
                         </div>
                       </div>
