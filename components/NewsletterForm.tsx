@@ -99,7 +99,7 @@ export default function NewsletterForm() {
               {/* Subtítulo */}
               <div>
                 <p className="text-lg text-white/70 leading-relaxed mb-8">
-                  Olvídate del spam. Recibe tácticas probadas de gestión, tendencias de LATAM y tips accionables para aplicar hoy mismo.
+                  Olvídate del spam. Recibe tácticas probadas de gestión y tips accionables para aplicar hoy mismo.
                 </p>
               </div>
 
