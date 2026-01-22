@@ -38,6 +38,39 @@ export default function NewsletterForm() {
         link.href = 'https://sibforms.com/forms/end-form/build/sib-styles.css'
         document.head.appendChild(link)
       }
+      
+      // Forzar estilos del input después de que Brevo cargue
+      const forceInputStyles = () => {
+        const emailInput = document.getElementById('EMAIL') as HTMLInputElement
+        if (emailInput) {
+          emailInput.style.setProperty('background', 'rgba(255, 255, 255, 0.05)', 'important')
+          emailInput.style.setProperty('background-color', 'rgba(255, 255, 255, 0.05)', 'important')
+          emailInput.style.setProperty('color', 'white', 'important')
+          emailInput.style.setProperty('-webkit-text-fill-color', 'white', 'important')
+          emailInput.style.setProperty('border', '1px solid rgba(255, 255, 255, 0.1)', 'important')
+        }
+      }
+      
+      // Intentar forzar estilos inmediatamente y después de un delay
+      forceInputStyles()
+      setTimeout(forceInputStyles, 100)
+      setTimeout(forceInputStyles, 500)
+      setTimeout(forceInputStyles, 1000)
+      
+      // También usar MutationObserver para cuando el input se añada al DOM
+      const observer = new MutationObserver(() => {
+        forceInputStyles()
+      })
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      })
+      
+      // Limpiar observer cuando el componente se desmonte
+      return () => {
+        observer.disconnect()
+      }
     }
   }, [])
 
@@ -114,16 +147,21 @@ export default function NewsletterForm() {
                             style={{
                               width: '100%',
                               padding: '15px 20px',
-                              background: 'rgba(255, 255, 255, 0.05) !important',
-                              border: '1px solid rgba(255, 255, 255, 0.1) !important',
+                              background: 'rgba(255, 255, 255, 0.05)',
+                              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
                               borderRadius: '12px',
-                              color: 'white !important',
+                              color: 'white',
+                              WebkitTextFillColor: 'white',
                               fontSize: '15px',
                               outline: 'none',
                               transition: 'all 0.3s ease',
                               boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-                              boxSizing: 'border-box'
-                            }}
+                              boxSizing: 'border-box',
+                              WebkitAppearance: 'none',
+                              MozAppearance: 'none',
+                              appearance: 'none'
+                            } as React.CSSProperties}
                           />
                         </div>
                       </div>

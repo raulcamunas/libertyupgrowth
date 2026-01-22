@@ -3272,12 +3272,22 @@
         
         .newsletter-form-wrapper .entry__field input,
         .newsletter-form-wrapper input[type="email"],
-        .newsletter-form-wrapper input.input {
+        .newsletter-form-wrapper input.input,
+        .newsletter-form-wrapper #sib-container input,
+        .newsletter-form-wrapper #sib-container .input,
+        .newsletter-form-wrapper #sib-container input[type="text"],
+        .newsletter-form-wrapper #sib-container input[type="email"],
+        .newsletter-form-wrapper #sib-form input,
+        .newsletter-form-wrapper #sib-form .input,
+        .newsletter-form-wrapper .sib-input input,
+        .newsletter-form-wrapper .form__entry input {
             padding: 15px 20px !important;
             background: rgba(255, 255, 255, 0.05) !important;
+            background-color: rgba(255, 255, 255, 0.05) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 12px !important;
             color: white !important;
+            -webkit-text-fill-color: white !important;
             font-size: 15px !important;
             outline: none !important;
             transition: all 0.3s ease !important;
@@ -3288,6 +3298,15 @@
             -webkit-appearance: none !important;
             -moz-appearance: none !important;
             appearance: none !important;
+        }
+        
+        .newsletter-form-wrapper #sib-container input:-webkit-autofill,
+        .newsletter-form-wrapper #sib-container input:-webkit-autofill:hover,
+        .newsletter-form-wrapper #sib-container input:-webkit-autofill:focus {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+            box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+            background-color: rgba(255, 255, 255, 0.05) !important;
         }
 
         .newsletter-form-wrapper .entry__field input:focus {
