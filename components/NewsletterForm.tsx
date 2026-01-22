@@ -4,13 +4,15 @@ import { useEffect } from 'react'
 
 export default function NewsletterForm() {
   useEffect(() => {
-    // Scripts de Brevo se cargarán automáticamente
     if (typeof window !== 'undefined') {
+      // Configuración de Brevo necesaria para el funcionamiento
       ;(window as any).REQUIRED_CODE_ERROR_MESSAGE = 'Elija un código de país'
       ;(window as any).LOCALE = 'es'
-      ;(window as any).EMAIL_INVALID_MESSAGE = (window as any).SMS_INVALID_MESSAGE = "La información que ha proporcionado no es válida. Compruebe el formato del campo e inténtelo de nuevo."
+      ;(window as any).EMAIL_INVALID_MESSAGE = (window as any).SMS_INVALID_MESSAGE = 
+        "La información que ha proporcionado no es válida. Compruebe el formato del campo e inténtelo de nuevo."
       ;(window as any).REQUIRED_ERROR_MESSAGE = "Este campo no puede quedarse vacío. "
-      ;(window as any).GENERIC_INVALID_MESSAGE = "La información que ha proporcionado no es válida. Compruebe el formato del campo e inténtelo de nuevo."
+      ;(window as any).GENERIC_INVALID_MESSAGE = 
+        "La información que ha proporcionado no es válida. Compruebe el formato del campo e inténtelo de nuevo."
       
       ;(window as any).translation = {
         common: {
@@ -23,230 +25,145 @@ export default function NewsletterForm() {
       
       ;(window as any).AUTOHIDE = Boolean(0)
       
-      // Inyectar estilos directamente en el head para sobrescribir Brevo
-      const styleId = 'newsletter-form-override-styles'
-      if (!document.getElementById(styleId)) {
-        const style = document.createElement('style')
-        style.id = styleId
-        style.textContent = `
-          #EMAIL,
-          #sib-container input[type="email"],
-          #sib-container input.input,
-          #sib-form input[type="email"],
-          .newsletter-form-wrapper input[type="email"],
-          .newsletter-form-wrapper #EMAIL {
-            background: rgba(255, 255, 255, 0.05) !important;
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            color: white !important;
-            -webkit-text-fill-color: white !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            padding: 15px 20px !important;
-            border-radius: 12px !important;
-            font-size: 15px !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-          }
-          #EMAIL:focus,
-          #sib-container input[type="email"]:focus,
-          #sib-form input[type="email"]:focus {
-            background: rgba(255, 255, 255, 0.08) !important;
-            background-color: rgba(255, 255, 255, 0.08) !important;
-            border-color: #FF6600 !important;
-            box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.1), 0 2px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-          }
-          #EMAIL:-webkit-autofill,
-          #EMAIL:-webkit-autofill:hover,
-          #EMAIL:-webkit-autofill:focus {
-            -webkit-text-fill-color: white !important;
-            -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
-            box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
-            background-color: rgba(255, 255, 255, 0.05) !important;
-          }
-        `
-        document.head.appendChild(style)
-      }
-      
-      // Cargar el script de Brevo si no está cargado
+      // Cargar solo el script de Brevo (sin CSS)
       if (!document.querySelector('script[src*="sibforms.com"]')) {
         const script = document.createElement('script')
         script.defer = true
         script.src = 'https://sibforms.com/forms/end-form/build/main.js'
         document.body.appendChild(script)
       }
-      
-      // Cargar el CSS de Brevo si no está cargado (después de nuestros estilos)
-      if (!document.querySelector('link[href*="sib-styles.css"]')) {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = 'https://sibforms.com/forms/end-form/build/sib-styles.css'
-        // Insertar después de nuestros estilos para que nuestros estilos tengan prioridad
-        const existingStyle = document.getElementById(styleId)
-        if (existingStyle && existingStyle.nextSibling) {
-          document.head.insertBefore(link, existingStyle.nextSibling)
-        } else {
-          document.head.appendChild(link)
-        }
-      }
-      
-      // Forzar estilos del input después de que Brevo cargue
-      const forceInputStyles = () => {
-        const emailInput = document.getElementById('EMAIL') as HTMLInputElement
-        if (emailInput) {
-          emailInput.style.setProperty('background', 'rgba(255, 255, 255, 0.05)', 'important')
-          emailInput.style.setProperty('background-color', 'rgba(255, 255, 255, 0.05)', 'important')
-          emailInput.style.setProperty('color', 'white', 'important')
-          emailInput.style.setProperty('-webkit-text-fill-color', 'white', 'important')
-          emailInput.style.setProperty('border', '1px solid rgba(255, 255, 255, 0.1)', 'important')
-        }
-      }
-      
-      // Intentar forzar estilos inmediatamente y después de un delay
-      forceInputStyles()
-      setTimeout(forceInputStyles, 100)
-      setTimeout(forceInputStyles, 500)
-      setTimeout(forceInputStyles, 1000)
-      setTimeout(forceInputStyles, 2000)
-      
-      // También usar MutationObserver para cuando el input se añada al DOM
-      const observer = new MutationObserver(() => {
-        forceInputStyles()
-      })
-      
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style', 'class']
-      })
-      
-      // Limpiar observer cuando el componente se desmonte
-      return () => {
-        observer.disconnect()
-      }
     }
   }, [])
 
   return (
-    <>
-      
-      <div className="newsletter-form-wrapper">
-        <div className="sib-form">
-          <div id="sib-form-container" className="sib-form-container">
-            <div id="error-message" className="sib-form-message-panel" style={{display: 'none'}}>
-              <div className="sib-form-message-panel__text sib-form-message-panel__text--center">
-                <svg viewBox="0 0 512 512" className="sib-icon sib-notification__icon">
-                  <path d="M256 40c118.621 0 216 96.075 216 216 0 119.291-96.61 216-216 216-119.244 0-216-96.562-216-216 0-119.203 96.602-216 216-216m0-32C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm-11.49 120h22.979c6.823 0 12.274 5.682 11.99 12.5l-7 168c-.268 6.428-5.556 11.5-11.99 11.5h-8.979c-6.433 0-11.722-5.073-11.99-11.5l-7-168c-.283-6.818 5.167-12.5 11.99-12.5zM256 340c-15.464 0-28 12.536-28 28s12.536 28 28 28 28-12.536 28-28-12.536-28-28-28z" />
-                </svg>
-                <span className="sib-form-message-panel__inner-text">
-                  No hemos podido validar su suscripción.
-                </span>
-              </div>
-            </div>
-
-            <div id="success-message" className="sib-form-message-panel" style={{display: 'none'}}>
-              <div className="sib-form-message-panel__text sib-form-message-panel__text--center">
-                <svg viewBox="0 0 512 512" className="sib-icon sib-notification__icon">
-                  <path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 464c-118.664 0-216-96.055-216-216 0-118.663 96.055-216 216-216 118.664 0 216 96.055 216 216 0 118.663-96.055 216-216 216zm141.63-274.961L217.15 376.071c-4.705 4.667-12.303 4.637-16.97-.068l-85.878-86.572c-4.667-4.705-4.637-12.303.068-16.97l8.52-8.451c4.705-4.667 12.303-4.637 16.97.068l68.976 69.533 163.441-162.13c4.705-4.667 12.303-4.637 16.97.068l8.451 8.52c4.668 4.705 4.637 12.303-.068 16.97z" />
-                </svg>
-                <span className="sib-form-message-panel__inner-text">
-                  Se ha realizado su suscripción.
-                </span>
-              </div>
-            </div>
-
-            <div id="sib-container" className="sib-container--large sib-container--vertical">
-              <form 
-                id="sib-form" 
-                method="POST" 
-                action="https://7a617b13.sibforms.com/serve/MUIFAMUzWml_T9n5ZHF1y8hxbFc8IEUnOSlDPFzMd6fXIujpj7Evys0aErFdISMSYKkPccis4JouzN3obEvmXGrtxjTSD7b-5qnWqmDYaExsLXEhIQ7qBEPkcuasMTEgDP2vP1Oz4qYI2EjGLG212Kx-R6rsZTQOWrKYgX9YiMHA31h7seHhipAe-rwMYON8F83YrpN2LNkQGakP4w==" 
-                data-type="subscription"
+    <div className="w-full">
+      <div className="sib-form">
+        <div id="sib-form-container" className="sib-form-container">
+          {/* Mensaje de error - Oculto por defecto */}
+          <div 
+            id="error-message" 
+            className="hidden mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400"
+          >
+            <div className="flex items-center gap-3">
+              <svg 
+                viewBox="0 0 512 512" 
+                className="w-5 h-5 flex-shrink-0"
+                fill="currentColor"
               >
-                <div style={{padding: '8px 0'}}>
-                  <div className="sib-form-block">
-                    <p>Newsletter</p>
-                  </div>
-                </div>
-
-                <div style={{padding: '8px 0'}}>
-                  <div className="sib-form-block">
-                    <div className="sib-text-form-block">
-                      <p>Suscríbase a nuestra newsletter para recibir nuestras novedades.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{padding: '8px 0'}}>
-                  <div className="sib-input sib-form-block">
-                    <div className="form__entry entry_block">
-                      <div className="form__label-row">
-                        <label 
-                          className="entry__label" 
-                          htmlFor="EMAIL" 
-                          data-required="*"
-                        >
-                          Introduzca su dirección de e-mail para suscribirse
-                        </label>
-                        <div className="entry__field">
-                          <input 
-                            className="input" 
-                            type="email" 
-                            id="EMAIL" 
-                            name="EMAIL" 
-                            autoComplete="email" 
-                            placeholder="tu@email.com" 
-                            data-required="true" 
-                            required 
-                            style={{
-                              width: '100%',
-                              padding: '15px 20px',
-                              background: 'rgba(255, 255, 255, 0.05)',
-                              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                              border: '1px solid rgba(255, 255, 255, 0.1)',
-                              borderRadius: '12px',
-                              color: 'white',
-                              WebkitTextFillColor: 'white',
-                              fontSize: '15px',
-                              outline: 'none',
-                              transition: 'all 0.3s ease',
-                              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-                              boxSizing: 'border-box',
-                              WebkitAppearance: 'none',
-                              MozAppearance: 'none',
-                              appearance: 'none'
-                            } as React.CSSProperties}
-                          />
-                        </div>
-                      </div>
-                      <label className="entry__error entry__error--primary" style={{display: 'none'}}></label>
-                      <label className="entry__specification">
-                        Introduce tu dirección de e-mail para suscribirte. Ej.: abc@xyz.com
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{padding: '8px 0'}}>
-                  <div className="sib-form-block" style={{textAlign: 'left'}}>
-                    <button 
-                      className="sib-form-block__button sib-form-block__button-with-loader" 
-                      form="sib-form" 
-                      type="submit"
-                    >
-                      <svg className="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512" style={{display: 'none'}}>
-                        <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z" />
-                      </svg>
-                      SUSCRIBIRSE
-                    </button>
-                  </div>
-                </div>
-
-                <input type="text" name="email_address_check" defaultValue="" className="input--hidden" readOnly style={{display: 'none'}} />
-                <input type="hidden" name="locale" value="es" />
-              </form>
+                <path d="M256 40c118.621 0 216 96.075 216 216 0 119.291-96.61 216-216 216-119.244 0-216-96.562-216-216 0-119.203 96.602-216 216-216m0-32C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm-11.49 120h22.979c6.823 0 12.274 5.682 11.99 12.5l-7 168c-.268 6.428-5.556 11.5-11.99 11.5h-8.979c-6.433 0-11.722-5.073-11.99-11.5l-7-168c-.283-6.818 5.167-12.5 11.99-12.5zM256 340c-15.464 0-28 12.536-28 28s12.536 28 28 28 28-12.536 28-28-12.536-28-28-28z" />
+              </svg>
+              <span className="sib-form-message-panel__inner-text">
+                No hemos podido validar su suscripción.
+              </span>
             </div>
+          </div>
+
+          {/* Mensaje de éxito - Oculto por defecto */}
+          <div 
+            id="success-message" 
+            className="hidden mb-5 p-4 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400"
+          >
+            <div className="flex items-center gap-3">
+              <svg 
+                viewBox="0 0 512 512" 
+                className="w-5 h-5 flex-shrink-0"
+                fill="currentColor"
+              >
+                <path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 464c-118.664 0-216-96.055-216-216 0-118.663 96.055-216 216-216 118.664 0 216 96.055 216 216 0 118.663-96.055 216-216 216zm141.63-274.961L217.15 376.071c-4.705 4.667-12.303 4.637-16.97-.068l-85.878-86.572c-4.667-4.705-4.637-12.303.068-16.97l8.52-8.451c4.705-4.667 12.303-4.637 16.97.068l68.976 69.533 163.441-162.13c4.705-4.667 12.303-4.637 16.97.068l8.451 8.52c4.668 4.705 4.637 12.303-.068 16.97z" />
+              </svg>
+              <span className="sib-form-message-panel__inner-text">
+                Se ha realizado su suscripción.
+              </span>
+            </div>
+          </div>
+
+          {/* Contenedor del formulario con estilo glassmorphism */}
+          <div 
+            id="sib-container" 
+            className="sib-container--large sib-container--vertical bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-orange-500/[0.02] backdrop-blur-[30px] border border-orange-500/20 rounded-3xl p-10 shadow-[0_8px_32px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)_inset,inset_0_1px_0_rgba(255,255,255,0.1)]"
+          >
+            <form 
+              id="sib-form" 
+              method="POST" 
+              action="https://7a617b13.sibforms.com/serve/MUIFAMUzWml_T9n5ZHF1y8hxbFc8IEUnOSlDPFzMd6fXIujpj7Evys0aErFdISMSYKkPccis4JouzN3obEvmXGrtxjTSD7b-5qnWqmDYaExsLXEhIQ7qBEPkcuasMTEgDP2vP1Oz4qYI2EjGLG212Kx-R6rsZTQOWrKYgX9YiMHA31h7seHhipAe-rwMYON8F83YrpN2LNkQGakP4w==" 
+              data-type="subscription"
+              className="space-y-6"
+            >
+              {/* Título */}
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-3">Newsletter</h3>
+              </div>
+
+              {/* Descripción */}
+              <div>
+                <p className="text-base text-white/70 leading-relaxed">
+                  Suscríbase a nuestra newsletter para recibir nuestras novedades.
+                </p>
+              </div>
+
+              {/* Campo de email */}
+              <div className="space-y-2">
+                <label 
+                  htmlFor="EMAIL" 
+                  className="block text-sm font-semibold text-white mb-2"
+                >
+                  Introduzca su dirección de e-mail para suscribirse
+                  <span className="text-orange-500 ml-1">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="EMAIL"
+                  name="EMAIL"
+                  autoComplete="email"
+                  placeholder="tu@email.com"
+                  data-required="true"
+                  required
+                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-orange-500 focus:shadow-[0_0_0_4px_rgba(255,102,0,0.1),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/30 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
+                  style={{
+                    WebkitTextFillColor: 'white',
+                    WebkitAppearance: 'none',
+                    MozAppearance: 'none',
+                    appearance: 'none',
+                  }}
+                />
+                <p className="text-xs text-white/50 mt-2">
+                  Introduce tu dirección de e-mail para suscribirte. Ej.: abc@xyz.com
+                </p>
+                {/* Mensaje de error del campo (manejado por Brevo) */}
+                <label className="entry__error entry__error--primary hidden text-red-400 text-sm mt-1"></label>
+              </div>
+
+              {/* Botón de envío */}
+              <div>
+                <button
+                  type="submit"
+                  className="w-full py-[18px] px-9 bg-[#ea580c] hover:bg-[#c2410c] text-white font-semibold text-base rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(234,88,12,0.3)] hover:shadow-[0_6px_30px_rgba(234,88,12,0.4)] hover:-translate-y-0.5"
+                >
+                  <span className="sib-form-block__button-text">SUSCRIBIRSE</span>
+                  <svg 
+                    className="icon clickable__icon progress-indicator__icon sib-hide-loader-icon hidden" 
+                    viewBox="0 0 512 512"
+                    style={{ display: 'none' }}
+                  >
+                    <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Campos ocultos requeridos por Brevo */}
+              <input 
+                type="text" 
+                name="email_address_check" 
+                defaultValue="" 
+                className="hidden" 
+                readOnly 
+                aria-hidden="true"
+              />
+              <input type="hidden" name="locale" value="es" />
+            </form>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
-
