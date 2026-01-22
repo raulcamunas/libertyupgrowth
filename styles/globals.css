@@ -3135,10 +3135,9 @@
         /* CTA Section */
         .blog-post-cta-wrapper {
             margin-top: 80px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 40px;
-            align-items: stretch;
         }
         
         .blog-post-cta {
@@ -3271,7 +3270,9 @@
             width: 100% !important;
         }
         
-        .newsletter-form-wrapper .entry__field input {
+        .newsletter-form-wrapper .entry__field input,
+        .newsletter-form-wrapper input[type="email"],
+        .newsletter-form-wrapper input.input {
             padding: 15px 20px !important;
             background: rgba(255, 255, 255, 0.05) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -3284,6 +3285,9 @@
                         inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
             display: block !important;
             box-sizing: border-box !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
         }
 
         .newsletter-form-wrapper .entry__field input:focus {
@@ -3477,7 +3481,7 @@
             }
             
             .blog-post-cta-wrapper {
-                grid-template-columns: 1fr;
+                flex-direction: column;
                 gap: 40px;
             }
             
