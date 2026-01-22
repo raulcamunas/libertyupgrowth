@@ -23,6 +23,48 @@ export default function NewsletterForm() {
       
       ;(window as any).AUTOHIDE = Boolean(0)
       
+      // Inyectar estilos directamente en el head para sobrescribir Brevo
+      const styleId = 'newsletter-form-override-styles'
+      if (!document.getElementById(styleId)) {
+        const style = document.createElement('style')
+        style.id = styleId
+        style.textContent = `
+          #EMAIL,
+          #sib-container input[type="email"],
+          #sib-container input.input,
+          #sib-form input[type="email"],
+          .newsletter-form-wrapper input[type="email"],
+          .newsletter-form-wrapper #EMAIL {
+            background: rgba(255, 255, 255, 0.05) !important;
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            color: white !important;
+            -webkit-text-fill-color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding: 15px 20px !important;
+            border-radius: 12px !important;
+            font-size: 15px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+          }
+          #EMAIL:focus,
+          #sib-container input[type="email"]:focus,
+          #sib-form input[type="email"]:focus {
+            background: rgba(255, 255, 255, 0.08) !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-color: #FF6600 !important;
+            box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.1), 0 2px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+          }
+          #EMAIL:-webkit-autofill,
+          #EMAIL:-webkit-autofill:hover,
+          #EMAIL:-webkit-autofill:focus {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+            box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+            background-color: rgba(255, 255, 255, 0.05) !important;
+          }
+        `
+        document.head.appendChild(style)
+      }
+      
       // Cargar el script de Brevo si no está cargado
       if (!document.querySelector('script[src*="sibforms.com"]')) {
         const script = document.createElement('script')
@@ -31,12 +73,18 @@ export default function NewsletterForm() {
         document.body.appendChild(script)
       }
       
-      // Cargar el CSS de Brevo si no está cargado
+      // Cargar el CSS de Brevo si no está cargado (después de nuestros estilos)
       if (!document.querySelector('link[href*="sib-styles.css"]')) {
         const link = document.createElement('link')
         link.rel = 'stylesheet'
         link.href = 'https://sibforms.com/forms/end-form/build/sib-styles.css'
-        document.head.appendChild(link)
+        // Insertar después de nuestros estilos para que nuestros estilos tengan prioridad
+        const existingStyle = document.getElementById(styleId)
+        if (existingStyle && existingStyle.nextSibling) {
+          document.head.insertBefore(link, existingStyle.nextSibling)
+        } else {
+          document.head.appendChild(link)
+        }
       }
       
       // Forzar estilos del input después de que Brevo cargue
@@ -56,6 +104,7 @@ export default function NewsletterForm() {
       setTimeout(forceInputStyles, 100)
       setTimeout(forceInputStyles, 500)
       setTimeout(forceInputStyles, 1000)
+      setTimeout(forceInputStyles, 2000)
       
       // También usar MutationObserver para cuando el input se añada al DOM
       const observer = new MutationObserver(() => {
@@ -64,7 +113,9 @@ export default function NewsletterForm() {
       
       observer.observe(document.body, {
         childList: true,
-        subtree: true
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
       })
       
       // Limpiar observer cuando el componente se desmonte
