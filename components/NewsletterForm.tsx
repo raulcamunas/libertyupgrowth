@@ -118,7 +118,7 @@ export default function NewsletterForm() {
                   placeholder="tu@email.com"
                   data-required="true"
                   required
-                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-orange-500 focus:shadow-[0_0_0_4px_rgba(255,102,0,0.1),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/30 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
+                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white/50 text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-orange-500 focus:shadow-[0_0_0_4px_rgba(255,102,0,0.1),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/30 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
                   style={{
                     WebkitTextFillColor: 'white',
                     WebkitAppearance: 'none',
@@ -126,9 +126,6 @@ export default function NewsletterForm() {
                     appearance: 'none',
                   }}
                 />
-                <p className="text-xs text-white/50 mt-2">
-                  Introduce tu dirección de e-mail para suscribirte. Ej.: abc@xyz.com
-                </p>
                 {/* Mensaje de error del campo (manejado por Brevo) */}
                 <label className="entry__error entry__error--primary hidden text-red-400 text-sm mt-1"></label>
               </div>
