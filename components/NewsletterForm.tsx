@@ -77,10 +77,10 @@ export default function NewsletterForm() {
             </div>
           </div>
 
-          {/* Contenedor del formulario con estilo igual al CTA */}
+          {/* Contenedor del formulario con estilo glassmorphism */}
           <div 
             id="sib-container" 
-            className="sib-container--large sib-container--vertical bg-gradient-to-br from-orange-500/[0.1] via-orange-500/[0.05] to-transparent border border-orange-500/20 rounded-3xl px-10 py-[60px] text-center"
+            className="sib-container--large sib-container--vertical bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-orange-500/[0.02] backdrop-blur-[30px] border border-orange-500/20 rounded-3xl p-10 shadow-[0_8px_32px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)_inset,inset_0_1px_0_rgba(255,255,255,0.1)] text-center"
           >
             <form 
               id="sib-form" 
@@ -89,9 +89,9 @@ export default function NewsletterForm() {
               data-type="subscription"
               className="space-y-6"
             >
-              {/* Título grande */}
+              {/* Título */}
               <div>
-                <h3 className="text-[32px] font-bold text-white mb-4">
+                <h3 className="text-2xl font-bold text-white mb-4">
                   Recibe en tu correo estrategias cada viernes totalmente gratis en tu correo
                 </h3>
               </div>
