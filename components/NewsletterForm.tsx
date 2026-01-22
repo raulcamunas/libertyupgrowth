@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function NewsletterForm() {
+  const [email, setEmail] = useState('')
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid'>('idle')
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Configuración de Brevo necesaria para el funcionamiento
@@ -120,7 +122,18 @@ export default function NewsletterForm() {
                   placeholder="tu@email.com"
                   data-required="true"
                   required
-                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-orange-500 focus:shadow-[0_0_0_4px_rgba(255,102,0,0.1),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/30 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
+                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-orange-500 focus:shadow-[0_0_0_4px_rgba(255,102,0,0.1),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/20 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
+                  value={email}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    setEmail(value)
+                    if (value === '') {
+                      setEmailStatus('idle')
+                    } else {
+                      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                      setEmailStatus(emailRegex.test(value) ? 'valid' : 'invalid')
+                    }
+                  }}
                   style={{
                     WebkitTextFillColor: 'white',
                     WebkitAppearance: 'none',
@@ -128,6 +141,23 @@ export default function NewsletterForm() {
                     appearance: 'none',
                   }}
                 />
+                {/* Feedback visual del email */}
+                {emailStatus === 'valid' && (
+                  <div className="flex items-center gap-2 mt-2 text-green-400 text-sm">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Gracias por suscribirte</span>
+                  </div>
+                )}
+                {emailStatus === 'invalid' && email !== '' && (
+                  <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <span>Por favor, introduce un email válido</span>
+                  </div>
+                )}
                 {/* Mensaje de error del campo (manejado por Brevo) */}
                 <label className="entry__error entry__error--primary hidden text-red-400 text-sm mt-1"></label>
               </div>
