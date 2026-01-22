@@ -92,14 +92,14 @@ export default function NewsletterForm() {
               {/* Título */}
               <div>
                 <h3 className="text-2xl font-bold text-white mb-4">
-                  Recibe en tu correo estrategias cada viernes totalmente gratis en tu correo
+                  Estrategias de Amazon que sí funcionan, cada viernes.
                 </h3>
               </div>
 
-              {/* Descripción pequeña */}
+              {/* Subtítulo */}
               <div>
                 <p className="text-lg text-white/70 leading-relaxed mb-8">
-                  Suscríbase a nuestra newsletter para recibir nuestras novedades.
+                  Olvídate del spam. Recibe tácticas probadas de gestión, tendencias de LATAM y tips accionables para aplicar hoy mismo.
                 </p>
               </div>
 
@@ -109,7 +109,7 @@ export default function NewsletterForm() {
                   htmlFor="EMAIL" 
                   className="block text-sm font-semibold text-white mb-2 text-left"
                 >
-                  Introduzca su dirección de e-mail para suscribirse
+                  ¿Dónde te enviamos las estrategias?
                   <span className="text-orange-500 ml-1">*</span>
                 </label>
                 <input
@@ -138,7 +138,7 @@ export default function NewsletterForm() {
                   type="submit"
                   className="w-full inline-flex items-center justify-center gap-3 py-[18px] px-9 bg-gradient-to-r from-[#FF6600] to-[#FF8533] hover:from-[#FF8533] hover:to-[#FF6600] text-white font-semibold text-base rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(255,102,0,0.3)] hover:shadow-[0_6px_30px_rgba(255,102,0,0.4)] hover:-translate-y-0.5"
                 >
-                  <span className="sib-form-block__button-text">SUSCRIBIRSE</span>
+                  <span className="sib-form-block__button-text">ENVIADME LAS ESTRATEGIAS</span>
                   <svg 
                     className="icon clickable__icon progress-indicator__icon sib-hide-loader-icon hidden" 
                     viewBox="0 0 512 512"
