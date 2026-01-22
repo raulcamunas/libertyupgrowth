@@ -77,10 +77,10 @@ export default function NewsletterForm() {
             </div>
           </div>
 
-          {/* Contenedor del formulario con estilo glassmorphism */}
+          {/* Contenedor del formulario con estilo igual al CTA */}
           <div 
             id="sib-container" 
-            className="sib-container--large sib-container--vertical bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-orange-500/[0.02] backdrop-blur-[30px] border border-orange-500/20 rounded-3xl p-10 shadow-[0_8px_32px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)_inset,inset_0_1px_0_rgba(255,255,255,0.1)]"
+            className="sib-container--large sib-container--vertical bg-gradient-to-br from-orange-500/[0.1] via-orange-500/[0.05] to-transparent border border-orange-500/20 rounded-3xl px-10 py-[60px] text-center"
           >
             <form 
               id="sib-form" 
@@ -89,23 +89,25 @@ export default function NewsletterForm() {
               data-type="subscription"
               className="space-y-6"
             >
-              {/* Título */}
+              {/* Título grande */}
               <div>
-                <h3 className="text-2xl font-bold text-white mb-3">Newsletter</h3>
+                <h3 className="text-[32px] font-bold text-white mb-4">
+                  Recibe en tu correo estrategias cada viernes totalmente gratis en tu correo
+                </h3>
               </div>
 
-              {/* Descripción */}
+              {/* Descripción pequeña */}
               <div>
-                <p className="text-base text-white/70 leading-relaxed">
+                <p className="text-lg text-white/70 leading-relaxed mb-8">
                   Suscríbase a nuestra newsletter para recibir nuestras novedades.
                 </p>
               </div>
 
               {/* Campo de email */}
-              <div className="space-y-2">
+              <div className="space-y-2 max-w-md mx-auto">
                 <label 
                   htmlFor="EMAIL" 
-                  className="block text-sm font-semibold text-white mb-2"
+                  className="block text-sm font-semibold text-white mb-2 text-left"
                 >
                   Introduzca su dirección de e-mail para suscribirse
                   <span className="text-orange-500 ml-1">*</span>
@@ -118,7 +120,7 @@ export default function NewsletterForm() {
                   placeholder="tu@email.com"
                   data-required="true"
                   required
-                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white/50 text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-orange-500 focus:shadow-[0_0_0_4px_rgba(255,102,0,0.1),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/30 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
+                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-orange-500 focus:shadow-[0_0_0_4px_rgba(255,102,0,0.1),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/30 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
                   style={{
                     WebkitTextFillColor: 'white',
                     WebkitAppearance: 'none',
@@ -131,10 +133,10 @@ export default function NewsletterForm() {
               </div>
 
               {/* Botón de envío */}
-              <div>
+              <div className="max-w-md mx-auto">
                 <button
                   type="submit"
-                  className="w-full py-[18px] px-9 bg-[#ea580c] hover:bg-[#c2410c] text-white font-semibold text-base rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(234,88,12,0.3)] hover:shadow-[0_6px_30px_rgba(234,88,12,0.4)] hover:-translate-y-0.5"
+                  className="w-full inline-flex items-center justify-center gap-3 py-[18px] px-9 bg-gradient-to-r from-[#FF6600] to-[#FF8533] hover:from-[#FF8533] hover:to-[#FF6600] text-white font-semibold text-base rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(255,102,0,0.3)] hover:shadow-[0_6px_30px_rgba(255,102,0,0.4)] hover:-translate-y-0.5"
                 >
                   <span className="sib-form-block__button-text">SUSCRIBIRSE</span>
                   <svg 
