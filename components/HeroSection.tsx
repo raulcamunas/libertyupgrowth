@@ -182,9 +182,12 @@ export default function HeroSection() {
                 }}
               />
             </div>
-            <h1 className="hero-title">
-              Escala tu facturación en Amazon y olvídate de la operativa
+            <h1 className="hero-eyebrow">
+              Agencia Especializada en Amazon y Consultores Expertos
             </h1>
+            <h2 className="hero-title">
+              Escala tu facturación en Amazon y olvídate de la operativa
+            </h2>
             <p className="hero-subtitle">
               Gestionamos y optimizamos tu cuenta de vendedor para disparar tu rentabilidad. Ya sea que estés lanzando o facturando 6 cifras, llevamos tu marca al siguiente nivel.
             </p>
