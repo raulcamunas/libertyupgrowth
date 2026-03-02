@@ -183,7 +183,7 @@ export default function HeroSection() {
               />
             </div>
             <h1 className="hero-eyebrow">
-              Agencia Especializada en Amazon y Consultores Expertos
+              Agencia y Consultores Expertos en Amazon FBA
             </h1>
             <h2 className="hero-title">
               Escala tu facturación en Amazon y olvídate de la operativa
