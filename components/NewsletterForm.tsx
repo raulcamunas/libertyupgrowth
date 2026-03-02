@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export default function NewsletterForm() {
   const [email, setEmail] = useState('')
   const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid'>('idle')
@@ -130,8 +132,7 @@ export default function NewsletterForm() {
                     if (value === '') {
                       setEmailStatus('idle')
                     } else {
-                      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                      setEmailStatus(emailRegex.test(value) ? 'valid' : 'invalid')
+                      setEmailStatus(EMAIL_REGEX.test(value) ? 'valid' : 'invalid')
                     }
                   }}
                   style={{
