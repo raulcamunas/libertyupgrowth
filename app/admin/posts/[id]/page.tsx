@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { Post } from '@/types/database'
 import EditPostForm from '@/components/EditPostForm'
 
+export const dynamic = 'force-dynamic'
+
 async function getPost(id: string): Promise<Post | null> {
   const supabase = await createClient()
   

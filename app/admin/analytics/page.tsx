@@ -5,6 +5,8 @@ import Link from 'next/link'
 import LogoutButton from '@/components/LogoutButton'
 import AnalyticsDashboard from '@/components/AnalyticsDashboard'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AnalyticsPage() {
   const supabase = await createClient()
   const {

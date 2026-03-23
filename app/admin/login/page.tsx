@@ -10,7 +10,9 @@ export default function AdminLogin() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
+  const hasSupabaseEnv = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,6 +20,13 @@ export default function AdminLogin() {
     setLoading(true)
 
     try {
+      if (!hasSupabaseEnv) {
+        setError('Supabase no está configurado en este entorno.')
+        setLoading(false)
+        return
+      }
+
+      const supabase = createClient()
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -95,6 +104,12 @@ export default function AdminLogin() {
             <p className="text-gray-400">Inicia sesión para gestionar el blog</p>
           </div>
 
+          {!hasSupabaseEnv && (
+            <div className="bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 px-4 py-3 rounded-lg text-sm mb-6">
+              Este panel requiere variables de entorno de Supabase (URL y ANON KEY).
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-6">
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
@@ -134,7 +149,7 @@ export default function AdminLogin() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !hasSupabaseEnv}
               className="w-full bg-[#00b5ff] hover:bg-[#0099cc] text-white font-semibold py-3 px-4 rounded-lg transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}

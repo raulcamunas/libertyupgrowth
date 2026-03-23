@@ -5,6 +5,8 @@ import { Post } from '@/types/database'
 import LogoutButton from '@/components/LogoutButton'
 import ScheduleCountdown from '@/components/ScheduleCountdown'
 
+export const dynamic = 'force-dynamic'
+
 async function getPosts() {
   const supabase = await createClient()
   const {
