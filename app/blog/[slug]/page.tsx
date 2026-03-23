@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: 'Post no encontrado | Liberty Seller',
+      title: 'Post no encontrado | Liberty UpGrowth',
     }
   }
 

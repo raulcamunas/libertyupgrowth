@@ -7,6 +7,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 export default function NewsletterForm() {
   const [email, setEmail] = useState('')
   const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Configuración de Brevo necesaria para el funcionamiento
@@ -84,7 +85,7 @@ export default function NewsletterForm() {
           {/* Contenedor del formulario con estilo glassmorphism */}
           <div 
             id="sib-container" 
-            className="sib-container--large sib-container--vertical bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-orange-500/[0.02] backdrop-blur-[30px] border border-orange-500/20 rounded-3xl p-10 shadow-[0_8px_32px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)_inset,inset_0_1px_0_rgba(255,255,255,0.1)] text-center"
+            className="sib-container--large sib-container--vertical bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-[#00b5ff]/[0.04] backdrop-blur-[30px] border border-[#00b5ff]/20 rounded-3xl p-10 shadow-[0_8px_32px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)_inset,inset_0_1px_0_rgba(255,255,255,0.1)] text-center"
           >
             <form 
               id="sib-form" 
@@ -96,7 +97,7 @@ export default function NewsletterForm() {
               {/* Título */}
               <div>
                 <h3 className="text-2xl font-bold text-white mb-4">
-                  Estrategias de Amazon que sí funcionan, cada viernes.
+                  Ideas de automatización con IA que sí funcionan, cada viernes.
                 </h3>
               </div>
 
@@ -114,7 +115,7 @@ export default function NewsletterForm() {
                   className="block text-sm font-semibold text-white mb-2 text-left"
                 >
                   ¿Dónde te enviamos las estrategias?
-                  <span className="text-orange-500 ml-1">*</span>
+                  <span className="text-[#00b5ff] ml-1">*</span>
                 </label>
                 <input
                   type="email"
@@ -124,7 +125,7 @@ export default function NewsletterForm() {
                   placeholder="tu@email.com"
                   data-required="true"
                   required
-                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-orange-500 focus:shadow-[0_0_0_4px_rgba(255,102,0,0.1),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/20 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
+                  className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-[15px] outline-none transition-all duration-300 focus:bg-white/[0.08] focus:border-[#00b5ff] focus:shadow-[0_0_0_4px_rgba(0,181,255,0.15),0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] placeholder:text-white/20 shadow-[0_2px_10px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]"
                   value={email}
                   onChange={(e) => {
                     const value = e.target.value
@@ -167,7 +168,7 @@ export default function NewsletterForm() {
               <div className="max-w-md mx-auto">
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-3 py-[18px] px-9 bg-gradient-to-r from-[#FF6600] to-[#FF8533] hover:from-[#FF8533] hover:to-[#FF6600] text-white font-semibold text-base rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(255,102,0,0.3)] hover:shadow-[0_6px_30px_rgba(255,102,0,0.4)] hover:-translate-y-0.5"
+                  className="w-full inline-flex items-center justify-center gap-3 py-[18px] px-9 bg-gradient-to-r from-[#00b5ff] to-[#33ccff] hover:from-[#33ccff] hover:to-[#00b5ff] text-white font-semibold text-base rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(0,181,255,0.35)] hover:shadow-[0_6px_30px_rgba(0,181,255,0.45)] hover:-translate-y-0.5"
                 >
                   <span className="sib-form-block__button-text">ENVIADME LAS ESTRATEGIAS</span>
                   <svg 

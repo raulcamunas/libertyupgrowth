@@ -1,5 +1,5 @@
 /**
- * Sistema de Analytics para Liberty Seller
+ * Sistema de Analytics para Liberty UpGrowth
  * Tracking de visitas, páginas y posts del blog
  */
 

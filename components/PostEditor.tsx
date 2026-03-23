@@ -27,10 +27,10 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
       Image.extend({
         addAttributes() {
           return {
-            ...this.parent?.(),
+            ...((this as any).parent?.() || {}),
             width: {
               default: null,
-              parseHTML: element => {
+              parseHTML: (element: HTMLElement) => {
                 const width = element.getAttribute('width')
                 const style = element.getAttribute('style')
                 if (width) return width.replace('px', '')
@@ -40,7 +40,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
                 }
                 return null
               },
-              renderHTML: attributes => {
+              renderHTML: (attributes: Record<string, any>) => {
                 if (!attributes.width) {
                   return {}
                 }
@@ -51,7 +51,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
             },
             height: {
               default: null,
-              parseHTML: element => {
+              parseHTML: (element: HTMLElement) => {
                 const height = element.getAttribute('height')
                 const style = element.getAttribute('style')
                 if (height) return height.replace('px', '')
@@ -61,7 +61,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
                 }
                 return null
               },
-              renderHTML: attributes => {
+              renderHTML: (attributes: Record<string, any>) => {
                 if (!attributes.height) {
                   return {}
                 }
@@ -72,8 +72,8 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
             },
             style: {
               default: null,
-              parseHTML: element => element.getAttribute('style'),
-              renderHTML: attributes => {
+              parseHTML: (element: HTMLElement) => element.getAttribute('style'),
+              renderHTML: (attributes: Record<string, any>) => {
                 if (!attributes.style) {
                   return {}
                 }
@@ -85,7 +85,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           }
         },
         addNodeView() {
-          return ({ node, HTMLAttributes, getPos, editor }) => {
+          return ({ node, HTMLAttributes, getPos, editor }: any) => {
             const container = document.createElement('span')
             container.className = 'image-resize-container'
             container.style.display = 'inline-block'
@@ -140,7 +140,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
               handle.style.position = 'absolute'
               handle.style.width = '12px'
               handle.style.height = '12px'
-              handle.style.backgroundColor = '#FF6600'
+              handle.style.backgroundColor = '#00b5ff'
               handle.style.border = '2px solid white'
               handle.style.borderRadius = '50%'
               handle.style.cursor = position === 'nw' ? 'nw-resize' :
@@ -258,7 +258,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-[#FF6600] underline',
+          class: 'text-[#00b5ff] underline',
         },
       }),
     ],
@@ -296,7 +296,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
 
       // Insertar imagen en el editor
       if (editor && data.url) {
-        editor.chain().focus().setImage({ src: data.url }).run()
+        ;(editor as any).chain().setImage({ src: data.url }).run()
       }
     } catch (error) {
       console.error('Error uploading image:', error)
@@ -323,7 +323,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
         <div className="admin-toolbar-group">
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleBold().run()}
+            onClick={() => (editor as any).chain().focus().toggleBold().run()}
             className={`admin-toolbar-button ${editor.isActive('bold') ? 'active' : ''}`}
             title="Negrita (Ctrl+B)"
           >
@@ -331,7 +331,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           </button>
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleItalic().run()}
+            onClick={() => (editor as any).chain().focus().toggleItalic().run()}
             className={`admin-toolbar-button ${editor.isActive('italic') ? 'active' : ''}`}
             title="Cursiva (Ctrl+I)"
           >
@@ -339,7 +339,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           </button>
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleStrike().run()}
+            onClick={() => (editor as any).chain().focus().toggleStrike().run()}
             className={`admin-toolbar-button ${editor.isActive('strike') ? 'active' : ''}`}
             title="Tachado"
           >
@@ -351,7 +351,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
         <div className="admin-toolbar-group">
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            onClick={() => (editor as any).chain().focus().toggleHeading({ level: 1 }).run()}
             className={`admin-toolbar-button ${editor.isActive('heading', { level: 1 }) ? 'active' : ''}`}
             title="Título 1"
           >
@@ -359,7 +359,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           </button>
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            onClick={() => (editor as any).chain().focus().toggleHeading({ level: 2 }).run()}
             className={`admin-toolbar-button ${editor.isActive('heading', { level: 2 }) ? 'active' : ''}`}
             title="Título 2"
           >
@@ -367,7 +367,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           </button>
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+            onClick={() => (editor as any).chain().focus().toggleHeading({ level: 3 }).run()}
             className={`admin-toolbar-button ${editor.isActive('heading', { level: 3 }) ? 'active' : ''}`}
             title="Título 3"
           >
@@ -379,7 +379,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
         <div className="admin-toolbar-group">
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            onClick={() => (editor as any).chain().focus().toggleBulletList().run()}
             className={`admin-toolbar-button ${editor.isActive('bulletList') ? 'active' : ''}`}
             title="Lista con viñetas"
           >
@@ -387,7 +387,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           </button>
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            onClick={() => (editor as any).chain().focus().toggleOrderedList().run()}
             className={`admin-toolbar-button ${editor.isActive('orderedList') ? 'active' : ''}`}
             title="Lista numerada"
           >
@@ -399,7 +399,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
         <div className="admin-toolbar-group">
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            onClick={() => (editor as any).chain().focus().toggleBlockquote().run()}
             className={`admin-toolbar-button ${editor.isActive('blockquote') ? 'active' : ''}`}
             title="Cita"
           >
@@ -411,7 +411,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
         <div className="admin-toolbar-group">
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleCode().run()}
+            onClick={() => (editor as any).chain().focus().toggleCode().run()}
             className={`admin-toolbar-button ${editor.isActive('code') ? 'active' : ''}`}
             title="Código"
           >
@@ -435,7 +435,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
           </button>
           <button
             type="button"
-            onClick={() => editor.chain().focus().unsetLink().run()}
+            onClick={() => (editor as any).chain().focus().unsetLink().run()}
             className="admin-toolbar-button"
             title="Quitar enlace"
             disabled={!editor.isActive('link')}
@@ -533,7 +533,7 @@ export default function PostEditor({ content, onChange }: PostEditorProps) {
 
   function handleLinkSubmit() {
     if (linkUrl.trim() && editor) {
-      editor.chain().focus().setLink({ href: linkUrl.trim() }).run()
+      ;(editor as any).chain().focus().setLink({ href: linkUrl.trim() }).run()
       setShowLinkModal(false)
       setLinkUrl('')
     }

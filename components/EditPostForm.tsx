@@ -136,7 +136,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
           {/* Título */}
           <div className="admin-form-group">
             <label className="admin-form-label">
-              <i className="fa-solid fa-heading mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-heading mr-2 text-[#00b5ff]"></i>
               Título *
             </label>
             <input
@@ -151,7 +151,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
           {/* Slug */}
           <div className="admin-form-group">
             <label className="admin-form-label">
-              <i className="fa-solid fa-link mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-link mr-2 text-[#00b5ff]"></i>
               Slug (URL) *
             </label>
             <input
@@ -163,7 +163,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
             />
             <p className="admin-form-hint">
               <i className="fa-solid fa-globe mr-1.5"></i>
-              URL: <span className="text-[#FF6600]">/blog/{formData.slug}</span>
+              URL: <span className="text-[#00b5ff]">/blog/{formData.slug}</span>
             </p>
           </div>
 
@@ -177,7 +177,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
           {/* Tiempo de Lectura */}
           <div className="admin-form-group">
             <label className="admin-form-label">
-              <i className="fa-solid fa-clock mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-clock mr-2 text-[#00b5ff]"></i>
               Tiempo de Lectura (minutos)
             </label>
             <input
@@ -198,7 +198,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
           <div className="admin-form-grid">
             <div className="admin-form-group">
               <label className="admin-form-label">
-                <i className="fa-solid fa-toggle-on mr-2 text-[#FF6600]"></i>
+                <i className="fa-solid fa-toggle-on mr-2 text-[#00b5ff]"></i>
                 Estado *
               </label>
               <select
@@ -215,7 +215,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
             {formData.status === 'scheduled' && (
               <div className="admin-form-group">
                 <label className="admin-form-label">
-                  <i className="fa-solid fa-calendar-alt mr-2 text-[#FF6600]"></i>
+                  <i className="fa-solid fa-calendar-alt mr-2 text-[#00b5ff]"></i>
                   Fecha de Publicación
                 </label>
                 <input
@@ -231,7 +231,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
           {/* SEO */}
           <div className="admin-form-section">
             <div className="admin-section-header">
-              <i className="fa-solid fa-search mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-search mr-2 text-[#00b5ff]"></i>
               <h3 className="admin-section-title">Optimización SEO</h3>
             </div>
             <div className="space-y-6 mt-6">
@@ -259,7 +259,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
           {/* Editor */}
           <div className="admin-form-section">
             <div className="admin-section-header mb-4">
-              <i className="fa-solid fa-pen-nib mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-pen-nib mr-2 text-[#00b5ff]"></i>
               <h3 className="admin-section-title">Contenido *</h3>
             </div>
             <PostEditor

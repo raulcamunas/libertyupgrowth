@@ -256,7 +256,7 @@ export default function ScrollSection() {
             <div className="right-text-block" id="text-4">
               <h3 className="right-title">Lanzamientos Marca Privada</h3>
               <p className="right-desc">
-                Varios clientes nos contactan para que lancemos sus tiendas con productos rentables para su venta en amazon. Analizamos productos perfil bajo y armamos una tienda llena de productos con margenes altos y con control absoluto de la situación.
+                Varios clientes nos contactan para lanzar su canal de ventas online con productos rentables. Analizamos oportunidades y construimos una estrategia con márgenes altos y control absoluto de la situación.
               </p>
               <span className="right-stat-label">Marca Privada</span>
               <span className="right-stat-big">Márgenes del 20-25%</span>
@@ -279,14 +279,14 @@ export default function ScrollSection() {
           <p>Una empresa que vende naranjas nos contactó porque muchas agencias le dijeron que no trabajan con este tipo de negocios.</p>
           <Image
             src="/testimonio1.png"
-            alt="Resultado: +20.000€/mes - Caso de éxito LibertySeller"
+            alt="Resultado: +20.000€/mes - Caso de éxito"
             className="mobile-result-img"
             width={400}
             height={300}
             loading="eager"
             priority
             style={{ cursor: 'pointer' }}
-            onClick={() => handleImageClick('/testimonio1.png', 'Resultado: +20.000€/mes - Caso de éxito LibertySeller')}
+            onClick={() => handleImageClick('/testimonio1.png', 'Resultado: +20.000€/mes - Caso de éxito')}
           />
           <span className="mobile-stat-label">Resultado</span>
           <span className="mobile-stat-big">+20.000€/mes</span>
@@ -298,13 +298,13 @@ export default function ScrollSection() {
           </p>
           <Image
             src="/testimonio2.png"
-            alt="Resultado: ACOS reducido al 18% - Optimización PPC LibertySeller"
+            alt="Resultado: Reducción de costes - Optimización"
             className="mobile-result-img"
             width={400}
             height={300}
             loading="lazy"
             style={{ cursor: 'pointer' }}
-            onClick={() => handleImageClick('/testimonio2.png', 'Resultado: ACOS reducido al 18% - Optimización PPC LibertySeller')}
+            onClick={() => handleImageClick('/testimonio2.png', 'Resultado: Reducción de costes - Optimización')}
           />
           <span className="mobile-stat-label">EFICIENCIA</span>
           <span className="mobile-stat-big">ACOS 12%</span>
@@ -316,13 +316,13 @@ export default function ScrollSection() {
           </p>
           <Image
             src="/testimonio3.png"
-            alt="Resultado: Incremento 13% Buy Box - Optimización Buy Box LibertySeller"
+            alt="Resultado: Incremento 13% - Optimización"
             className="mobile-result-img"
             width={400}
             height={300}
             loading="lazy"
             style={{ cursor: 'pointer' }}
-            onClick={() => handleImageClick('/testimonio3.png', 'Resultado: Incremento 13% Buy Box - Optimización Buy Box LibertySeller')}
+            onClick={() => handleImageClick('/testimonio3.png', 'Resultado: Incremento 13% - Optimización')}
           />
           <span className="mobile-stat-label">Buy Box</span>
           <span className="mobile-stat-big">Incremento 13%</span>
@@ -330,17 +330,17 @@ export default function ScrollSection() {
         <div className="mobile-result-card">
           <h3>Lanzamientos Marca Privada</h3>
           <p>
-            Varios clientes nos contactan para que lancemos sus tiendas con productos rentables para su venta en amazon. Analizamos productos perfil bajo y armamos una tienda llena de productos con margenes altos y con control absoluto de la situación.
+            Varios clientes nos contactan para lanzar su canal de ventas online con productos rentables. Analizamos oportunidades y construimos una estrategia con márgenes altos y control absoluto de la situación.
           </p>
           <Image
             src="/testimonio4.png"
-            alt="Resultado: Márgenes del 20-25% - Marca Privada LibertySeller"
+            alt="Resultado: Márgenes del 20-25% - Marca Privada"
             className="mobile-result-img"
             width={400}
             height={300}
             loading="lazy"
             style={{ cursor: 'pointer' }}
-            onClick={() => handleImageClick('/testimonio4.png', 'Resultado: Márgenes del 20-25% - Marca Privada LibertySeller')}
+            onClick={() => handleImageClick('/testimonio4.png', 'Resultado: Márgenes del 20-25% - Marca Privada')}
           />
           <span className="mobile-stat-label">Marca Privada</span>
           <span className="mobile-stat-big">Márgenes del 20-25%</span>
@@ -352,13 +352,13 @@ export default function ScrollSection() {
           </p>
           <Image
             src="/testimonio5.png"
-            alt="Resultado: +7 paises - Internacionalización LibertySeller"
+            alt="Resultado: +7 países - Internacionalización"
             className="mobile-result-img"
             width={400}
             height={300}
             loading="lazy"
             style={{ cursor: 'pointer' }}
-            onClick={() => handleImageClick('/testimonio5.png', 'Resultado: +7 paises - Internacionalización LibertySeller')}
+            onClick={() => handleImageClick('/testimonio5.png', 'Resultado: +7 países - Internacionalización')}
           />
           <span className="mobile-stat-label">Expansión</span>
           <span className="mobile-stat-big">+7 paises</span>

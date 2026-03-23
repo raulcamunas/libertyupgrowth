@@ -1,23 +1,32 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import '../styles/globals.css'
-import Navbar from '@/components/Navbar'
 import CookieBanner from '@/components/CookieBanner'
 import WhatsAppWidget from '@/components/WhatsAppWidget'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://libertyseller.es'),
+  metadataBase: new URL('https://libertyupgrowth.es'),
   title: {
-    default: 'Agencia Amazon FBA - Escala tus Ventas | Liberty Seller',
-    template: '%s | Liberty Seller',
+    default: 'Automatización con IA para agendar y convertir | Liberty UpGrowth',
+    template: '%s | Liberty UpGrowth',
   },
-  description: 'Agencia especializada en Amazon FBA. Reducimos tu ACOS, optimizamos PPC\'s y aumentamos tu Buy Box. Gestión 360° de tu cuenta Amazon con resultados medibles.',
-  keywords: ['Amazon FBA', 'agencia Amazon', 'gestión Amazon', 'Amazon Seller', 'Amazon PPC', 'optimización Amazon', 'Amazon marketing', 'Amazon FBA España'],
-  authors: [{ name: 'LibertySeller' }],
-  creator: 'LibertySeller',
-  publisher: 'LibertySeller',
+  description:
+    'Agencia de automatización con IA: atendemos por WhatsApp, convertimos leads y llenamos tu agenda en piloto automático. Integración completa y dashboard en tiempo real.',
+  keywords: [
+    'automatización IA',
+    'automatización WhatsApp',
+    'agendado automático',
+    'IA para negocios',
+    'bot WhatsApp',
+    'n8n',
+    'Supabase',
+    'Evolution API',
+  ],
+  authors: [{ name: 'Liberty UpGrowth' }],
+  creator: 'Liberty UpGrowth',
+  publisher: 'Liberty UpGrowth',
   robots: {
     index: true,
     follow: true,
@@ -30,10 +39,11 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Agencia Amazon FBA - Escala tus Ventas | LibertySeller',
-    description: 'Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado. +20.000€/mes de facturación para nuestros clientes.',
-    url: 'https://libertyseller.es',
-    siteName: 'Liberty Seller',
+    title: 'Automatización con IA para agendar y convertir | Liberty UpGrowth',
+    description:
+      'Automatización con IA por WhatsApp para atender, convertir y agendar sin fricción. Integración completa y dashboard en tiempo real.',
+    url: 'https://libertyupgrowth.es',
+    siteName: 'Liberty UpGrowth',
     type: 'website',
     locale: 'es_ES',
     images: [
@@ -41,18 +51,19 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Liberty Seller - Agencia Amazon FBA',
+        alt: 'Liberty UpGrowth - Automatización con IA',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Agencia Amazon FBA - Escala tus Ventas | LibertySeller',
-    description: 'Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.',
+    title: 'Automatización con IA para agendar y convertir | Liberty UpGrowth',
+    description:
+      'Automatización con IA por WhatsApp para atender, convertir y agendar sin fricción. Integración completa y dashboard en tiempo real.',
     images: ['/og-image.jpg'],
   },
   alternates: {
-    canonical: 'https://libertyseller.es',
+    canonical: 'https://libertyupgrowth.es',
   },
   verification: {
     // Añade aquí tus códigos de verificación cuando los tengas
@@ -63,7 +74,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#FF6600',
+  themeColor: '#00b5ff',
 }
 
 export default function RootLayout({
@@ -198,7 +209,6 @@ export default function RootLayout({
           alt="" 
           style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none' }}
         />
-        <Navbar />
         {children}
         <CookieBanner />
         <WhatsAppWidget />
@@ -210,18 +220,19 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'ProfessionalService',
-              name: 'LibertySeller',
-              description: 'Agencia especializada en Amazon FBA. Gestionamos tus cuentas y disparamos tus ventas con inteligencia de mercado.',
-              url: 'https://libertyseller.es',
-              logo: 'https://libertyseller.es/logo.png',
-              serviceType: 'Amazon FBA Management',
+              name: 'Liberty UpGrowth',
+              description:
+                'Agencia de automatización con IA por WhatsApp: atendemos, convertimos y agendamos en piloto automático con integración completa y dashboard.',
+              url: 'https://libertyupgrowth.es',
+              logo: 'https://libertyupgrowth.es/logo.png',
+              serviceType: 'AI Automation',
               areaServed: {
                 '@type': 'Country',
                 name: 'Spain',
               },
               offers: {
                 '@type': 'Offer',
-                description: 'Servicios de gestión y optimización de cuentas Amazon FBA',
+                description: 'Servicios de automatización con IA, bot de WhatsApp e integración (Evolution API + Supabase + n8n).',
               },
               aggregateRating: {
                 '@type': 'AggregateRating',
@@ -237,17 +248,13 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Organization',
-              name: 'LibertySeller',
-              url: 'https://libertyseller.es',
-              logo: 'https://libertyseller.es/logo.png',
-              sameAs: [
-                'https://twitter.com/libertyseller',
-                'https://linkedin.com/company/libertyseller',
-              ],
+              name: 'Liberty UpGrowth',
+              url: 'https://libertyupgrowth.es',
+              logo: 'https://libertyupgrowth.es/logo.png',
               contactPoint: {
                 '@type': 'ContactPoint',
                 contactType: 'Customer Service',
-                email: 'business@libertyseller.com',
+                email: 'contacto@libertyupgrowth.es',
                 telephone: '+34910626798',
                 availableLanguage: 'Spanish',
               },
@@ -267,66 +274,50 @@ export default function RootLayout({
               mainEntity: [
                 {
                   '@type': 'Question',
-                  name: '¿Tenéis algún contrato de permanencia?',
+                  name: '¿Es difícil de configurar en mi negocio?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'No. En Liberty Seller no atamos a ningún cliente con contratos blindados. Creemos que la única razón para que te quedes con nosotros es que veas resultados mes a mes. Si no aportamos valor, eres libre de irte; no tiene sentido retenerte a la fuerza.',
+                    text: 'Para nada. Nosotros nos encargamos de toda la parte técnica (integración de API y bases de datos). Tú solo defines tus horarios y servicios; nosotros hacemos que la magia ocurra.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: '¿Garantizáis resultados de venta?',
+                  name: '¿Qué pasa si el bot no entiende a un cliente?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Si alguien te garantiza ventas fijas en Amazon, huye. Nosotros somos honestos: el mercado fluctúa. Lo que sí garantizamos es una gestión profesional basada en datos y estrategias testadas en nuestras propias cuentas. No somos una agencia que "prueba suerte" con tu dinero, gestionamos tu capital con el mismo cuidado que el nuestro.',
+                    text: 'El sistema está diseñado para detectar intenciones complejas. Si no puede resolver una duda, te notificará al instante o derivará la conversación a un humano para que no pierdas la cita.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: '¿Cómo estructuráis el precio?',
+                  name: '¿Mis clientes se sentirán bien atendidos?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Huimos de las tarifas estándar. Nuestro modelo se basa en el éxito compartido: cobramos un fijo ajustado para la operativa y un variable (generalmente un 5%) que se aplica exclusivamente sobre la facturación que supere lo que hiciste el año anterior en ese mismo mes. Si no mejoramos tus números históricos, no cobramos ese variable.',
+                    text: 'Sí. No es un contestador rígido. Usamos IA con lenguaje natural que se adapta al tono de tu marca, ofreciendo una experiencia rápida, amable y mucho más eficiente que una espera al teléfono.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: 'Ya trabajé con agencias y perdí dinero en PPC, ¿qué haréis distinto?',
+                  name: '¿Puedo seguir agendando citas a mano?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Entendemos tu frustración. Muchos gestores disparan el gasto sin ton ni son. Nuestro enfoque es conservador: no quemamos dinero si el listing no convierte. Primero auditamos y reparamos el catálogo; solo invertimos en campañas cuando tenemos un ACOS controlado y el margen protegido.',
+                    text: 'Por supuesto. Tu nuevo Dashboard se sincroniza en tiempo real. Si tú añades una cita manualmente, el bot lo sabrá al segundo y no ofrecerá ese hueco a nadie más por WhatsApp.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: 'He escuchado que puedo empezar con 100€ o 1.000€, ¿es cierto?',
+                  name: '¿Qué tecnología utilizáis exactamente?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Seamos honestos: muchos gurús te dirán eso, pero es falso. Si quieres montar un negocio real y no un hobby, necesitas estructura y stock. Para lanzar una tienda en condiciones y que funcione bien, la inversión mínima realista ronda los 6.000€ - 8.000€. Amazon es un negocio serio y requiere darle el valor que merece.',
+                    text: 'Implementamos una infraestructura profesional basada en n8n para la lógica, Supabase para la seguridad de tus datos y Evolution API para conectar con tu número oficial de WhatsApp.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: '¿Trabajáis con cuentas nuevas o desde cero?',
+                  name: '¿Cómo es el modelo de pago?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Sí. Gestionamos proyectos desde la fase semilla, como hicimos con clientes de Marca Privada. Te asesoramos desde la creación de la cuenta hasta la estrategia de lanzamiento, asegurando que empiezas con una base sólida y evitas los errores de novato que suelen costar mucho dinero.',
-                  },
-                },
-                {
-                  '@type': 'Question',
-                  name: 'No tengo tiempo para gestionar la cuenta, ¿vosotros os encargáis?',
-                  acceptedAnswer: {
-                    '@type': 'Answer',
-                    text: 'Exacto. Ofrecemos una Gestión 360°. Nos convertimos en tu departamento de Amazon: desde la logística hasta hablar con el Soporte de Amazon para resolver incidencias. Tú supervisas el crecimiento, nosotros nos encargamos de toda la operativa diaria.',
-                  },
-                },
-                {
-                  '@type': 'Question',
-                  name: '¿Cómo sé si mi producto tiene potencial antes de invertir?',
-                  acceptedAnswer: {
-                    '@type': 'Answer',
-                    text: 'Antes de lanzarnos, realizamos una auditoría y análisis de mercado. No se trata de "subir productos", sino de analizar la competencia y los márgenes reales. Si vemos que el producto no es viable, te lo diremos antes de que inviertas. Preferimos perder un cliente a que tú pierdas tus ahorros.',
+                    text: 'Trabajamos con una inversión inicial de setup y una suscripción mensual de mantenimiento que cubre servidores, actualizaciones de la IA y soporte técnico continuo para que nunca dejes de agendar.',
                   },
                 },
               ],

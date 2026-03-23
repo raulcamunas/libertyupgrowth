@@ -17,7 +17,7 @@ export default function NewPostPage() {
     slug: '',
     content: '<p>Empieza a escribir tu contenido aquí...</p>',
     featured_image: '',
-    author: 'Equipo Liberty Seller', // Valor por defecto, no se muestra en el formulario
+    author: 'Equipo Liberty UpGrowth', // Valor por defecto, no se muestra en el formulario
     status: 'draft' as 'draft' | 'published' | 'scheduled',
     published_at: '',
     seo_title: '',
@@ -113,7 +113,7 @@ export default function NewPostPage() {
           {/* Título */}
           <div className="admin-form-group">
             <label className="admin-form-label">
-              <i className="fa-solid fa-heading mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-heading mr-2 text-[#00b5ff]"></i>
               Título *
             </label>
             <input
@@ -122,14 +122,14 @@ export default function NewPostPage() {
               onChange={handleTitleChange}
               required
               className="admin-form-input"
-              placeholder="Ej: Cómo Reducir tu ACOS en Amazon FBA"
+              placeholder="Ej: Cómo automatizar tu agenda por WhatsApp con IA"
             />
           </div>
 
           {/* Slug */}
           <div className="admin-form-group">
             <label className="admin-form-label">
-              <i className="fa-solid fa-link mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-link mr-2 text-[#00b5ff]"></i>
               Slug (URL) *
             </label>
             <input
@@ -138,11 +138,11 @@ export default function NewPostPage() {
               onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
               required
               className="admin-form-input admin-form-input-mono"
-              placeholder="como-reducir-acos-amazon-fba"
+              placeholder="como-automatizar-agenda-whatsapp-ia"
             />
             <p className="admin-form-hint">
               <i className="fa-solid fa-globe mr-1.5"></i>
-              URL: <span className="text-[#FF6600]">/blog/{formData.slug || 'tu-slug'}</span>
+              URL: <span className="text-[#00b5ff]">/blog/{formData.slug || 'tu-slug'}</span>
             </p>
           </div>
 
@@ -156,7 +156,7 @@ export default function NewPostPage() {
           {/* Tiempo de Lectura */}
           <div className="admin-form-group">
             <label className="admin-form-label">
-              <i className="fa-solid fa-clock mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-clock mr-2 text-[#00b5ff]"></i>
               Tiempo de Lectura (minutos)
             </label>
             <input
@@ -177,7 +177,7 @@ export default function NewPostPage() {
           <div className="admin-form-grid">
             <div className="admin-form-group">
               <label className="admin-form-label">
-                <i className="fa-solid fa-toggle-on mr-2 text-[#FF6600]"></i>
+                <i className="fa-solid fa-toggle-on mr-2 text-[#00b5ff]"></i>
                 Estado *
               </label>
               <select
@@ -194,7 +194,7 @@ export default function NewPostPage() {
             {formData.status === 'scheduled' && (
               <div className="admin-form-group">
                 <label className="admin-form-label">
-                  <i className="fa-solid fa-calendar-alt mr-2 text-[#FF6600]"></i>
+                  <i className="fa-solid fa-calendar-alt mr-2 text-[#00b5ff]"></i>
                   Fecha de Publicación
                 </label>
                 <input
@@ -210,7 +210,7 @@ export default function NewPostPage() {
           {/* SEO */}
           <div className="admin-form-section">
             <div className="admin-section-header">
-              <i className="fa-solid fa-search mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-search mr-2 text-[#00b5ff]"></i>
               <h3 className="admin-section-title">Optimización SEO</h3>
             </div>
             <div className="space-y-6 mt-6">
@@ -240,7 +240,7 @@ export default function NewPostPage() {
           {/* Editor */}
           <div className="admin-form-section">
             <div className="admin-section-header mb-4">
-              <i className="fa-solid fa-pen-nib mr-2 text-[#FF6600]"></i>
+              <i className="fa-solid fa-pen-nib mr-2 text-[#00b5ff]"></i>
               <h3 className="admin-section-title">Contenido *</h3>
             </div>
             <PostEditor

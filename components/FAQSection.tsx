@@ -12,105 +12,79 @@ export default function FAQSection() {
           <div className="faq-list scroll-trigger">
             <div className="faq-item">
               <div className="faq-question">
-                <span>¿Tenéis algún contrato de permanencia?</span>
+                <span>¿Es difícil de configurar en mi negocio?</span>
                 <div className="faq-toggle-icon">
                   <i className="fa-solid fa-chevron-down"></i>
                 </div>
               </div>
               <div className="faq-answer">
                 <p>
-                  No. En Liberty Seller no atamos a ningún cliente con contratos blindados. Creemos que la única razón para que te quedes con nosotros es que veas resultados mes a mes. Si no aportamos valor, eres libre de irte; no tiene sentido retenerte a la fuerza.
+                  Para nada. Nosotros nos encargamos de toda la parte técnica (integración de API y bases de datos). Tú solo defines tus horarios y servicios; nosotros hacemos que la magia ocurra.
                 </p>
               </div>
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span>¿Garantizáis resultados de venta?</span>
+                <span>¿Qué pasa si el bot no entiende a un cliente?</span>
                 <div className="faq-toggle-icon">
                   <i className="fa-solid fa-chevron-down"></i>
                 </div>
               </div>
               <div className="faq-answer">
                 <p>
-                  Si alguien te garantiza ventas fijas en Amazon, <strong>huye</strong>. Nosotros somos honestos: el mercado fluctúa. Lo que sí garantizamos es una gestión profesional basada en datos y estrategias testadas en nuestras propias cuentas. No somos una agencia que &quot;prueba suerte&quot; con tu dinero, gestionamos tu capital con el mismo cuidado que el nuestro.
+                  El sistema está diseñado para detectar intenciones complejas. Si no puede resolver una duda, te notificará al instante o derivará la conversación a un humano para que no pierdas la cita.
                 </p>
               </div>
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span>¿Cómo estructuráis el precio?</span>
+                <span>¿Mis clientes se sentirán bien atendidos?</span>
                 <div className="faq-toggle-icon">
                   <i className="fa-solid fa-chevron-down"></i>
                 </div>
               </div>
               <div className="faq-answer">
                 <p>
-                  Huimos de las tarifas estándar. Nuestro modelo se basa en el éxito compartido: cobramos un fijo ajustado para la operativa y un variable (generalmente un 5%) que se aplica <strong>exclusivamente sobre la facturación que supere</strong> lo que hiciste el año anterior en ese mismo mes. Si no mejoramos tus números históricos, no cobramos ese variable.
+                  Sí. No es un contestador rígido. Usamos IA con lenguaje natural que se adapta al tono de tu marca, ofreciendo una experiencia rápida, amable y mucho más eficiente que una espera al teléfono.
                 </p>
               </div>
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span>Ya trabajé con agencias y perdí dinero en PPC, ¿qué haréis distinto?</span>
+                <span>¿Puedo seguir agendando citas a mano?</span>
                 <div className="faq-toggle-icon">
                   <i className="fa-solid fa-chevron-down"></i>
                 </div>
               </div>
               <div className="faq-answer">
                 <p>
-                  Entendemos tu frustración. Muchos gestores disparan el gasto sin ton ni son. Nuestro enfoque es conservador: <strong>no quemamos dinero si el listing no convierte</strong>. Primero auditamos y reparamos el catálogo; solo invertimos en campañas cuando tenemos un ACOS controlado y el margen protegido.
+                  Por supuesto. Tu nuevo Dashboard se sincroniza en tiempo real. Si tú añades una cita manualmente, el bot lo sabrá al segundo y no ofrecerá ese hueco a nadie más por WhatsApp.
                 </p>
               </div>
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span>He escuchado que puedo empezar con 100€ o 1.000€, ¿es cierto?</span>
+                <span>¿Qué tecnología utilizáis exactamente?</span>
                 <div className="faq-toggle-icon">
                   <i className="fa-solid fa-chevron-down"></i>
                 </div>
               </div>
               <div className="faq-answer">
                 <p>
-                  Seamos honestos: muchos gurús te dirán eso, pero es falso. Si quieres montar un negocio real y no un hobby, necesitas estructura y stock. Para lanzar una tienda en condiciones y que funcione bien, la inversión mínima realista ronda los <strong>6.000€ - 8.000€</strong>. Amazon es un negocio serio y requiere darle el valor que merece.
+                  Implementamos una infraestructura profesional basada en n8n para la lógica, Supabase para la seguridad de tus datos y Evolution API para conectar con tu número oficial de WhatsApp.
                 </p>
               </div>
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span>¿Trabajáis con cuentas nuevas o desde cero?</span>
+                <span>¿Cómo es el modelo de pago?</span>
                 <div className="faq-toggle-icon">
                   <i className="fa-solid fa-chevron-down"></i>
                 </div>
               </div>
               <div className="faq-answer">
                 <p>
-                  Sí. Gestionamos proyectos desde la fase semilla, como hicimos con clientes de Marca Privada. Te asesoramos desde la creación de la cuenta hasta la estrategia de lanzamiento, asegurando que empiezas con una base sólida y evitas los errores de novato que suelen costar mucho dinero.
-                </p>
-              </div>
-            </div>
-            <div className="faq-item">
-              <div className="faq-question">
-                <span>No tengo tiempo para gestionar la cuenta, ¿vosotros os encargáis?</span>
-                <div className="faq-toggle-icon">
-                  <i className="fa-solid fa-chevron-down"></i>
-                </div>
-              </div>
-              <div className="faq-answer">
-                <p>
-                  Exacto. Ofrecemos una <strong>Gestión 360°</strong>. Nos convertimos en tu departamento de Amazon: desde la logística hasta hablar con el Soporte de Amazon para resolver incidencias. Tú supervisas el crecimiento, nosotros nos encargamos de toda la operativa diaria.
-                </p>
-              </div>
-            </div>
-            <div className="faq-item">
-              <div className="faq-question">
-                <span>¿Cómo sé si mi producto tiene potencial antes de invertir?</span>
-                <div className="faq-toggle-icon">
-                  <i className="fa-solid fa-chevron-down"></i>
-                </div>
-              </div>
-              <div className="faq-answer">
-                <p>
-                  Antes de lanzarnos, realizamos una auditoría y análisis de mercado. No se trata de &quot;subir productos&quot;, sino de analizar la competencia y los márgenes reales. Si vemos que el producto no es viable, te lo diremos antes de que inviertas. Preferimos perder un cliente a que tú pierdas tus ahorros.
+                  Trabajamos con una inversión inicial de setup y una suscripción mensual de mantenimiento que cubre servidores, actualizaciones de la IA y soporte técnico continuo para que nunca dejes de agendar.
                 </p>
               </div>
             </div>

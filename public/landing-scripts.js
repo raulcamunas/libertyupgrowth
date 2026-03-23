@@ -26,9 +26,9 @@
             
             if (amazonCheckbox && submitBtn) {
                 if (amazonCheckbox.checked) {
-                    submitBtn.textContent = 'AUDITAR MI CUENTA';
+                    submitBtn.textContent = 'RECIBIR DEMO';
                 } else {
-                    submitBtn.textContent = 'QUIERO EMPEZAR';
+                    submitBtn.textContent = 'QUIERO MI DEMO';
                 }
             }
         }
@@ -324,7 +324,7 @@
                     this.vx = (Math.random() - 0.5) * 0.2; 
                     this.vy = (Math.random() - 0.5) * 0.2; 
                     this.size = Math.random() * 1.5 + 0.5;
-                    this.color = '#FF6600'; 
+                    this.color = '#00b5ff'; 
                 } 
                 update() { 
                     this.x += this.vx; 
@@ -341,7 +341,7 @@
                 } 
             }
             function initCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; particles = []; for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); } }
-            function animateCanvas() { ctx.clearRect(0, 0, width, height); for (let i = 0; i < particles.length; i++) { let p = particles[i]; p.update(); p.draw(); if (mouse.x != null) { let dx = mouse.x - p.x; let dy = mouse.y - p.y; let distance = Math.sqrt(dx * dx + dy * dy); if (distance < mouseConnectDistance) { ctx.beginPath(); ctx.strokeStyle = `rgba(255, 102, 0, ${1 - distance/mouseConnectDistance})`; ctx.lineWidth = 0.5; ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(p.x, p.y); ctx.stroke(); const force = (mouseConnectDistance - distance) / mouseConnectDistance; p.x -= (dx / distance) * force * 0.5; p.y -= (dy / distance) * force * 0.5; } } } requestAnimationFrame(animateCanvas); }
+            function animateCanvas() { ctx.clearRect(0, 0, width, height); for (let i = 0; i < particles.length; i++) { let p = particles[i]; p.update(); p.draw(); if (mouse.x != null) { let dx = mouse.x - p.x; let dy = mouse.y - p.y; let distance = Math.sqrt(dx * dx + dy * dy); if (distance < mouseConnectDistance) { ctx.beginPath(); ctx.strokeStyle = `rgba(0, 181, 255, ${1 - distance/mouseConnectDistance})`; ctx.lineWidth = 0.5; ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(p.x, p.y); ctx.stroke(); const force = (mouseConnectDistance - distance) / mouseConnectDistance; p.x -= (dx / distance) * force * 0.5; p.y -= (dy / distance) * force * 0.5; } } } requestAnimationFrame(animateCanvas); }
             window.addEventListener('resize', initCanvas); 
             if(window.innerWidth > 991) { window.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); mouse.x = e.clientX; mouse.y = e.clientY; }); }
             window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; }); initCanvas(); animateCanvas();
@@ -359,85 +359,6 @@
                 }
             });
         }
-
-        // --- FEATURES SWITCH ---
-        const featureData = {
-            orange: { tagline: "Si ya eres vendedor", title: "Tu cuenta de Amazon tiene más potencial, vamos a desbloquearlo", desc: "Tienes buen producto, pero el algoritmo es despiadado. Dejamos de lado las intuiciones y aplicamos ingeniería de datos para arreglar lo que falla, reducir tu ACOS y recuperar el control de tu facturación", cards: [ { icon: "fa-chart-line", title: "Reducción de ACOS", desc: "Dejamos de quemar dinero en PPC's. Optimizamos tus campañas para maximizar el ROAS y eliminar palabras clave que solo generan gasto" }, { icon: "fa-magnifying-glass", title: "SEO y Posicionamiento Orgánico", desc: "No solo buscamos keywords, entendemos la intención de compra. Posicionamos tus productos correctamente." }, { icon: "fa-store", title: "Contenido A+ y Storefront", desc: "Tu marca debe parecer premium para cobrar como premium. Diseñamos fichas y tiendas que disparan la tasa de conversión." }, { icon: "fa-warehouse", title: "Logística FBA Sin Fisuras", desc: "Evitamos roturas de stock y sobrecostes de almacenamiento. Planificamos tus envíos para que Amazon siempre tenga inventario sano." }, { icon: "fa-shield", title: "Protección de Marca", desc: "¿Hijackers? ¿Falsificaciones? Nos encargamos de limpiar tu listado y proteger tu propiedad intelectual con Brand Registry." }, { icon: "fa-globe", title: "Expansión Internacional", desc: "¿Vendes solo en tu pais? Analizamos tu tienda para armar un plan de internacionalización para vender en más paises." }, { icon: "fa-headset", title: "Salud de cuenta y Bloqueos", desc: " Recuperamos cuentas suspendidas y gestionamos casos complejos con el soporte de Amazon (sí, hablamos su idioma)" }, { icon: "fa-chart-bar", title: "Auditoría de Rentabilidad", desc: "Te decimos cuánto ganas realmente. Desglosamos márgenes reales después de comisiones, devoluciones y publicidad." } ] },
-            blue: { tagline: "Aun no vendes en Amazon", title: 'Empieza a vender en Amazon con una "ventaja injusta"', desc: "La mayoría de nuevos vendedores fracasan por falta de estrategia. Nosotros construimos los cimientos sólidos de tu marca para que te saltes la curva de aprendizaje (y los errores caros) desde el día uno.", cards: [ { icon: "fa-chart-bar", title: "Validación de Mercado", desc: "Antes de gastar un euro en stock, analizamos la demanda y la competencia para asegurarnos de que tu producto tiene hueco" }, { icon: "fa-file-invoice", title: "Burocracia Cero", desc: " Nos ocupamos del alta de cuenta, registros fiscales y normativas de Amazon. Tú olvídate del papeleo aburrido." }, { icon: "fa-rocket", title: "Estrategia de Lanzamiento ", desc: 'Aprovechamos la "Luna de Miel" del algoritmo. Diseñamos una estrategia agresiva para conseguir tracción y reseñas desde el día 1.'}, { icon: "fa-pen-fancy", title: "Copywriting Persuasivo", desc: " Escribimos títulos y viñetas que venden. Transformamos características técnicas en deseos de compra irresistibles." }, { icon: "fa-camera", title: "Fotografía Estratégica", desc: "En Amazon no se toca el producto, se compra por los ojos. Creamos imágenes y renders que destacan frente a la competencia." }, { icon: "fa-ship", title: "Gestión de Importación", desc: "Te asesoramos en la primera entrada de stock a los almacenes de Amazon (FBA) para que no rechacen tu mercancía." }, { icon: "fa-bullhorn", title: "Publicidad de Controlada", desc: " Configuramos tus primeras campañas de PPC para ganar visibilidad inmediata sin desperdiciar presupuesto en pruebas a ciegas." }, { icon: "fa-user-tie", title: "Mentoria 1 a 1", desc: "No estarás solo ante el gigante. Tendrás un canal directo con expertos para resolver dudas y definir el futuro de tu marca." } ] }
-        };
-        const featuresSection = document.getElementById('features-section');
-        const featuresGrid = document.getElementById('features-grid');
-        const headerTextContainer = document.getElementById('header-text-container');
-        let currentTheme = 'orange'; let isAnimating = false;
-        function renderCardsHTML(theme) {
-            const data = featureData[theme];
-            if(document.getElementById('feature-tagline')) document.getElementById('feature-tagline').textContent = data.tagline;
-            if(document.getElementById('feature-title')) document.getElementById('feature-title').textContent = data.title;
-            if(document.getElementById('feature-desc')) document.getElementById('feature-desc').textContent = data.desc;
-            if (featuresGrid) {
-                featuresGrid.innerHTML = ''; 
-                data.cards.forEach((card, index) => {
-                    const cardHTML = `<div class="feature-card" style="transition-delay: ${index * 0.1}s;"><i class="fa-solid ${card.icon} feature-icon"></i><h3 class="feature-card-title">${card.title}</h3><p class="feature-card-desc">${card.desc}</p></div>`;
-                    featuresGrid.insertAdjacentHTML('beforeend', cardHTML);
-                });
-                // Observar feature-cards individualmente en móvil
-                if (window.innerWidth <= 768) {
-                    observeFeatureCards();
-                }
-            }
-        }
-        
-        // Función para observar feature-cards en móvil
-        function observeFeatureCards() {
-            const featureCards = document.querySelectorAll('.feature-card');
-            const cardObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('card-visible');
-                        cardObserver.unobserve(entry.target);
-                    }
-                });
-            }, { 
-                threshold: 0.2,
-                rootMargin: '0px 0px -50px 0px'
-            });
-            
-            featureCards.forEach(card => cardObserver.observe(card));
-        }
-        function setTheme(theme) {
-            if (currentTheme === theme || isAnimating) return;
-            if (!featuresSection || !headerTextContainer || !featuresGrid) return;
-            isAnimating = true; headerTextContainer.classList.add('switching'); featuresGrid.classList.add('switching');
-            setTimeout(() => {
-                currentTheme = theme;
-                if (theme === 'orange') { featuresSection.classList.add('theme-orange'); featuresSection.classList.remove('theme-blue'); } else { featuresSection.classList.add('theme-blue'); featuresSection.classList.remove('theme-orange'); }
-                renderCardsHTML(theme);
-                // Usar requestAnimationFrame en lugar de reflow forzado
-                requestAnimationFrame(() => {
-                    featuresSection.classList.add('switching');
-                }); 
-                headerTextContainer.classList.remove('switching'); featuresGrid.classList.remove('switching');
-                isAnimating = false;
-            }, 300); 
-        }
-        function toggleTheme() { if (currentTheme === 'orange') setTheme('blue'); else setTheme('orange'); }
-        renderCardsHTML('orange');
-        
-        // Observar feature-cards en móvil al cargar la página
-        if (window.innerWidth <= 768) {
-            setTimeout(() => observeFeatureCards(), 100);
-        }
-        
-        // Re-observar cuando cambia el tamaño de ventana
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                if (window.innerWidth <= 768) {
-                    observeFeatureCards();
-                }
-            }, 250);
-        });
 
         // --- SCROLL SPY (DESKTOP) ---
         const visualItems = document.querySelectorAll('.scroll-visual-item');
@@ -602,7 +523,7 @@
         
         // 1. RATE LIMITING (máximo 3 envíos por hora)
         function checkRateLimit() {
-            const RATE_LIMIT_KEY = 'libertyseller_form_submissions';
+            const RATE_LIMIT_KEY = 'libertyupgrowth_form_submissions';
             const RATE_LIMIT_COUNT = 3;
             const RATE_LIMIT_TIME = 60 * 60 * 1000; // 1 hora en ms
             
@@ -944,7 +865,7 @@
                     const amazonCheckbox = document.getElementById('form-amazon-seller');
                     const submitBtn = form.querySelector('button[type="submit"]');
                     if (amazonCheckbox && submitBtn) {
-                        submitBtn.textContent = amazonCheckbox.checked ? 'AUDITAR MI CUENTA' : 'QUIERO EMPEZAR';
+                        submitBtn.textContent = amazonCheckbox.checked ? 'RECIBIR DEMO' : 'QUIERO MI DEMO';
                     }
                 }, 3000);
                 return;
@@ -1003,7 +924,7 @@
             
             const data = { 
                 name, phone, email, 
-                vendeEnAmazon: isSeller ? "Sí" : "No",
+                usaAgendaDigital: isSeller ? "Sí" : "No",
                 sellingDuration, monthlyRevenue,
                 source: "Hero Form", 
                 timestamp: new Date().toISOString() 
@@ -1012,7 +933,7 @@
             try {
                 const response = await fetch('https://n8n-n8n.hyonwd.easypanel.host/webhook/08ef2386-67c2-46e0-9bd8-5084f6908215', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
                 if (response.ok) { 
-                    formBtn.style.opacity = '1'; formBtn.style.backgroundColor = '#CC5200'; formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'; 
+                    formBtn.style.opacity = '1'; formBtn.style.backgroundColor = '#0088c0'; formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'; 
                     form.reset(); 
                     form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'));
                     const expandableFields = form.querySelector('.expandable-fields');
@@ -1070,7 +991,7 @@
         }, 40000);
 
         // ===== COOKIE CONSENT BANNER =====
-        const COOKIE_CONSENT_KEY = 'libertyseller_cookie_consent';
+        const COOKIE_CONSENT_KEY = 'libertyupgrowth_cookie_consent';
         
         // Función para mostrar el banner
         function showCookieBanner() {

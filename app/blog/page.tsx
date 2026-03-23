@@ -7,11 +7,12 @@ import AnalyticsTracker from '@/components/AnalyticsTracker'
 import BlogCountdown from '@/components/BlogCountdown'
 
 export const metadata: Metadata = {
-  title: 'Blog - Estrategias y Consejos para Amazon FBA | Liberty Seller',
-  description: 'Descubre las últimas estrategias, consejos y casos de éxito para optimizar tu cuenta de Amazon FBA. Aprende de los expertos.',
+  title: 'Blog - Automatización con IA para negocios | Liberty UpGrowth',
+  description:
+    'Estrategias, guías y casos reales para automatizar atención, conversión y agenda con IA (WhatsApp + integraciones + dashboard).',
   openGraph: {
-    title: 'Blog - Estrategias Amazon FBA | Liberty Seller',
-    description: 'Descubre las últimas estrategias y consejos para optimizar tu cuenta de Amazon FBA.',
+    title: 'Blog - Automatización con IA | Liberty UpGrowth',
+    description: 'Estrategias y guías para automatizar tu negocio con IA.',
     type: 'website',
   },
 }
@@ -72,9 +73,9 @@ export default async function BlogPage() {
       <AnalyticsTracker pageType="blog" />
       <div className="blog-hero">
         <div className="blog-hero-content">
-          <h1 className="blog-hero-title">Blog Liberty Seller</h1>
+          <h1 className="blog-hero-title">Blog Liberty UpGrowth</h1>
           <p className="blog-hero-subtitle">
-            Estrategias, consejos y casos de éxito para escalar tu negocio en Amazon FBA
+            Estrategias, guías y casos de éxito para automatizar tu negocio con IA
           </p>
         </div>
       </div>

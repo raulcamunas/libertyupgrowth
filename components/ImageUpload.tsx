@@ -128,7 +128,7 @@ export default function ImageUpload({ value, onChange, label = 'Imagen Destacada
   return (
     <div className="admin-form-group">
       <label className="admin-form-label">
-        <i className="fa-solid fa-image mr-2 text-[#FF6600]"></i>
+        <i className="fa-solid fa-image mr-2 text-[#00b5ff]"></i>
         {label}
       </label>
 
@@ -150,7 +150,7 @@ export default function ImageUpload({ value, onChange, label = 'Imagen Destacada
 
         {isUploading ? (
           <div className="upload-loading">
-            <i className="fa-solid fa-spinner fa-spin text-[#FF6600] text-2xl mb-2"></i>
+            <i className="fa-solid fa-spinner fa-spin text-[#00b5ff] text-2xl mb-2"></i>
             <p className="text-sm text-gray-400">Subiendo imagen...</p>
           </div>
         ) : preview ? (
@@ -185,7 +185,7 @@ export default function ImageUpload({ value, onChange, label = 'Imagen Destacada
           <div className="upload-placeholder">
             <i className="fa-solid fa-cloud-arrow-up text-4xl text-gray-500 mb-3"></i>
             <p className="text-gray-400 mb-1">
-              <span className="text-[#FF6600] font-semibold">Haz clic</span> o arrastra una imagen aquí
+              <span className="text-[#00b5ff] font-semibold">Haz clic</span> o arrastra una imagen aquí
             </p>
             <p className="text-xs text-gray-500">PNG, JPG, WebP o GIF (máx. 5MB)</p>
           </div>
@@ -202,7 +202,7 @@ export default function ImageUpload({ value, onChange, label = 'Imagen Destacada
       {value && !preview && (
         <p className="admin-form-hint mt-2">
           <i className="fa-solid fa-info-circle mr-1.5"></i>
-          URL actual: <span className="text-[#FF6600] break-all">{value}</span>
+          URL actual: <span className="text-[#00b5ff] break-all">{value}</span>
         </p>
       )}
     </div>

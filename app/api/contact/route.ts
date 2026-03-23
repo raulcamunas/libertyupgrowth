@@ -33,7 +33,7 @@ function validateFormData(data: any): { valid: boolean; error?: string } {
   
   // Validar email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(data.email)) {
+  if (data.email && !emailRegex.test(data.email)) {
     return { valid: false, error: 'Invalid email' }
   }
   
@@ -88,8 +88,9 @@ export async function POST(request: NextRequest) {
     const webhookData = {
       name: body.name,
       phone: `${body.prefix || '+34'} ${body.phone}`,
-      email: body.email,
-      vendeEnAmazon: body.isSeller ? 'Sí' : 'No',
+      email: body.email || '',
+      businessType: body.businessType || '',
+      usaAgendaDigital: body.isSeller ? 'Sí' : 'No',
       sellingDuration: body.sellingDuration || '',
       monthlyRevenue: body.monthlyRevenue || '',
       source: 'Hero Form',

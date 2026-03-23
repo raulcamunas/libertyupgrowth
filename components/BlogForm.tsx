@@ -127,7 +127,7 @@ export default function BlogForm() {
 
       // Éxito
       formBtn.style.opacity = '1'
-      formBtn.style.backgroundColor = '#CC5200'
+      formBtn.style.backgroundColor = '#0088c0'
       formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'
       form.reset()
       
@@ -189,7 +189,7 @@ export default function BlogForm() {
 
   return (
     <div className="form-card blog-form-card">
-        <h2 className="form-title">Solicita tu Auditoría o Plan de Lanzamiento</h2>
+        <h2 className="form-title">Solicita una demo y automatiza tu agenda con IA</h2>
         <form 
           id="blog-signup-form" 
           className="smart-form" 
@@ -267,7 +267,7 @@ export default function BlogForm() {
           </div>
           
           <div className="amazon-switch-group">
-            <span className="switch-label-text">¿Vendes en Amazon?</span>
+            <span className="switch-label-text">¿Usas agenda digital actualmente?</span>
             <label className="toggle-switch">
               <input
                 type="checkbox"
@@ -306,7 +306,7 @@ export default function BlogForm() {
             className="submit-btn"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Enviando...' : 'QUIERO EMPEZAR'}
+            {isSubmitting ? 'Enviando...' : 'RECIBIR DEMO'}
           </button>
         </form>
       </div>

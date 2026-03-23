@@ -24,7 +24,7 @@ export default function LandingScripts() {
   return (
     <Script
       id="landing-scripts"
-      src="/landing-scripts.js"
+      src="/landing-scripts.js?v=2"
       strategy="lazyOnload"
       onLoad={() => {
         // Script cargado correctamente

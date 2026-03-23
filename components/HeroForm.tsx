@@ -84,7 +84,7 @@ export default function HeroForm() {
       const formData = {
         name: (document.getElementById('form-name') as HTMLInputElement).value.trim(),
         phone: (document.getElementById('form-phone') as HTMLInputElement).value.trim(),
-        email: (document.getElementById('form-email') as HTMLInputElement).value.trim(),
+        businessType: (document.getElementById('form-business-type') as HTMLInputElement).value.trim(),
         prefix: (document.getElementById('form-prefix') as HTMLSelectElement).value,
         isSeller: isAmazonSeller,
         sellingDuration: (document.getElementById('hero-duration-input') as HTMLInputElement)?.value || '',
@@ -95,9 +95,6 @@ export default function HeroForm() {
       // Validación básica del lado del cliente
       if (!formData.name || formData.name.length < 2) {
         throw new Error('Por favor, ingresa un nombre válido')
-      }
-      if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        throw new Error('Por favor, ingresa un email válido')
       }
       if (!formData.phone || formData.phone.length < 8) {
         throw new Error('Por favor, ingresa un teléfono válido')
@@ -124,7 +121,7 @@ export default function HeroForm() {
 
       // Éxito
       formBtn.style.opacity = '1'
-      formBtn.style.backgroundColor = '#CC5200'
+      formBtn.style.backgroundColor = '#0088c0'
       formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'
       form.reset()
       
@@ -186,7 +183,7 @@ export default function HeroForm() {
 
   return (
     <div className="form-card">
-        <h2 className="form-title">Solicita tu Auditoría o Plan de Lanzamiento</h2>
+        <h2 className="form-title">Prueba nuestro Bot Demo ahora</h2>
         <form 
           id="signup-form" 
           className="smart-form" 
@@ -247,24 +244,24 @@ export default function HeroForm() {
               type="tel"
               id="form-phone"
               className="form-input form-phone-number"
-              placeholder="612 345 678"
+              placeholder="Tu número de WhatsApp"
               required
             />
             <div className="error-message" id="phone-error"></div>
           </div>
           <div className="input-group">
             <input
-              type="email"
-              id="form-email"
+              type="text"
+              id="form-business-type"
               className="form-input"
-              placeholder="Correo electrónico"
+              placeholder="Tipo de negocio (Peluquería, Clínica...)"
               required
             />
             <div className="error-message" id="email-error"></div>
           </div>
           
           <div className="amazon-switch-group">
-            <span className="switch-label-text">¿Vendes en Amazon?</span>
+            <span className="switch-label-text">¿Usas agenda digital actualmente?</span>
             <label className="toggle-switch">
               <input
                 type="checkbox"
@@ -303,7 +300,7 @@ export default function HeroForm() {
             className="submit-btn"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Enviando...' : 'TE CONTACTAMOS'}
+            {isSubmitting ? 'Enviando...' : 'RECIBIR ACCESO AL BOT'}
           </button>
         </form>
       </div>

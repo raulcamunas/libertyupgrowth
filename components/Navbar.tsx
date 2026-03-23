@@ -116,9 +116,9 @@ export default function Navbar() {
             <div className="contact-section">
               <div className="contact-label">(EMAIL)</div>
               <div className="contact-links">
-                <a href="mailto:business@libertyseller.com" className="contact-link" aria-label="Email">
+                <a href="mailto:contacto@libertyupgrowth.es" className="contact-link" aria-label="Email">
                   <i className="fa-solid fa-envelope"></i>
-                  <span>business@libertyseller.com</span>
+                  <span>contacto@libertyupgrowth.es</span>
                 </a>
               </div>
             </div>

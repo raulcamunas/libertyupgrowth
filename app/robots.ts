@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/'],
       },
     ],
-    sitemap: 'https://libertyseller.es/sitemap.xml',
+    sitemap: 'https://libertyupgrowth.es/sitemap.xml',
   }
 }
 

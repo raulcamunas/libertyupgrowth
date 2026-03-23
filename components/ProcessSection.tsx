@@ -5,9 +5,10 @@ export default function ProcessSection() {
     <section className="process-section" id="process-section">
       <div className="process-sticky-container">
         <div className="process-header">
-          <h2 className="process-title scroll-trigger">Cómo lo hacemos</h2>
+          <div className="process-label scroll-trigger">• PROCESO DE ALTA</div>
+          <h2 className="process-title scroll-trigger">Tu sistema, listo en 5 pasos</h2>
           <p className="process-subtitle scroll-trigger">
-            Un proceso validado paso a paso. No hacemos testeos, replicamos lo que funciona.
+            Un despliegue rápido y guiado para que no tengas que preocuparte por la parte técnica. Nos encargamos de todo.
           </p>
         </div>
 
@@ -23,9 +24,9 @@ export default function ProcessSection() {
             </div>
             <div className="step-content">
               <span className="step-num">PASO 01</span>
-              <h3 className="step-title">Llamada</h3>
+              <h3 className="step-title">Conexión Inicial</h3>
               <p className="step-desc">
-                Nos ponemos en contacto para una primera conversación sobre el estado actual de tu cuenta y tus objetivos.
+                Contacta por formulario o WhatsApp. Analizamos tu volumen de citas para asegurar el mejor encaje con nuestra tecnología.
               </p>
             </div>
           </div>
@@ -36,9 +37,9 @@ export default function ProcessSection() {
             </div>
             <div className="step-content">
               <span className="step-num">PASO 02</span>
-              <h3 className="step-title">Planificación</h3>
+              <h3 className="step-title">Diseño Estratégico</h3>
               <p className="step-desc">
-                Trabajamos un periodo intenso de 3 meses para sanear tu cuenta y optimizarla para obtener los mejores resultados.
+                Diseñamos tu flujo ideal. Definimos servicios, horarios y la personalidad de tu IA para que actúe bajo tu propia lógica.
               </p>
             </div>
           </div>
@@ -49,9 +50,9 @@ export default function ProcessSection() {
             </div>
             <div className="step-content">
               <span className="step-num">PASO 03</span>
-              <h3 className="step-title">Mantenimiento</h3>
+              <h3 className="step-title">Setup de Reglas</h3>
               <p className="step-desc">
-                Analizamos el rendimiento de la cuenta después de nuestras acciones. Optimizamos para tener mejores resultados.
+                Formalizamos el alta y configuramos tus reglas de negocio. Aquí es donde volcamos tu operativa real en el motor del bot.
               </p>
             </div>
           </div>
@@ -62,9 +63,9 @@ export default function ProcessSection() {
             </div>
             <div className="step-content">
               <span className="step-num">PASO 04</span>
-              <h3 className="step-title">Escalado</h3>
+              <h3 className="step-title">Despliegue Técnico</h3>
               <p className="step-desc">
-                Miramos nuevas oportunidades de inclusión de productos al catálogo para crecer horizontalmente.
+                Integramos Evolution API y Supabase. Un especialista testea el sistema en tiempo real hasta asegurar que el flujo es perfecto.
               </p>
             </div>
           </div>
@@ -75,9 +76,9 @@ export default function ProcessSection() {
             </div>
             <div className="step-content">
               <span className="step-num">PASO 05</span>
-              <h3 className="step-title">Expansión</h3>
+              <h3 className="step-title">Libertad Operativa</h3>
               <p className="step-desc">
-                Planificamos la internacionalización de tu cuenta para crecer verticalmente de manera exponencial.
+                ¡Listo! Ya puedes acceder a tu dashboard y deja que el sistema trabaje por ti. Tu agenda se llena en automático.
               </p>
             </div>
           </div>

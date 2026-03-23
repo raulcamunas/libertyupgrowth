@@ -12,7 +12,7 @@ export default function BlogCTA() {
       <div className="blog-post-cta-wrapper">
         <div className="blog-post-cta">
           <div className="blog-post-cta-content">
-            <h3 className="blog-post-cta-title">¿Listo para escalar tu cuenta de Amazon?</h3>
+            <h3 className="blog-post-cta-title">¿Listo para automatizar tu agenda con IA?</h3>
             <p className="blog-post-cta-text">
               Contacta con nosotros y descubre cómo podemos ayudarte a alcanzar tus objetivos.
             </p>

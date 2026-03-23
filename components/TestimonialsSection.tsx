@@ -7,9 +7,9 @@ const testimonialsData = [
   { id: 1, name: 'Everox', image: '/partner_1.png', stat: 'Lanzamiento exitoso', desc: 'Marca creada desde 0 que llegó a tener 3000€/dia de facturación.', tag: 'Marca Privada' },
   { id: 2, name: 'Diru', image: '/partner_2.png', stat: 'Cuenta en crecimiento', desc: 'Nuestro cliente decidió confiar en un equipo que le creé la cuenta desde 0 y ya gestiona varios productos rentables con +20% de rentabilidad cada uno.', tag: 'Cuenta nueva' },
   { id: 3, name: 'IronTechGlobal', image: '/partner_3.png', stat: 'Optimización de PPC\'s', desc: 'Estudio y gestión activa de campañas de PPC\'s, el cliente venia gastando 60% de ACOS por culpa de otras agencias y con nosotros bajó a 13% (y bajando...)', tag: 'PPC\'s' },
-  { id: 4, name: 'EvoComputer', image: '/partner_4.png', stat: 'Volcado de Inventario', desc: 'Un cliente que tenia un potencial enorme en un catálogo que manejaba y no estaba subido a Amazon, analizamos rentabilidades y aumentamos facturación en pocas semanas.', tag: 'Inventario sin explotar' },
-  { id: 5, name: 'Creative Toys', image: '/partner_5.png', stat: 'Marca Reconocida ', desc: 'Empresa TOP en el mercado de juegos de mesa que decidió contar con nosotros para crear su cuenta desde 0 en Amazon.', tag: 'Creación de cuenta' },
-  { id: 6, name: 'BSC', image: '/partner_6.png', stat: 'Gestión 360º', desc: 'Cliente que cuenta con nuestra ayuda para poder gestionar su cuenta de manera activa en Amazon. Aumento de Buy Box de 3% a 17%-25%', tag: 'Buy Box y gestión.' },
+  { id: 4, name: 'EvoComputer', image: '/partner_4.png', stat: 'Volcado de Inventario', desc: 'Un cliente que tenía un gran potencial en su catálogo y no lo tenía online. Analizamos rentabilidades y aumentamos facturación en pocas semanas.', tag: 'Inventario sin explotar' },
+  { id: 5, name: 'Creative Toys', image: '/partner_5.png', stat: 'Marca Reconocida', desc: 'Empresa TOP en el mercado de juegos de mesa que decidió contar con nosotros para crear su canal de ventas online desde cero.', tag: 'Creación de cuenta' },
+  { id: 6, name: 'BSC', image: '/partner_6.png', stat: 'Gestión 360º', desc: 'Cliente que cuenta con nuestra ayuda para gestionar su crecimiento de manera activa. Optimización continua y mejora del rendimiento.', tag: 'Gestión y performance' },
   { id: 7, name: 'Naranjas Ramblizo', image: '/partner_7.png', stat: 'Marca con productos de comida', desc: 'Trabajamos con este cliente para llevar su negocio de fruta a la venta online, consiguiendo ventas asombrosas cada dia.', tag: 'Marca Privada' },
   { id: 8, name: 'SAUSI', image: '/partner_8.png', stat: 'Una de nuestras Mejores Tiendas', desc: 'Lanzamiento de tienda desde 0, contando con varios productos de más de 20% de margen y con altas ventas al dia (+10ud)', tag: 'Nuevo Vendedor' }
 ]
@@ -25,7 +25,7 @@ export default function TestimonialsSection() {
         const card = document.createElement('div')
         card.className = 'client-card'
         card.onclick = () => showPopup(client)
-        card.innerHTML = `<img src="${client.image}" alt="${client.name} - Partner LibertySeller" class="client-logo-img" loading="lazy" style="width: auto; height: auto;">`
+        card.innerHTML = `<img src="${client.image}" alt="${client.name} - Partner Liberty UpGrowth" class="client-logo-img" loading="lazy" style="width: auto; height: auto;">`
         testimonialsGrid.appendChild(card)
       })
     }

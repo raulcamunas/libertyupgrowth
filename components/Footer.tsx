@@ -10,22 +10,22 @@ export default function Footer() {
           <div className="footer-section footer-brand">
             <Image
               src="/logo.png"
-              alt="LibertySeller - Agencia Amazon FBA"
+              alt="Liberty UpGrowth"
               className="footer-logo-img"
               width={140}
               height={35}
               loading="lazy"
             />
             <p className="footer-desc">
-              La agencia especializada en Amazon FBA que transforma cuentas estancadas en líderes de categoría. Gestionamos tu crecimiento con metodología basada en datos.
+              Automatización con IA para que tu negocio atienda, convierta y agende sin fricción.
             </p>
           </div>
           <div className="footer-section footer-contact">
             <h3 className="footer-contact-title">Contacto</h3>
             <div className="contact-info">
-              <a href="mailto:business@libertyseller.com" className="contact-item">
+              <a href="mailto:contacto@libertyupgrowth.es" className="contact-item">
                 <i className="fa-solid fa-envelope"></i>
-                <span>business@libertyseller.com</span>
+                <span>contacto@libertyupgrowth.es</span>
               </a>
               <a href="tel:+910626798" className="contact-item">
                 <i className="fa-solid fa-phone"></i>
@@ -35,15 +35,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <div className="copyright">© 2025 LibertySeller. Todos los derechos reservados.</div>
-          <div className="social-icons">
-            <a href="#" aria-label="Twitter">
-              <i className="fa-brands fa-twitter"></i>
-            </a>
-            <a href="#" aria-label="LinkedIn">
-              <i className="fa-brands fa-linkedin"></i>
-            </a>
-          </div>
+          <div className="copyright">© 2025 Liberty UpGrowth. Todos los derechos reservados.</div>
         </div>
       </div>
     </footer>

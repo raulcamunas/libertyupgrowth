@@ -144,7 +144,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
       // Éxito
       formBtn.style.opacity = '1'
-      formBtn.style.backgroundColor = '#CC5200'
+      formBtn.style.backgroundColor = '#0088c0'
       formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'
       form.reset()
       
@@ -299,7 +299,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </div>
             
             <div className="amazon-switch-group">
-              <span className="switch-label-text">¿Vendes en Amazon?</span>
+              <span className="switch-label-text">¿Usas agenda digital actualmente?</span>
               <label className="toggle-switch">
                 <input
                   type="checkbox"
@@ -338,7 +338,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               className="submit-btn"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Enviando...' : (isAmazonSeller ? 'AUDITAR MI CUENTA' : 'QUIERO EMPEZAR')}
+              {isSubmitting ? 'Enviando...' : 'RECIBIR DEMO'}
             </button>
           </form>
         </div>

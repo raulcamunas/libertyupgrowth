@@ -84,7 +84,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
 
       {loading && (
         <div className="text-center py-8">
-          <i className="fa-solid fa-spinner fa-spin text-2xl text-[#FF6600]"></i>
+          <i className="fa-solid fa-spinner fa-spin text-2xl text-[#00b5ff]"></i>
         </div>
       )}
 
@@ -123,7 +123,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
             </div>
 
             <div className="admin-stat-card">
-              <div className="admin-stat-icon bg-orange-500/20 text-orange-400">
+              <div className="admin-stat-icon bg-[#00b5ff]/20 text-[#33ccff]">
                 <i className="fa-solid fa-clock"></i>
               </div>
               <div>
@@ -137,7 +137,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
           {stats.top_pages && stats.top_pages.length > 0 && (
             <div className="admin-form-section">
               <div className="admin-section-header">
-                <i className="fa-solid fa-file-alt mr-2 text-[#FF6600]"></i>
+                <i className="fa-solid fa-file-alt mr-2 text-[#00b5ff]"></i>
                 <h3 className="admin-section-title">Páginas Más Visitadas</h3>
               </div>
               <div className="mt-6 space-y-3">
@@ -147,7 +147,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
                     className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 rounded-lg bg-[#FF6600]/20 text-[#FF6600] flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 rounded-lg bg-[#00b5ff]/20 text-[#00b5ff] flex items-center justify-center font-bold">
                         {index + 1}
                       </div>
                       <div>
@@ -158,7 +158,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-[#FF6600]">{page.views}</p>
+                      <p className="text-lg font-bold text-[#00b5ff]">{page.views}</p>
                       <p className="text-xs text-gray-500">visitas</p>
                     </div>
                   </div>
@@ -171,7 +171,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
           {stats.top_posts && stats.top_posts.length > 0 && (
             <div className="admin-form-section">
               <div className="admin-section-header">
-                <i className="fa-solid fa-newspaper mr-2 text-[#FF6600]"></i>
+                <i className="fa-solid fa-newspaper mr-2 text-[#00b5ff]"></i>
                 <h3 className="admin-section-title">Posts Más Populares</h3>
               </div>
               <div className="mt-6 space-y-3">
@@ -181,7 +181,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
                     className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 rounded-lg bg-[#FF6600]/20 text-[#FF6600] flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 rounded-lg bg-[#00b5ff]/20 text-[#00b5ff] flex items-center justify-center font-bold">
                         {index + 1}
                       </div>
                       <div>
@@ -193,7 +193,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
                     </div>
                     <div className="flex items-center gap-6">
                       <div className="text-right">
-                        <p className="text-lg font-bold text-[#FF6600]">{post.views}</p>
+                        <p className="text-lg font-bold text-[#00b5ff]">{post.views}</p>
                         <p className="text-xs text-gray-500">visitas</p>
                       </div>
                       <Link
@@ -215,7 +215,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
           {stats.device_breakdown && stats.device_breakdown.length > 0 && (
             <div className="admin-form-section">
               <div className="admin-section-header">
-                <i className="fa-solid fa-mobile-alt mr-2 text-[#FF6600]"></i>
+                <i className="fa-solid fa-mobile-alt mr-2 text-[#00b5ff]"></i>
                 <h3 className="admin-section-title">Dispositivos</h3>
               </div>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -235,7 +235,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
                       </div>
                       <div className="w-full bg-white/10 rounded-full h-2">
                         <div
-                          className="bg-[#FF6600] h-2 rounded-full transition-all"
+                          className="bg-[#00b5ff] h-2 rounded-full transition-all"
                           style={{ width: `${percentage}%` }}
                         ></div>
                       </div>
@@ -251,7 +251,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
           {stats.views_by_day && stats.views_by_day.length > 0 && (
             <div className="admin-form-section">
               <div className="admin-section-header">
-                <i className="fa-solid fa-chart-line mr-2 text-[#FF6600]"></i>
+                <i className="fa-solid fa-chart-line mr-2 text-[#00b5ff]"></i>
                 <h3 className="admin-section-title">Visitas por Día</h3>
               </div>
               <div className="mt-6">
@@ -268,7 +268,7 @@ export default function AnalyticsDashboard({ initialStats }: AnalyticsDashboardP
                         </div>
                         <div className="flex-1 bg-white/10 rounded-full h-8 relative overflow-hidden">
                           <div
-                            className="bg-gradient-to-r from-[#FF6600] to-[#FF8533] h-8 rounded-full flex items-center justify-end pr-3 transition-all"
+                            className="bg-gradient-to-r from-[#00b5ff] to-[#33ccff] h-8 rounded-full flex items-center justify-end pr-3 transition-all"
                             style={{ width: `${percentage}%` }}
                           >
                             {percentage > 10 && (
