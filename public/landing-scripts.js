@@ -1006,7 +1006,7 @@
             }
         }
         
-        // Función para aceptar cookies (Conectada a GTM)
+        // Función para aceptar cookies
         function acceptCookies() {
             localStorage.setItem(COOKIE_CONSENT_KEY, 'accepted');
             const banner = document.getElementById('cookie-banner');
@@ -1016,13 +1016,6 @@
                     banner.style.display = 'none';
                 }, 400);
             }
-            // Actualizar consentimiento en GTM
-            gtag('consent', 'update', {
-                'analytics_storage': 'granted',
-                'ad_storage': 'granted'
-            });
-            // Disparar evento para que GTM sepa que puede cargar pixels
-            window.dataLayer.push({'event': 'cookie_consent_update'});
         }
         
         // Función para rechazar cookies
@@ -1035,13 +1028,6 @@
                     banner.style.display = 'none';
                 }, 400);
             }
-            // Mantener consentimiento denegado
-            if (typeof gtag === 'function') {
-                gtag('consent', 'update', {
-                    'analytics_storage': 'denied',
-                    'ad_storage': 'denied'
-                });
-            }
         }
         
         // Verificar consentimiento al cargar
@@ -1049,12 +1035,7 @@
             const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
             
             if (consent === 'accepted') {
-                // Si ya aceptó antes, actualizar consentimiento en GTM
-                gtag('consent', 'update', {
-                    'analytics_storage': 'granted',
-                    'ad_storage': 'granted'
-                });
-                window.dataLayer.push({'event': 'cookie_consent_update'});
+                // Si ya aceptó antes, no hacer nada
             } else if (consent === 'rejected') {
                 // Si rechazó, no hacer nada
                 return;

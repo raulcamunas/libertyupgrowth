@@ -148,28 +148,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'
       form.reset()
       
-      // Disparar evento de conversión para Google Tag Manager (solo una vez)
-      // Usar sessionStorage para prevenir duplicación incluso si el componente se monta dos veces
-      if (typeof window !== 'undefined' && (window as any).dataLayer) {
-        const eventKey = `form_submit_modal-signup-form_${Date.now()}`
-        const lastEventKey = sessionStorage.getItem('last_form_submit_event')
-        const lastEventTime = sessionStorage.getItem('last_form_submit_time')
-        const now = Date.now()
-        
-        // Solo enviar si no se envió un evento similar en los últimos 3 segundos
-        if (!lastEventKey || !lastEventTime || (now - parseInt(lastEventTime)) > 3000) {
-          (window as any).dataLayer.push({
-            'event': 'form_submit',
-            'form_id': 'modal-signup-form',
-            'form_name': 'modal_form',
-            'conversion_type': 'form_submission'
-          })
-          sessionStorage.setItem('last_form_submit_event', eventKey)
-          sessionStorage.setItem('last_form_submit_time', now.toString())
-          setEventSent(true)
-        }
-      }
-      
       form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'))
       const expandableFields = form.querySelector('.expandable-fields')
       if (expandableFields) expandableFields.classList.remove('open')
