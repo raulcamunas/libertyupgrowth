@@ -3,59 +3,12 @@
 import { useEffect, useState } from 'react'
 
 export default function BlogForm() {
-  const [isAmazonSeller, setIsAmazonSeller] = useState(false)
+  const [usesDigitalAgenda, setUsesDigitalAgenda] = useState<string>('')
+  const [employeesCount, setEmployeesCount] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [eventSent, setEventSent] = useState(false)
 
   useEffect(() => {
-    // Toggle expandable fields
-    const amazonToggle = document.getElementById('blog-form-amazon-seller') as HTMLInputElement
-    const expandable = document.getElementById('blog-expandable')
-    
-    const handleToggle = () => {
-      const checked = amazonToggle?.checked || false
-      setIsAmazonSeller(checked)
-      if (expandable) {
-        if (checked) {
-          expandable.classList.add('open')
-        } else {
-          expandable.classList.remove('open')
-        }
-      }
-    }
-
-    amazonToggle?.addEventListener('change', handleToggle)
-
-    // Pill button selection
-    const selectPill = (element: HTMLElement, inputId: string, gridId: string) => {
-      const grid = document.getElementById(gridId)
-      const input = document.getElementById(inputId) as HTMLInputElement
-      
-      if (grid && input) {
-        // Remove active from all pills in this grid
-        grid.querySelectorAll('.pill-btn').forEach((btn) => {
-          btn.classList.remove('active')
-        })
-        // Add active to clicked pill
-        element.classList.add('active')
-        // Set hidden input value
-        input.value = element.getAttribute('data-value') || element.textContent || ''
-      }
-    }
-
-    // Attach click handlers to pill buttons within this form
-    const form = document.getElementById('blog-signup-form')
-    if (form) {
-      const pillButtons = form.querySelectorAll('.pill-btn')
-      pillButtons.forEach((btn) => {
-        btn.addEventListener('click', function(this: HTMLElement) {
-          const gridId = this.closest('.pill-grid')?.id
-          const inputId = gridId === 'blog-duration-grid' ? 'blog-duration-input' : 'blog-revenue-input'
-          selectPill(this, inputId, gridId || '')
-        })
-      })
-    }
-
     // Country selector
     const countrySelector = document.getElementById('blog-country-selector')
     const countryFlag = document.getElementById('blog-country-flag')
@@ -68,10 +21,6 @@ export default function BlogForm() {
         countryFlag.textContent = flag
       }
     })
-
-    return () => {
-      amazonToggle?.removeEventListener('change', handleToggle)
-    }
   }, [])
 
 
@@ -89,9 +38,8 @@ export default function BlogForm() {
         phone: (document.getElementById('blog-form-phone') as HTMLInputElement).value.trim(),
         email: (document.getElementById('blog-form-email') as HTMLInputElement).value.trim(),
         prefix: (document.getElementById('blog-form-prefix') as HTMLSelectElement).value,
-        isSeller: isAmazonSeller,
-        sellingDuration: (document.getElementById('blog-duration-input') as HTMLInputElement)?.value || '',
-        monthlyRevenue: (document.getElementById('blog-revenue-input') as HTMLInputElement)?.value || '',
+        usaAgendaDigital: usesDigitalAgenda,
+        empleados: employeesCount,
         website: (document.getElementById('blog-website-field') as HTMLInputElement)?.value || '', // Honeypot
       }
 
@@ -105,8 +53,11 @@ export default function BlogForm() {
       if (!formData.phone || formData.phone.length < 8) {
         throw new Error('Por favor, ingresa un teléfono válido')
       }
-      if (isAmazonSeller && (!formData.sellingDuration || !formData.monthlyRevenue)) {
-        throw new Error('Por favor, completa todos los campos requeridos')
+      if (!formData.usaAgendaDigital) {
+        throw new Error('Por favor, indica si usas agenda digital actualmente')
+      }
+      if (!formData.empleados) {
+        throw new Error('Por favor, indica cuántos empleados tiene el negocio')
       }
 
       formBtn.disabled = true
@@ -132,9 +83,8 @@ export default function BlogForm() {
       form.reset()
       
       form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'))
-      const expandableFields = form.querySelector('.expandable-fields')
-      if (expandableFields) expandableFields.classList.remove('open')
-      setIsAmazonSeller(false)
+      setUsesDigitalAgenda('')
+      setEmployeesCount('')
       
       // Limpiar errores
       const errorMessages = form.querySelectorAll('.error-message')
@@ -173,9 +123,6 @@ export default function BlogForm() {
           className="smart-form" 
           onSubmit={handleSubmit}
         >
-          <input type="hidden" name="selling_duration" id="blog-duration-input" />
-          <input type="hidden" name="monthly_revenue" id="blog-revenue-input" />
-          
           {/* Honeypot field - invisible para bots */}
           <input
             type="text"
@@ -244,47 +191,48 @@ export default function BlogForm() {
             <div className="error-message" id="blog-email-error"></div>
           </div>
           
-          <div className="amazon-switch-group">
-            <span className="switch-label-text">¿Usas agenda digital actualmente?</span>
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                id="blog-form-amazon-seller"
-                checked={isAmazonSeller}
-                onChange={(e) => setIsAmazonSeller(e.target.checked)}
-              />
-              <span className="slider">
-                <span className="txt-no">NO</span>
-                <span className="txt-si">SÍ</span>
-              </span>
-            </label>
+          <span className="pill-label">¿Usas agenda digital actualmente?</span>
+          <div className="pill-grid cols-2" id="blog-agenda-grid">
+            <button
+              type="button"
+              className={`pill-btn ${usesDigitalAgenda === 'No' ? 'active' : ''}`}
+              onClick={() => setUsesDigitalAgenda('No')}
+            >
+              No
+            </button>
+            <button
+              type="button"
+              className={`pill-btn ${usesDigitalAgenda === 'Sí' ? 'active' : ''}`}
+              onClick={() => setUsesDigitalAgenda('Sí')}
+            >
+              Sí
+            </button>
           </div>
-          
-          <div className={`expandable-fields ${isAmazonSeller ? 'open' : ''}`} id="blog-expandable">
-            <span className="pill-label" id="blog-duration-label">¿Cuánto tiempo llevas vendiendo?</span>
-            <div className="pill-grid cols-3" id="blog-duration-grid">
-              <div className="pill-btn" data-value="0-1 año">0-1 año</div>
-              <div className="pill-btn" data-value="2-5 años">2-5 años</div>
-              <div className="pill-btn" data-value="+5 años">+5 años</div>
-            </div>
-            <div className="error-message" id="blog-duration-error"></div>
-            
-            <span className="pill-label" id="blog-revenue-label">¿Facturación mensual?</span>
-            <div className="pill-grid cols-4" id="blog-revenue-grid">
-              <div className="pill-btn" data-value="0-5k">0-5k</div>
-              <div className="pill-btn" data-value="5k-20k">5k-20k</div>
-              <div className="pill-btn" data-value="20k-50k">20k-50k</div>
-              <div className="pill-btn" data-value="+50k">+50k</div>
-            </div>
-            <div className="error-message" id="blog-revenue-error"></div>
+
+          <span className="pill-label">¿De cuántos empleados se compone el negocio?</span>
+          <div className="pill-grid cols-2" id="blog-employees-grid">
+            <button
+              type="button"
+              className={`pill-btn ${employeesCount === 'Solo yo' ? 'active' : ''}`}
+              onClick={() => setEmployeesCount('Solo yo')}
+            >
+              Solo yo
+            </button>
+            <button
+              type="button"
+              className={`pill-btn ${employeesCount === '+2 personas' ? 'active' : ''}`}
+              onClick={() => setEmployeesCount('+2 personas')}
+            >
+              +2 personas
+            </button>
           </div>
 
           <button 
             type="submit" 
             className="submit-btn"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !usesDigitalAgenda || !employeesCount}
           >
-            {isSubmitting ? 'Enviando...' : 'RECIBIR DEMO'}
+            {isSubmitting ? 'Enviando...' : 'QUIERO QUE ME CONTACTEN'}
           </button>
         </form>
       </div>

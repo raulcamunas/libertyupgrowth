@@ -106,7 +106,7 @@ export default function HeroSection() {
                 rel="noreferrer"
                 aria-label="Abrir el bot demo"
               >
-                <i className="fa-solid fa-play-circle" aria-hidden="true"></i> QUIERO PROBAR EL BOT DEMO
+                <i className="fa-solid fa-play-circle" aria-hidden="true"></i> TE CONTACTAMOS PARA DARTE MÁS INFO
               </a>
             </div>
           </div>

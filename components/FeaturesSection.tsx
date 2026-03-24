@@ -166,7 +166,7 @@ export default function FeaturesSection() {
             </div>
           </div>
         </div>
-        <div className="features-grid dynamic-content scroll-trigger" id="features-grid"></div>
+        <div className="features-grid dynamic-content" id="features-grid"></div>
       </div>
     </section>
   )

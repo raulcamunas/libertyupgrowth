@@ -85,14 +85,20 @@ export async function POST(request: NextRequest) {
     }
     
     // 4. Enviar a webhook (tu endpoint actual)
+    const usaAgendaDigital =
+      typeof body.usaAgendaDigital === 'string'
+        ? body.usaAgendaDigital
+        : body.isSeller
+          ? 'Sí'
+          : 'No'
+
     const webhookData = {
       name: body.name,
       phone: `${body.prefix || '+34'} ${body.phone}`,
       email: body.email || '',
       businessType: body.businessType || '',
-      usaAgendaDigital: body.isSeller ? 'Sí' : 'No',
-      sellingDuration: body.sellingDuration || '',
-      monthlyRevenue: body.monthlyRevenue || '',
+      usaAgendaDigital,
+      empleados: body.empleados || '',
       source: 'Hero Form',
       timestamp: new Date().toISOString(),
       ip: ip,

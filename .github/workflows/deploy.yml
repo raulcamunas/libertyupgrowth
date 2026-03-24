@@ -1,0 +1,30 @@
+name: Deploy a Hostinger 🚀
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: 🎉 Subiendo a Hostinger
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Obtener código más reciente
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1  # ⚡️ Optimización: Baja solo la última versión para evitar errores con el historial .git
+
+    - name: 📂 Sincronizar archivos (FTP)
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: ./ 
+        # Hemos quitado 'delete: true' porque daba error.
+        # Esta acción sobreescribirá los archivos que hayan cambiado.
+        exclude: |
+          **/.git*
+          **/.git/**
+          **/.github/**
+          README.md
