@@ -105,9 +105,13 @@ export async function POST(request: NextRequest) {
     }
     
     console.log('📤 Sending to webhook:', webhookData)
+
+    const webhookUrl =
+      process.env.N8N_WEBHOOK_URL ||
+      'https://n8n-n8n.hyonwd.easypanel.host/webhook/df995535-e426-4691-9d8f-cb326bd9640f'
     
     const webhookResponse = await fetch(
-      'https://n8n-n8n.hyonwd.easypanel.host/webhook/08ef2386-67c2-46e0-9bd8-5084f6908215',
+      webhookUrl,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

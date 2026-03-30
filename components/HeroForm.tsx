@@ -114,7 +114,7 @@ export default function HeroForm() {
 
   return (
     <div className="form-card">
-        <h2 className="form-title">Te contactamos para darte más info</h2>
+        <h2 className="form-title">Solicita acceso a la demo</h2>
         <form 
           id="signup-form" 
           className="smart-form" 

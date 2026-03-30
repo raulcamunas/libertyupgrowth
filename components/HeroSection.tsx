@@ -74,8 +74,10 @@ export default function HeroSection() {
                 src="/logo.png"
                 alt="SyncBook AI"
                 className="hero-main-logo"
-                width={120}
-                height={30}
+                width={480}
+                height={120}
+                sizes="(max-width: 991px) 200px, 240px"
+                quality={100}
                 priority
                 onError={(e) => {
                   const target = e.target as HTMLImageElement
@@ -106,7 +108,7 @@ export default function HeroSection() {
                 rel="noreferrer"
                 aria-label="Abrir el bot demo"
               >
-                <i className="fa-solid fa-play-circle" aria-hidden="true"></i> TE CONTACTAMOS PARA DARTE MÁS INFO
+                <i className="fa-solid fa-play-circle" aria-hidden="true"></i> Solicita acceso a la demo
               </a>
             </div>
           </div>
