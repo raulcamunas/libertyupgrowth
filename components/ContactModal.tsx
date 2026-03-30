@@ -104,8 +104,8 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
       // Éxito
       formBtn.style.opacity = '1'
-      formBtn.style.backgroundColor = '#0088c0'
-      formBtn.innerHTML = '¡RECIBIDO! <i class="fa-solid fa-check"></i>'
+      formBtn.style.backgroundColor = '#005b99'
+      formBtn.textContent = 'Alguien del equipo te contactará lo antes posible.'
       form.reset()
       
       form.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'))
