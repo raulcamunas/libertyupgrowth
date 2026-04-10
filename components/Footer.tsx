@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
@@ -36,6 +37,9 @@ export default function Footer() {
         </div>
         <div className="footer-bottom">
           <div className="copyright">© 2025 Liberty UpGrowth. Todos los derechos reservados.</div>
+          <Link href="/politica-de-privacidad" className="footer-privacy-link">
+            Política de Privacidad
+          </Link>
         </div>
       </div>
     </footer>

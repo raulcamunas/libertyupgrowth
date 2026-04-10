@@ -4812,6 +4812,17 @@
             flex-wrap: wrap;
             gap: 20px;
         }
+
+        .footer-privacy-link {
+            color: #666;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-privacy-link:hover {
+            color: var(--brand-color);
+        }
         
         .copyright {
             color: #666;
