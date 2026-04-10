@@ -7,7 +7,7 @@ import WhatsAppWidget from '@/components/WhatsAppWidget'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1222383833301915'
+const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || '2096844111095507'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://libertyupgrowth.es'),
