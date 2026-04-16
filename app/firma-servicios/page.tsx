@@ -271,13 +271,13 @@ export default function FirmaServiciosPage() {
         </header>
 
         <div className="contract-sign-grid">
-          <section className="contract-sign-card">
+          <section className="contract-sign-card contract-sign-card-contract">
             <div className="contract-sign-card-header">
               <div className="contract-sign-card-title">Contrato</div>
               <div className="contract-sign-card-subtitle">Lee el contrato completo antes de firmar.</div>
             </div>
             <div className="contract-sign-contract-box">
-              <div className="blog-post-body contract-sign-contract-body">
+              <div className="contract-sign-contract-body">
                 {renderContract(contractTextFilled)}
               </div>
             </div>
