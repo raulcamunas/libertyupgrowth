@@ -27,9 +27,22 @@ async function fetchImageAsDataUrl(url: string): Promise<string> {
 
 type Props = {
   priceMonthlyEUR: string
+  showCompanySignatureOnPage?: boolean
 }
 
-export default function ContractSignaturePage({ priceMonthlyEUR }: Props) {
+function getImageDimensions(dataUrl: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image()
+    img.onload = () => resolve({ width: img.naturalWidth || img.width, height: img.naturalHeight || img.height })
+    img.onerror = () => reject(new Error('No se pudo leer la imagen'))
+    img.src = dataUrl
+  })
+}
+
+export default function ContractSignaturePage({
+  priceMonthlyEUR,
+  showCompanySignatureOnPage = false,
+}: Props) {
   const router = useRouter()
   const sigRef = useRef<SignatureCanvas | null>(null)
   const signatureWrapRef = useRef<HTMLDivElement | null>(null)
@@ -286,14 +299,44 @@ export default function ContractSignaturePage({ priceMonthlyEUR }: Props) {
 
     const companySignatureDataUrl = await fetchImageAsDataUrl('/firma.png')
 
+    const trimmedCanvas = sigRef.current?.getTrimmedCanvas()
+    const clientSigW = trimmedCanvas?.width || 1
+    const clientSigH = trimmedCanvas?.height || 1
+    const companyDims = await getImageDimensions(companySignatureDataUrl)
+
     const gap = 18
     const colW = (usableWidth - gap) / 2
-    const sigH = 110
+    const boxH = 95
 
-    doc.addImage(signatureDataUrl, 'PNG', marginX, y, colW, sigH)
-    doc.addImage(companySignatureDataUrl, 'PNG', marginX + colW + gap, y, colW, sigH)
+    const drawCentered = (
+      dataUrl: string,
+      imgW: number,
+      imgH: number,
+      x: number,
+      y: number,
+      boxW: number,
+      boxH: number
+    ) => {
+      const scale = Math.min(boxW / imgW, boxH / imgH)
+      const w = imgW * scale
+      const h = imgH * scale
+      const dx = x + (boxW - w) / 2
+      const dy = y + (boxH - h) / 2
+      doc.addImage(dataUrl, 'PNG', dx, dy, w, h)
+    }
 
-    const labelY = y + sigH + 14
+    drawCentered(signatureDataUrl, clientSigW, clientSigH, marginX, y, colW, boxH)
+    drawCentered(
+      companySignatureDataUrl,
+      companyDims.width || 1,
+      companyDims.height || 1,
+      marginX + colW + gap,
+      y,
+      colW,
+      boxH
+    )
+
+    const labelY = y + boxH + 14
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     doc.text(form.razonSocial || 'CLIENTE', marginX, labelY)
@@ -305,7 +348,19 @@ export default function ContractSignaturePage({ priceMonthlyEUR }: Props) {
     doc.setFontSize(10)
     doc.text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, marginX, y)
 
-    doc.save(`contrato-libertyupgrowth-${form.taxId || 'cliente'}.pdf`)
+    const fileName = `contrato-libertyupgrowth-${form.taxId || 'cliente'}.pdf`
+    const pdfBlob = doc.output('blob') as Blob
+
+    const url = URL.createObjectURL(pdfBlob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = fileName
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+
+    return { pdfBlob, fileName }
   }
 
   const handleSubmit = async () => {
@@ -321,16 +376,24 @@ export default function ContractSignaturePage({ priceMonthlyEUR }: Props) {
 
     setProcessing(true)
     try {
+      const { pdfBlob, fileName } = await generatePdf(signatureDataUrl)
+
+      const fd = new FormData()
+      fd.append('razonSocial', form.razonSocial)
+      fd.append('taxId', form.taxId)
+      fd.append('direccionFiscal', form.direccionFiscal)
+      fd.append('email', form.email)
+      fd.append('accepted', String(accepted))
+      fd.append('priceMonthlyEUR', priceMonthlyEUR)
+      fd.append('contractText', contractTextFilled)
+      fd.append('signatureBase64', signatureDataUrl)
+
+      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' })
+      fd.append('contrato_pdf', pdfFile)
+
       const res = await fetch('/api/firma-servicios', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          signatureBase64: signatureDataUrl,
-          contractText: contractTextFilled,
-          accepted,
-          priceMonthlyEUR,
-        }),
+        body: fd,
       })
 
       const data = await res.json()
@@ -338,7 +401,6 @@ export default function ContractSignaturePage({ priceMonthlyEUR }: Props) {
         throw new Error(data?.error || 'No se pudo enviar la firma')
       }
 
-      await generatePdf(signatureDataUrl)
       router.push('/exito')
     } catch (e: any) {
       setError(e?.message || 'Error inesperado')
@@ -405,9 +467,48 @@ export default function ContractSignaturePage({ priceMonthlyEUR }: Props) {
             <div className="contract-sign-divider" />
 
             <div className="contract-sign-card-title">Firmas</div>
-            <div className="contract-sign-card-subtitle">Firma como CLIENTE. La firma de Liberty queda representada al lado.</div>
+            <div className="contract-sign-card-subtitle">
+              {showCompanySignatureOnPage
+                ? 'Firma como CLIENTE. La firma de Liberty queda representada al lado.'
+                : 'Firma como CLIENTE.'}
+            </div>
 
-            <div className="contract-sign-dual-signatures">
+            {showCompanySignatureOnPage ? (
+              <div className="contract-sign-dual-signatures">
+                <div className="contract-sign-signature-col">
+                  <div className="contract-sign-signature-wrap" ref={signatureWrapRef}>
+                    <SignatureCanvas
+                      ref={(ref: SignatureCanvas | null) => {
+                        sigRef.current = ref
+                      }}
+                      penColor="#0b1b3a"
+                      canvasProps={{
+                        width: signatureCanvasWidth * signatureCanvasDpr,
+                        height: 220 * signatureCanvasDpr,
+                        className: 'contract-sign-signature-canvas',
+                        style: {
+                          width: '100%',
+                          height: 220,
+                          touchAction: 'none',
+                        },
+                      }}
+                    />
+                  </div>
+                  <div className="contract-sign-signature-label">{form.razonSocial || 'CLIENTE'}</div>
+                </div>
+
+                <div className="contract-sign-signature-col">
+                  <div className="contract-sign-signature-wrap contract-sign-signature-wrap-company">
+                    <img
+                      src="/firma.png"
+                      alt="Firma Liberty UpGrowth"
+                      className="contract-sign-company-signature"
+                    />
+                  </div>
+                  <div className="contract-sign-signature-label">Liberty UpGrowth LLC</div>
+                </div>
+              </div>
+            ) : (
               <div className="contract-sign-signature-col">
                 <div className="contract-sign-signature-wrap" ref={signatureWrapRef}>
                   <SignatureCanvas
@@ -429,18 +530,7 @@ export default function ContractSignaturePage({ priceMonthlyEUR }: Props) {
                 </div>
                 <div className="contract-sign-signature-label">{form.razonSocial || 'CLIENTE'}</div>
               </div>
-
-              <div className="contract-sign-signature-col">
-                <div className="contract-sign-signature-wrap contract-sign-signature-wrap-company">
-                  <img
-                    src="/firma.png"
-                    alt="Firma Liberty UpGrowth"
-                    className="contract-sign-company-signature"
-                  />
-                </div>
-                <div className="contract-sign-signature-label">Liberty UpGrowth LLC</div>
-              </div>
-            </div>
+            )}
 
             <button type="button" onClick={clearSignature} className="contract-sign-btn-secondary">
               Limpiar firma
