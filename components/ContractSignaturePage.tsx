@@ -25,6 +25,19 @@ async function fetchImageAsDataUrl(url: string): Promise<string> {
   })
 }
 
+function downloadPdfBlob(pdfBlob: Blob, fileName: string) {
+  const url = URL.createObjectURL(pdfBlob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = fileName
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+
+  // En Safari móvil, revocar inmediatamente puede provocar errores/descargas fallidas.
+  setTimeout(() => URL.revokeObjectURL(url), 4000)
+}
+
 type Props = {
   priceMonthlyEUR: string
   showCompanySignatureOnPage?: boolean
@@ -379,15 +392,6 @@ export default function ContractSignaturePage({
     const fileName = `contrato-libertyupgrowth-${form.taxId || 'cliente'}.pdf`
     const pdfBlob = doc.output('blob') as Blob
 
-    const url = URL.createObjectURL(pdfBlob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = fileName
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(url)
-
     return { pdfBlob, fileName }
   }
 
@@ -428,6 +432,8 @@ export default function ContractSignaturePage({
       if (!res.ok) {
         throw new Error(data?.error || 'No se pudo enviar la firma')
       }
+
+      downloadPdfBlob(pdfBlob, fileName)
 
       router.push('/exito')
     } catch (e: any) {
