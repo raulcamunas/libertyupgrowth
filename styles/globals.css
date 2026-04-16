@@ -5654,6 +5654,40 @@
             background: rgba(255,255,255,0.95);
         }
 
+        .contract-sign-dual-signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .contract-sign-signature-col {
+            min-width: 0;
+        }
+
+        .contract-sign-signature-wrap-company {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.95);
+            height: 220px;
+        }
+
+        .contract-sign-company-signature {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 16px;
+        }
+
+        .contract-sign-signature-label {
+            margin-top: 10px;
+            font-weight: 800;
+            font-size: 13px;
+            color: rgba(255,255,255,0.85);
+            text-align: center;
+        }
+
         .contract-sign-btn-secondary {
             margin-top: 10px;
             height: 46px;
@@ -5733,6 +5767,9 @@
 
         @media (max-width: 991px) {
             .contract-sign-grid {
+                grid-template-columns: 1fr;
+            }
+            .contract-sign-dual-signatures {
                 grid-template-columns: 1fr;
             }
         }
