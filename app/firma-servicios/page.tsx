@@ -46,8 +46,44 @@ export default function FirmaServiciosPage() {
   }, [])
 
   const contractText = useMemo(
-    () =>
-      `CONTRATO DE PRESTACIÓN DE SERVICIOS DE AUTOMATIZACIÓN E IA\n\nENTRE:\nLiberty UpGrowth LLC, con domicilio social en 99 Wall Street #1068, New York, NY 10005, Estados Unidos (en adelante, el PRESTADOR).\n\nY:\n[Nombre del Cliente/Estudio], con DNI/NIF [Número], (en adelante, el CLIENTE).\n\n1. OBJETO DEL SERVICIO\nEl PRESTADOR integrará un Agente de Inteligencia Artificial en el número de WhatsApp propiedad del CLIENTE para las siguientes funciones:\n\n- Atención al cliente 24/7 y respuesta a consultas frecuentes.\n- Agendamiento automatizado de citas y gestión de disponibilidad.\n- Cualificación de leads y organización de la base de datos de clientes.\n\n2. PROPIEDAD Y ACCESO AL NÚMERO\n- Propiedad del Número: El CLIENTE mantiene en todo momento la propiedad, titularidad y acceso total a su número de WhatsApp Business. La implementación del Bot no implica la pérdida de control manual del número por parte del CLIENTE.\n- Continuidad: En caso de cese del servicio, el CLIENTE conserva su número y todos los contactos de su cuenta de WhatsApp. Únicamente se desactivará la capa de inteligencia artificial y automatización proporcionada por el PRESTADOR.\n\n3. PROTECCIÓN DE DATOS Y CONFIDENCIALIDAD (RGPD)\nDe acuerdo con los estándares internacionales de protección de datos y el RGPD:\n\n- No comercialización: Liberty UpGrowth LLC garantiza que no venderá, cederá ni manipulará los datos de los clientes del CLIENTE para fines comerciales propios o de terceros. Los datos se utilizan exclusivamente para el correcto funcionamiento del Bot.\n- Base de Datos: Los datos recolectados durante el servicio (citas, nombres, preferencias) pertenecen al CLIENTE. Si el servicio se cancela, el PRESTADOR entregará dicha información al CLIENTE y procederá al borrado de sus servidores para garantizar la privacidad.\n- Confidencialidad: Toda la información intercambiada se considera estrictamente confidencial y solo será accesible por el personal técnico necesario para la configuración.\n\n4. CONDICIONES ECONÓMICAS Y FACTURACIÓN\n- Configuración Inicial: Pago único de 197,00€.\n- Mantenimiento Mensual: Cuota de 97,00€/mes.\n- Estructura Fiscal: Al ser Liberty UpGrowth LLC una entidad constituida en EE.UU. y prestar un servicio internacional, la factura se emite exenta de IVA, siendo el precio final el estipulado sin cargos adicionales de impuestos indirectos.\n\n5. DURACIÓN Y CANCELACIÓN\nEl servicio es mensual y no tiene compromiso de permanencia. El CLIENTE puede cancelar el servicio notificándolo con 15 días de antelación al siguiente ciclo de facturación. Tras la cancelación, el PRESTADOR retirará las automatizaciones y el CLIENTE podrá seguir usando su número de forma manual o con otros sistemas.\n`,
+    () => `
+      CONTRATO DE PRESTACIÓN DE SERVICIOS DE AUTOMATIZACIÓN E IA
+
+      ENTRE:
+      Liberty UpGrowth LLC, con domicilio social en 99 Wall Street #1068, New York, NY 10005, Estados Unidos (en adelante, el PRESTADOR).
+
+      Y:
+      [Nombre del Cliente/Estudio], con DNI/NIF [Número], (en adelante, el CLIENTE).
+
+      1 OBJETO DEL SERVICIO:
+      El PRESTADOR integrará un Agente de Inteligencia Artificial en el número de WhatsApp propiedad del CLIENTE para las siguientes funciones:
+
+      - Atención al cliente 24/7 y respuesta a consultas frecuentes.
+      - Agendamiento automatizado de citas y gestión de disponibilidad.
+      - Cualificación de leads y organización de la base de datos de clientes.
+
+      2 PROPIEDAD Y ACCESO AL NÚMERO
+
+      - Propiedad del Número: El CLIENTE mantiene en todo momento la propiedad, titularidad y acceso total a su número de WhatsApp Business. La implementación del Bot no implica la pérdida de control manual del número por parte del CLIENTE.
+      - Continuidad: En caso de cese del servicio, el CLIENTE conserva su número y todos los contactos de su cuenta de WhatsApp. Únicamente se desactivará la capa de inteligencia artificial y automatización proporcionada por el PRESTADOR.
+
+      3 PROTECCIÓN DE DATOS Y CONFIDENCIALIDAD (RFPD)
+      De acuerdo con los estándares internacionales de protección de datos y el RGPD:
+
+      - No comercialización: Liberty UpGrowth LLC garantiza que no venderá, cederá ni manipulará los datos de los clientes del CLIENTE para fines comerciales propios o de terceros. Los datos se utilizan exclusivamente para el correcto funcionamiento del Bot.
+      - Base de Datos: Los datos recolectados durante el servicio (citas, nombres, preferencias) pertenecen al CLIENTE. Si el servicio se cancela, el PRESTADOR entregará dicha información al CLIENTE y procederá al borrado de sus servidores para garantizar la privacidad.
+      - Confidencialidad: Toda la información intercambiada se considera estrictamente confidencial y solo será accesible por el personal técnico necesario para la configuración.
+
+      4 CONDICIONES ECONOMICAS Y DE FACTURACIÓN
+
+      - El servicio se factura de forma mensual.
+      - El cobro se realizará automáticamente a través de la tarjeta que el CLIENTE introduzca en la pasarela de pago de Stripe, el mismo día del mes en que se inicia el pago.
+
+      5 DURACIÓN Y CANCELACIÓN
+
+      - El servicio tendrá una duración indefinida hasta que cualquiera de las partes comunique su cancelación.
+      - En caso de cancelación, no se reembolsará la cantidad abonada por los servicios, ya que corresponden a horas de trabajo puestas a disposición del CLIENTE.
+    `,
     []
   )
 
@@ -82,6 +118,35 @@ export default function FirmaServiciosPage() {
       if (!block) return
 
       const lines = block.split('\n').map((l) => l.trim()).filter(Boolean)
+      const firstLine = lines[0] || ''
+      const restLines = lines.slice(1)
+
+      if (/^\d+\s/.test(firstLine) && lines.length > 1) {
+        flushList()
+        elements.push(<h3 key={`h3-${elements.length}`}>{firstLine}</h3>)
+        const restBlock = restLines.join('\n').trim()
+        if (restBlock) {
+          const restParts = restBlock.split(/\n\n+/g)
+          restParts.forEach((p) => {
+            const plines = p.split('\n').map((l) => l.trim()).filter(Boolean)
+            const bullets = plines.length > 0 && plines.every((l) => l.startsWith('- '))
+            if (bullets) {
+              elements.push(
+                <ul key={`ul-${elements.length}`}>
+                  {plines.map((l, idx) => (
+                    <li key={idx}>{l.replace(/^-\s+/, '')}</li>
+                  ))}
+                </ul>
+              )
+            } else {
+              const single = plines.join(' ')
+              if (single) elements.push(<p key={`p-${elements.length}`}>{single}</p>)
+            }
+          })
+        }
+        return
+      }
+
       const allBullets = lines.length > 1 && lines.every((l) => l.startsWith('- '))
       if (allBullets) {
         pendingList.push(...lines.map((l) => l.replace(/^-\s+/, '')))
@@ -92,7 +157,7 @@ export default function FirmaServiciosPage() {
 
       const single = lines.join(' ')
 
-      if (/^\d+\./.test(single)) {
+      if (/^\d+\s/.test(single)) {
         elements.push(<h3 key={`h3-${elements.length}`}>{single}</h3>)
         return
       }
