@@ -13,18 +13,6 @@ type FormState = {
   email: string
 }
 
-async function fetchImageAsDataUrl(url: string): Promise<string> {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error('No se pudo cargar el logo')
-  const blob = await res.blob()
-  return await new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(String(reader.result))
-    reader.onerror = () => reject(new Error('No se pudo leer el logo'))
-    reader.readAsDataURL(blob)
-  })
-}
-
 export default function FirmaServiciosPage() {
   const router = useRouter()
   const sigRef = useRef<SignatureCanvas | null>(null)
@@ -40,10 +28,13 @@ export default function FirmaServiciosPage() {
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<string>('')
   const [signatureCanvasWidth, setSignatureCanvasWidth] = useState(920)
+  const [signatureCanvasDpr, setSignatureCanvasDpr] = useState(1)
 
   useEffect(() => {
     const el = signatureWrapRef.current
     if (!el) return
+
+    setSignatureCanvasDpr(Math.max(1, Math.floor(window.devicePixelRatio || 1)))
 
     const ro = new ResizeObserver(() => {
       const width = Math.max(320, Math.floor(el.getBoundingClientRect().width))
@@ -59,6 +50,64 @@ export default function FirmaServiciosPage() {
       `CONTRATO DE PRESTACIÓN DE SERVICIOS DE AUTOMATIZACIÓN E IA\n\nENTRE:\nLiberty UpGrowth LLC, con domicilio social en 99 Wall Street #1068, New York, NY 10005, Estados Unidos (en adelante, el PRESTADOR).\n\nY:\n[Nombre del Cliente/Estudio], con DNI/NIF [Número], (en adelante, el CLIENTE).\n\n1. OBJETO DEL SERVICIO\nEl PRESTADOR integrará un Agente de Inteligencia Artificial en el número de WhatsApp propiedad del CLIENTE para las siguientes funciones:\n\n- Atención al cliente 24/7 y respuesta a consultas frecuentes.\n- Agendamiento automatizado de citas y gestión de disponibilidad.\n- Cualificación de leads y organización de la base de datos de clientes.\n\n2. PROPIEDAD Y ACCESO AL NÚMERO\n- Propiedad del Número: El CLIENTE mantiene en todo momento la propiedad, titularidad y acceso total a su número de WhatsApp Business. La implementación del Bot no implica la pérdida de control manual del número por parte del CLIENTE.\n- Continuidad: En caso de cese del servicio, el CLIENTE conserva su número y todos los contactos de su cuenta de WhatsApp. Únicamente se desactivará la capa de inteligencia artificial y automatización proporcionada por el PRESTADOR.\n\n3. PROTECCIÓN DE DATOS Y CONFIDENCIALIDAD (RGPD)\nDe acuerdo con los estándares internacionales de protección de datos y el RGPD:\n\n- No comercialización: Liberty UpGrowth LLC garantiza que no venderá, cederá ni manipulará los datos de los clientes del CLIENTE para fines comerciales propios o de terceros. Los datos se utilizan exclusivamente para el correcto funcionamiento del Bot.\n- Base de Datos: Los datos recolectados durante el servicio (citas, nombres, preferencias) pertenecen al CLIENTE. Si el servicio se cancela, el PRESTADOR entregará dicha información al CLIENTE y procederá al borrado de sus servidores para garantizar la privacidad.\n- Confidencialidad: Toda la información intercambiada se considera estrictamente confidencial y solo será accesible por el personal técnico necesario para la configuración.\n\n4. CONDICIONES ECONÓMICAS Y FACTURACIÓN\n- Configuración Inicial: Pago único de 197,00€.\n- Mantenimiento Mensual: Cuota de 97,00€/mes.\n- Estructura Fiscal: Al ser Liberty UpGrowth LLC una entidad constituida en EE.UU. y prestar un servicio internacional, la factura se emite exenta de IVA, siendo el precio final el estipulado sin cargos adicionales de impuestos indirectos.\n\n5. DURACIÓN Y CANCELACIÓN\nEl servicio es mensual y no tiene compromiso de permanencia. El CLIENTE puede cancelar el servicio notificándolo con 15 días de antelación al siguiente ciclo de facturación. Tras la cancelación, el PRESTADOR retirará las automatizaciones y el CLIENTE podrá seguir usando su número de forma manual o con otros sistemas.\n`,
     []
   )
+
+  const contractTextFilled = useMemo(() => {
+    const razon = form.razonSocial?.trim() || '[Nombre del Cliente/Estudio]'
+    const tax = form.taxId?.trim() || '[Número]'
+    return contractText
+      .replace(/\[Nombre del Cliente\/Estudio\]/g, razon)
+      .replace(/DNI\/NIF \[Número\]/g, `DNI/NIF ${tax}`)
+  }, [contractText, form.razonSocial, form.taxId])
+
+  const renderContract = (text: string) => {
+    const blocks = text.split(/\n\n+/g)
+    const elements: JSX.Element[] = []
+    let pendingList: string[] = []
+
+    const flushList = () => {
+      if (!pendingList.length) return
+      const items = pendingList
+      pendingList = []
+      elements.push(
+        <ul key={`ul-${elements.length}`}>
+          {items.map((it, idx) => (
+            <li key={idx}>{it}</li>
+          ))}
+        </ul>
+      )
+    }
+
+    blocks.forEach((raw) => {
+      const block = raw.trim()
+      if (!block) return
+
+      const lines = block.split('\n').map((l) => l.trim()).filter(Boolean)
+      const allBullets = lines.length > 1 && lines.every((l) => l.startsWith('- '))
+      if (allBullets) {
+        pendingList.push(...lines.map((l) => l.replace(/^-\s+/, '')))
+        return
+      }
+
+      flushList()
+
+      const single = lines.join(' ')
+
+      if (/^\d+\./.test(single)) {
+        elements.push(<h3 key={`h3-${elements.length}`}>{single}</h3>)
+        return
+      }
+
+      if (/^[A-ZÁÉÍÓÚÑ0-9\s\-()]+:$/.test(single) || /^[A-ZÁÉÍÓÚÑ0-9\s\-()]+$/.test(single)) {
+        elements.push(<h2 key={`h2-${elements.length}`}>{single.replace(/:$/, '')}</h2>)
+        return
+      }
+
+      elements.push(<p key={`p-${elements.length}`}>{single}</p>)
+    })
+
+    flushList()
+    return elements
+  }
 
   const onChange = (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [key]: e.target.value }))
@@ -87,13 +136,7 @@ export default function FirmaServiciosPage() {
 
     let y = 48
 
-    try {
-      const logoDataUrl = await fetchImageAsDataUrl('/logo.png')
-      doc.addImage(logoDataUrl, 'PNG', marginX, y, 180, 45)
-      y += 70
-    } catch {
-      y += 10
-    }
+    y += 10
 
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(14)
@@ -134,7 +177,7 @@ export default function FirmaServiciosPage() {
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
 
-    const contractLines = doc.splitTextToSize(contractText, usableWidth)
+    const contractLines = doc.splitTextToSize(contractTextFilled, usableWidth)
 
     contractLines.forEach((line: string) => {
       if (y > doc.internal.pageSize.getHeight() - 120) {
@@ -157,8 +200,15 @@ export default function FirmaServiciosPage() {
     doc.text('Firma', marginX, y)
     y += 14
 
-    doc.addImage(signatureDataUrl, 'PNG', marginX, y, 260, 110)
-    y += 130
+    const trimmedCanvas = sigRef.current?.getTrimmedCanvas()
+    const sigW = trimmedCanvas?.width || 1
+    const sigH = trimmedCanvas?.height || 1
+    const maxSigW = Math.min(usableWidth, 320)
+    const targetSigW = Math.min(maxSigW, sigW)
+    const targetSigH = Math.max(70, Math.min(140, (targetSigW * sigH) / sigW))
+
+    doc.addImage(signatureDataUrl, 'PNG', marginX, y, targetSigW, targetSigH)
+    y += targetSigH + 20
 
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
@@ -186,7 +236,7 @@ export default function FirmaServiciosPage() {
         body: JSON.stringify({
           ...form,
           signatureBase64: signatureDataUrl,
-          contractText,
+          contractText: contractTextFilled,
           accepted,
         }),
       })
@@ -226,7 +276,11 @@ export default function FirmaServiciosPage() {
               <div className="contract-sign-card-title">Contrato</div>
               <div className="contract-sign-card-subtitle">Lee el contrato completo antes de firmar.</div>
             </div>
-            <div className="contract-sign-contract-box">{contractText}</div>
+            <div className="contract-sign-contract-box">
+              <div className="blog-post-body contract-sign-contract-body">
+                {renderContract(contractTextFilled)}
+              </div>
+            </div>
           </section>
 
           <section className="contract-sign-card contract-sign-card-form">
@@ -274,8 +328,8 @@ export default function FirmaServiciosPage() {
                 }}
                 penColor="#0b1b3a"
                 canvasProps={{
-                  width: signatureCanvasWidth,
-                  height: 220,
+                  width: signatureCanvasWidth * signatureCanvasDpr,
+                  height: 220 * signatureCanvasDpr,
                   className: 'contract-sign-signature-canvas',
                   style: {
                     width: '100%',
