@@ -57,13 +57,10 @@ export default function ContractSignaturePage({
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<string>('')
   const [signatureCanvasWidth, setSignatureCanvasWidth] = useState(920)
-  const [signatureCanvasDpr, setSignatureCanvasDpr] = useState(1)
 
   useEffect(() => {
     const el = signatureWrapRef.current
     if (!el) return
-
-    setSignatureCanvasDpr(Math.max(1, Math.floor(window.devicePixelRatio || 1)))
 
     const ro = new ResizeObserver(() => {
       const width = Math.max(320, Math.floor(el.getBoundingClientRect().width))
@@ -73,6 +70,26 @@ export default function ContractSignaturePage({
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
+
+  const getSignatureDataUrl = () => {
+    const trimmed = sigRef.current?.getTrimmedCanvas()
+    if (!trimmed) return ''
+
+    const dpr = Math.max(1, window.devicePixelRatio || 1)
+    const out = document.createElement('canvas')
+    out.width = Math.floor(trimmed.width * dpr)
+    out.height = Math.floor(trimmed.height * dpr)
+
+    const ctx = out.getContext('2d')
+    if (!ctx) return trimmed.toDataURL('image/png')
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
+    ctx.drawImage(trimmed, 0, 0)
+
+    return out.toDataURL('image/png')
+  }
 
   const contractText = useMemo(
     () => `
@@ -297,12 +314,19 @@ export default function ContractSignaturePage({
     doc.text('Firmas', marginX, y)
     y += 14
 
-    const companySignatureDataUrl = await fetchImageAsDataUrl('/firma.png')
+    let companySignatureDataUrl = ''
+    try {
+      companySignatureDataUrl = await fetchImageAsDataUrl('/firma.png')
+    } catch {
+      companySignatureDataUrl = ''
+    }
 
     const trimmedCanvas = sigRef.current?.getTrimmedCanvas()
     const clientSigW = trimmedCanvas?.width || 1
     const clientSigH = trimmedCanvas?.height || 1
-    const companyDims = await getImageDimensions(companySignatureDataUrl)
+    const companyDims = companySignatureDataUrl
+      ? await getImageDimensions(companySignatureDataUrl)
+      : { width: 1, height: 1 }
 
     const gap = 18
     const colW = (usableWidth - gap) / 2
@@ -326,21 +350,25 @@ export default function ContractSignaturePage({
     }
 
     drawCentered(signatureDataUrl, clientSigW, clientSigH, marginX, y, colW, boxH)
-    drawCentered(
-      companySignatureDataUrl,
-      companyDims.width || 1,
-      companyDims.height || 1,
-      marginX + colW + gap,
-      y,
-      colW,
-      boxH
-    )
+    if (companySignatureDataUrl) {
+      drawCentered(
+        companySignatureDataUrl,
+        companyDims.width || 1,
+        companyDims.height || 1,
+        marginX + colW + gap,
+        y,
+        colW,
+        boxH
+      )
+    }
 
     const labelY = y + boxH + 14
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     doc.text(form.razonSocial || 'CLIENTE', marginX, labelY)
-    doc.text('Liberty UpGrowth LLC', marginX + colW + gap, labelY)
+    if (companySignatureDataUrl) {
+      doc.text('Liberty UpGrowth LLC', marginX + colW + gap, labelY)
+    }
 
     y = labelY + 18
 
@@ -372,7 +400,7 @@ export default function ContractSignaturePage({
       return
     }
 
-    const signatureDataUrl = sigRef.current!.getTrimmedCanvas().toDataURL('image/png')
+    const signatureDataUrl = getSignatureDataUrl()
 
     setProcessing(true)
     try {
@@ -483,8 +511,8 @@ export default function ContractSignaturePage({
                       }}
                       penColor="#0b1b3a"
                       canvasProps={{
-                        width: signatureCanvasWidth * signatureCanvasDpr,
-                        height: 220 * signatureCanvasDpr,
+                        width: signatureCanvasWidth,
+                        height: 220,
                         className: 'contract-sign-signature-canvas',
                         style: {
                           width: '100%',
@@ -517,8 +545,8 @@ export default function ContractSignaturePage({
                     }}
                     penColor="#0b1b3a"
                     canvasProps={{
-                      width: signatureCanvasWidth * signatureCanvasDpr,
-                      height: 220 * signatureCanvasDpr,
+                      width: signatureCanvasWidth,
+                      height: 220,
                       className: 'contract-sign-signature-canvas',
                       style: {
                         width: '100%',
