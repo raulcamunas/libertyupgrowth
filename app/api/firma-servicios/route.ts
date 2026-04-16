@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     const webhookUrl =
       process.env.N8N_FIRMA_SERVICIOS_WEBHOOK_URL ||
       process.env.N8N_WEBHOOK_URL ||
-      'https://n8n-n8n.hyonwd.easypanel.host/webhook-test/51048a0f-64fe-44bb-9866-dd9452e2e699'
+      'https://n8n-n8n.hyonwd.easypanel.host/webhook/51048a0f-64fe-44bb-9866-dd9452e2e699'
 
     const payload = {
       ...body,
