@@ -11,6 +11,17 @@ export default async function ErpHomePage() {
 
   const visible = ERP_APPS.filter((a) => (a.adminOnly ? role === 'admin' : true)).filter((a) => a.id !== 'home')
 
+  if (visible.length === 0) {
+    return (
+      <div className="erp-grid-wrap">
+        <div className="erp-empty">
+          <div className="erp-empty-title">No hay apps instaladas</div>
+          <div className="erp-empty-subtitle">Añade nuevas mini-apps en `lib/erp/apps.ts` para que aparezcan aquí.</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="erp-grid-wrap">
       <div className="erp-grid">

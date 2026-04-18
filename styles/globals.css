@@ -6577,6 +6577,30 @@
             line-height: 1.35;
         }
 
+        .erp-empty {
+            width: min(720px, 100%);
+            margin: 32px auto 0;
+            padding: 22px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+            border-radius: 18px;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+        }
+
+        .erp-empty-title {
+            font-weight: 900;
+            font-size: 16px;
+            color: rgba(255,255,255,0.92);
+            letter-spacing: 0.2px;
+        }
+
+        .erp-empty-subtitle {
+            margin-top: 8px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.66);
+            line-height: 1.4;
+        }
+
         .erp-miniapp {
             max-width: 880px;
         }
