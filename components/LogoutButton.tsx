@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useState } from 'react'
 
-export default function LogoutButton() {
+export default function LogoutButton({ redirectTo = '/admin/login' }: { redirectTo?: string }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
@@ -13,7 +13,7 @@ export default function LogoutButton() {
     setLoading(true)
     try {
       await supabase.auth.signOut()
-      router.push('/admin/login')
+      router.push(redirectTo)
       router.refresh()
     } catch (error) {
       console.error('Error al cerrar sesión:', error)

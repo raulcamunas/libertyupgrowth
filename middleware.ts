@@ -49,10 +49,26 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Si está intentando acceder a /app y no está autenticado, redirigir a login
+  if (request.nextUrl.pathname.startsWith('/app') && !request.nextUrl.pathname.startsWith('/app/login')) {
+    if (!user) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/app/login'
+      return NextResponse.redirect(url)
+    }
+  }
+
   // Si está en /admin/login y ya está autenticado, redirigir a /admin
   if (request.nextUrl.pathname === '/admin/login' && user) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin'
+    return NextResponse.redirect(url)
+  }
+
+  // Si está en /app/login y ya está autenticado, redirigir a /app
+  if (request.nextUrl.pathname === '/app/login' && user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/app'
     return NextResponse.redirect(url)
   }
 
@@ -62,6 +78,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/admin/:path*',
+    '/app/:path*',
   ],
 }
 
