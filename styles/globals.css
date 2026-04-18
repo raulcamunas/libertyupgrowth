@@ -5821,6 +5821,19 @@
             z-index: 0;
         }
 
+        .formulario-page-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 44px 44px;
+            opacity: 0.18;
+            mask-image: radial-gradient(circle at 50% 20%, rgba(0,0,0,1), rgba(0,0,0,0) 62%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .formulario-container {
             position: relative;
             z-index: 1;
@@ -5840,6 +5853,35 @@
         .formulario-header {
             padding: 18px 18px 12px;
             border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .formulario-brand-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .formulario-brand-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,181,255,0.18);
+            background: rgba(0,181,255,0.08);
+            color: rgba(255,255,255,0.92);
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .formulario-brand-step {
+            color: rgba(255,255,255,0.70);
+            font-size: 12px;
+            font-weight: 800;
         }
 
         .formulario-title {
@@ -5923,6 +5965,10 @@
             gap: 12px;
         }
 
+        .formulario-fields {
+            align-items: start;
+        }
+
         .formulario-field {
             display: flex;
             flex-direction: column;
@@ -5972,6 +6018,246 @@
             justify-content: space-between;
             gap: 12px;
             border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .formulario-artist-wrap {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .formulario-artist-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(0,0,0,0.22);
+        }
+
+        .formulario-artist-title {
+            font-weight: 900;
+            color: rgba(255,255,255,0.92);
+            font-size: 14px;
+        }
+
+        .formulario-artist-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .formulario-artist-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            font-weight: 900;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .formulario-artist-btn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0,181,255,0.35);
+            background: rgba(0,181,255,0.10);
+        }
+
+        .formulario-artist-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .formulario-artist-count {
+            min-width: 36px;
+            text-align: center;
+            font-weight: 900;
+            color: rgba(255,255,255,0.88);
+        }
+
+        .formulario-artist-hint {
+            color: rgba(255,255,255,0.70);
+            font-size: 13px;
+            padding: 0 2px;
+        }
+
+        .formulario-artist-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .formulario-artist-card {
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+        }
+
+        .formulario-artist-card-title {
+            font-weight: 900;
+            color: rgba(255,255,255,0.92);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .formulario-artist-details {
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(0,0,0,0.18);
+            padding: 14px;
+        }
+
+        .formulario-artist-details-title {
+            font-weight: 900;
+            color: rgba(255,255,255,0.92);
+            font-size: 14px;
+        }
+
+        .formulario-artist-details-subtitle {
+            margin-top: 6px;
+            color: rgba(255,255,255,0.70);
+            font-size: 12.5px;
+        }
+
+        .formulario-artist-details-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .formulario-artist-detail-card {
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+        }
+
+        .formulario-artist-detail-title {
+            font-weight: 900;
+            color: rgba(255,255,255,0.92);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .formulario-artist-badges {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .formulario-artist-badge {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .formulario-artist-badge span {
+            font-weight: 800;
+            font-size: 12px;
+            color: rgba(255,255,255,0.80);
+        }
+
+        .formulario-schedule {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .formulario-schedule-title {
+            font-weight: 900;
+            color: rgba(255,255,255,0.92);
+            font-size: 14px;
+        }
+
+        .formulario-schedule-subtitle {
+            color: rgba(255,255,255,0.70);
+            font-size: 12.5px;
+        }
+
+        .formulario-schedule-grid {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .formulario-schedule-day {
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        .formulario-schedule-day-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .formulario-schedule-day-name {
+            font-weight: 900;
+            color: rgba(255,255,255,0.92);
+            font-size: 13px;
+        }
+
+        .formulario-schedule-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+            color: rgba(255,255,255,0.74);
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .formulario-schedule-toggle input {
+            accent-color: rgba(0,181,255,0.95);
+        }
+
+        .formulario-schedule-rows {
+            display: grid;
+            gap: 10px;
+        }
+
+        .formulario-schedule-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .formulario-schedule-closed {
+            color: rgba(255,255,255,0.64);
+            font-size: 12.5px;
+            padding: 8px 0 2px;
+        }
+
+        .formulario-schedule-extra {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 860px) {
+            .formulario-artist-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .formulario-schedule-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .formulario-btn {
