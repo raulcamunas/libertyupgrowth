@@ -435,7 +435,7 @@ export default function ContractSignaturePage({
 
       downloadPdfBlob(pdfBlob, fileName)
 
-      router.push('/exito')
+      router.push(`/exito?plan=${encodeURIComponent(priceMonthlyEUR)}`)
     } catch (e: any) {
       setError(e?.message || 'Error inesperado')
     } finally {

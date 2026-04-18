@@ -5787,6 +5787,257 @@
             transform: translateY(0);
         }
 
+        /* --- FORMULARIO (ONBOARDING BOT) --- */
+        .formulario-page {
+            min-height: 100vh;
+            padding: 36px 16px 64px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-color);
+        }
+
+        .formulario-page::before {
+            content: "";
+            position: absolute;
+            inset: -220px -220px auto -220px;
+            height: 560px;
+            background:
+                radial-gradient(closest-side at 20% 30%, rgba(0, 181, 255, 0.22), rgba(0, 181, 255, 0) 60%),
+                radial-gradient(closest-side at 75% 20%, rgba(0, 120, 255, 0.18), rgba(0, 120, 255, 0) 62%),
+                radial-gradient(closest-side at 55% 80%, rgba(0, 80, 200, 0.10), rgba(0, 80, 200, 0) 65%);
+            filter: blur(34px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .formulario-page::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06), rgba(255,255,255,0) 55%),
+                linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.55));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .formulario-container {
+            position: relative;
+            z-index: 1;
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .formulario-card {
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            overflow: hidden;
+        }
+
+        .formulario-header {
+            padding: 18px 18px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .formulario-title {
+            font-weight: 900;
+            color: #fff;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .formulario-subtitle {
+            margin-top: 6px;
+            color: rgba(255,255,255,0.72);
+            font-size: 13px;
+        }
+
+        .formulario-progress {
+            height: 8px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .formulario-progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, rgba(0,181,255,0.9), rgba(0,120,255,0.9));
+            transition: width 0.35s ease;
+        }
+
+        .formulario-step-question {
+            padding: 18px;
+            font-weight: 900;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .formulario-type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            padding: 0 18px 18px;
+        }
+
+        .formulario-type-card {
+            text-align: left;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(0,0,0,0.25);
+            padding: 14px;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+            color: #fff;
+        }
+
+        .formulario-type-card:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0,181,255,0.35);
+            background: rgba(0,181,255,0.10);
+        }
+
+        .formulario-type-card-active {
+            border-color: rgba(0,181,255,0.55);
+            background: rgba(0,181,255,0.14);
+            box-shadow: 0 12px 30px rgba(0, 119, 204, 0.18);
+        }
+
+        .formulario-type-title {
+            font-weight: 900;
+            font-size: 15px;
+        }
+
+        .formulario-type-desc {
+            margin-top: 6px;
+            font-size: 12.5px;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.35;
+        }
+
+        .formulario-fields {
+            padding: 18px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .formulario-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .formulario-label {
+            font-weight: 800;
+            font-size: 12.5px;
+            color: rgba(255,255,255,0.80);
+        }
+
+        .formulario-required {
+            color: rgba(0,181,255,0.95);
+        }
+
+        .formulario-input {
+            height: 50px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(0,0,0,0.35);
+            color: #fff;
+            padding: 0 14px;
+            outline: none;
+            font-size: 15px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        textarea.formulario-input {
+            height: auto;
+            padding: 12px 14px;
+            resize: vertical;
+        }
+
+        select.formulario-input {
+            padding-right: 36px;
+        }
+
+        .formulario-input:focus {
+            border-color: rgba(0,181,255,0.5);
+            box-shadow: 0 0 0 3px rgba(0,181,255,0.12);
+        }
+
+        .formulario-actions {
+            padding: 14px 18px 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .formulario-btn {
+            height: 48px;
+            border-radius: 12px;
+            padding: 0 16px;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+        }
+
+        .formulario-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .formulario-btn-primary {
+            border: 1px solid rgba(0,181,255,0.35);
+            background: linear-gradient(135deg, #0077cc 0%, #005b99 100%);
+            color: #fff;
+            box-shadow: 0 10px 24px rgba(0, 119, 204, 0.22), 0 0 0 1px rgba(0,181,255,0.12) inset;
+        }
+
+        .formulario-btn-secondary {
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+        }
+
+        .formulario-error {
+            margin: 0 18px;
+            color: #ffb4b4;
+            background: rgba(255, 68, 68, 0.12);
+            border: 1px solid rgba(255, 68, 68, 0.28);
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .formulario-success {
+            padding: 22px 18px;
+        }
+
+        .formulario-success-title {
+            font-weight: 900;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .formulario-success-text {
+            margin-top: 8px;
+            color: rgba(255,255,255,0.74);
+            font-size: 13px;
+        }
+
+        @media (max-width: 860px) {
+            .formulario-fields {
+                grid-template-columns: 1fr;
+            }
+            .formulario-type-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .cookie-banner-content {
             max-width: 1200px;
             margin: 0 auto;
