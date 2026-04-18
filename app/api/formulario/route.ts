@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,6 +20,31 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
       event: 'client_onboarding_form_submitted',
       source: body?.source || 'Formulario Liberty UpGrowth',
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    if (supabaseUrl && supabaseServiceRoleKey) {
+      try {
+        const supabaseAdmin = createServerClient(supabaseUrl, supabaseServiceRoleKey, {
+          cookies: {
+            getAll() {
+              return []
+            },
+            setAll() {},
+          },
+        })
+
+        await supabaseAdmin.from('form_submissions').insert({
+          source: payload.source,
+          ip,
+          user_agent: request.headers.get('user-agent') || null,
+          payload,
+        })
+      } catch {
+        // Ignorar errores de persistencia para no romper el flujo hacia el webhook
+      }
     }
 
     const webhookResponse = await fetch(webhookUrl, {

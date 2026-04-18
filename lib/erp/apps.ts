@@ -16,4 +16,11 @@ export const ERP_APPS: ErpApp[] = [
     href: '/app',
     icon: 'fa-solid fa-house',
   },
+  {
+    id: 'formularios',
+    name: 'Formularios',
+    description: 'Envíos y respuestas capturadas del onboarding',
+    href: '/app/apps/formularios',
+    icon: 'fa-solid fa-clipboard-list',
+  },
 ]
