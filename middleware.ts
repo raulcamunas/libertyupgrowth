@@ -58,20 +58,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Si está en /admin/login y ya está autenticado, redirigir a /admin
-  if (request.nextUrl.pathname === '/admin/login' && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin'
-    return NextResponse.redirect(url)
-  }
-
-  // Si está en /app/login y ya está autenticado, redirigir a /app
-  if (request.nextUrl.pathname === '/app/login' && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/app'
-    return NextResponse.redirect(url)
-  }
-
   return supabaseResponse
 }
 

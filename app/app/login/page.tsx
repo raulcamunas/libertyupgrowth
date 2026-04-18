@@ -40,12 +40,8 @@ export default function ErpLoginPage() {
       }
 
       await new Promise((r) => setTimeout(r, 500))
-      router.push('/app')
+      router.replace('/app')
       router.refresh()
-
-      setTimeout(() => {
-        if (window.location.pathname === '/app/login') window.location.href = '/app'
-      }, 400)
     } catch (err: any) {
       setError(err?.message || 'Error al iniciar sesión')
     } finally {
