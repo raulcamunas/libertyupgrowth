@@ -96,6 +96,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [addStatus, setAddStatus] = useState<LeadStatus>('new')
   const [addError, setAddError] = useState('')
 
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string>('')
+
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string>('')
   const [colWidths, setColWidths] = useState<Record<ColumnKey, number>>(COLUMN_DEFAULT_WIDTH)
@@ -304,6 +307,41 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       setAddStatus('new')
     } catch (e: any) {
       setAddError(e?.message || 'No se ha podido crear el lead')
+    }
+  }
+
+  const deleteLead = async (id: string) => {
+    setDeleteError('')
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('leads').delete().eq('id', id)
+      if (error) throw error
+
+      setLocalLeads((prev: LeadRow[]) => prev.filter((l) => l.id !== id))
+      setStatusOverrideById((prev: Record<string, LeadStatus>) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+      setNotesOverrideById((prev: Record<string, string>) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+      setBaseStatusById((prev: Record<string, LeadStatus>) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+      setBaseNotesById((prev: Record<string, string>) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+      if (drawerLeadId === id) setDrawerLeadId(null)
+      setDeleteId(null)
+    } catch (e: any) {
+      setDeleteError(e?.message || 'No se ha podido borrar')
     }
   }
 
@@ -606,6 +644,47 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         </AnimatePresence>
 
         <AnimatePresence>
+          {deleteId ? (
+            <motion.div
+              className="leads-add-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.14 }}
+              onPointerDown={() => setDeleteId(null)}
+            >
+              <motion.div
+                className="leads-add-modal"
+                initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                transition={{ duration: 0.16 }}
+                onPointerDown={(e) => e.stopPropagation()}
+              >
+                <div className="leads-add-title">Borrar lead</div>
+                <div className="leads-add-error" style={{ borderColor: 'rgba(255,255,255,0.10)', background: 'rgba(0,0,0,0.18)', color: 'rgba(255,255,255,0.82)' }}>
+                  Esta acción no se puede deshacer.
+                </div>
+                {deleteError ? <div className="leads-add-error">{deleteError}</div> : null}
+
+                <div className="leads-add-actions">
+                  <button className="leads-add-cancel" type="button" onClick={() => setDeleteId(null)}>
+                    Cancelar
+                  </button>
+                  <button
+                    className="leads-add-create"
+                    type="button"
+                    onClick={() => deleteLead(deleteId)}
+                  >
+                    Borrar
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+        <AnimatePresence>
           {selected ? (
             <motion.div
               className="leads-drawer-overlay"
@@ -644,6 +723,13 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                       </button>
                       <button className="leads-drawer-close" onClick={() => setDrawerLeadId(null)} type="button">
                         Cerrar
+                      </button>
+                      <button
+                        className="leads-drawer-delete"
+                        onClick={() => setDeleteId(selected.id)}
+                        type="button"
+                      >
+                        Borrar
                       </button>
                     </div>
                   </div>
