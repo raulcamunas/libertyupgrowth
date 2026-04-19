@@ -92,6 +92,19 @@ function notesToEntries(raw: string): Array<{ ts: string; text: string }> {
   return out
 }
 
+function entriesToNotes(entries: Array<{ ts: string; text: string }>): string {
+  return entries
+    .map((e) => {
+      const text = (e.text || '').trimEnd()
+      if (!text && !e.ts) return ''
+      if (!e.ts) return text
+      return `[${e.ts}]\n${text}`.trimEnd()
+    })
+    .filter(Boolean)
+    .join('\n\n')
+    .trim()
+}
+
 function nowStampEs() {
   try {
     const d = new Date()
@@ -131,8 +144,6 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [addNotes, setAddNotes] = useState('')
   const [addStatus, setAddStatus] = useState<LeadStatus>('new')
   const [addError, setAddError] = useState('')
-
-  const [noteDraftById, setNoteDraftById] = useState<Record<string, string>>({})
 
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string>('')
@@ -563,7 +574,6 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     const statusColor = statusColorByValue(statusValue)
                     const notesValue = notesOverrideById[l.id] ?? baseNotesById[l.id] ?? (l.notes || '')
                     const entries = notesToEntries(notesValue)
-                    const draft = noteDraftById[l.id] || ''
                     return (
                       <motion.div
                         key={l.id}
@@ -616,33 +626,32 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                             {entries.map((en, i) => (
                               <div key={`${l.id}-${i}`} className="leads-note-entry">
                                 {en.ts ? <div className="leads-note-ts">{en.ts}</div> : null}
-                                <div className="leads-note-text">{en.text || '-'}</div>
+                                <textarea
+                                  className="leads-note-textarea"
+                                  value={en.text}
+                                  placeholder="Escribe..."
+                                  rows={2}
+                                  onChange={(e) => {
+                                    const next = entries.slice()
+                                    next[i] = { ...next[i], text: e.target.value }
+                                    setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                                  }}
+                                />
                               </div>
                             ))}
                           </div>
-                          <div className="leads-note-compose">
-                            <textarea
-                              className="leads-note-compose-input"
-                              value={draft}
-                              placeholder="Añadir comentario..."
-                              rows={2}
-                              onChange={(e) => setNoteDraftById((prev) => ({ ...prev, [l.id]: e.target.value }))}
-                            />
-                            <button
-                              type="button"
-                              className="leads-note-compose-btn"
-                              disabled={!draft.trim()}
-                              onClick={() => {
-                                const stamp = nowStampEs()
-                                const nextBlock = `[${stamp}]\n${draft.trim()}`
-                                const nextNotes = notesValue.trim() ? `${notesValue.trim()}\n\n${nextBlock}` : nextBlock
-                                setNotesOverrideById((prev) => ({ ...prev, [l.id]: nextNotes }))
-                                setNoteDraftById((prev) => ({ ...prev, [l.id]: '' }))
-                              }}
-                            >
-                              +
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            className="leads-note-add-btn"
+                            onClick={() => {
+                              const stamp = nowStampEs()
+                              const next = entries.slice()
+                              next.push({ ts: stamp, text: '' })
+                              setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                            }}
+                          >
+                            +
+                          </button>
                         </div>
 
                         <div className="leads-td leads-td-extra" onClick={(e) => e.stopPropagation()}>
