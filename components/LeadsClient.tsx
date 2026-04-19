@@ -62,6 +62,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [savingId, setSavingId] = useState<string | null>(null)
   const [showJson, setShowJson] = useState(false)
   const [statusOverrideById, setStatusOverrideById] = useState<Record<string, LeadStatus>>({})
+  const [statusMenuOpenForId, setStatusMenuOpenForId] = useState<string | null>(null)
 
   const sources = useMemo(() => {
     const set = new Set<string>()
@@ -117,6 +118,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     const val = (status || 'new') as LeadStatus
     const found = STATUS_OPTIONS.find((s) => s.value === val) || STATUS_OPTIONS[0]
     return <span className={`leads-status leads-status-${found.color}`}>{found.label}</span>
+  }
+
+  const statusColorByValue = (status?: string | null) => {
+    const val = (status || 'new') as LeadStatus
+    const found = STATUS_OPTIONS.find((s) => s.value === val) || STATUS_OPTIONS[0]
+    return found.color
   }
 
   return (
@@ -198,10 +205,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                   {filtered.map((l, idx) => {
                     const isActive = l.id === selectedId
                     const statusValue = statusOverrideById[l.id] || (((l.status || 'new') as LeadStatus) || 'new')
+                    const statusColor = statusColorByValue(statusValue)
                     return (
                       <motion.div
                         key={l.id}
-                        className={`leads-tr ${isActive ? 'is-active' : ''}`}
+                        className={`leads-tr leads-row-${statusColor} ${isActive ? 'is-active' : ''}`}
                         onClick={() => {
                           setSelectedId(l.id)
                           setShowJson(false)
@@ -225,22 +233,41 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         <div className="leads-td">{l.source || '-'}</div>
                         <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
                           <div className="leads-status-wrap">
-                            {statusBadge(statusValue)}
-                            <select
-                              className="leads-status-select"
-                              value={statusValue}
+                            <button
+                              type="button"
+                              className="leads-status-btn"
                               disabled={savingId === l.id}
-                              onChange={async (e) => {
-                                const next = e.target.value as LeadStatus
-                                await updateStatus(l.id, next)
-                              }}
+                              onClick={() => setStatusMenuOpenForId((cur) => (cur === l.id ? null : l.id))}
                             >
-                              {STATUS_OPTIONS.map((s) => (
-                                <option key={s.value} value={s.value}>
-                                  {s.label}
-                                </option>
-                              ))}
-                            </select>
+                              {statusBadge(statusValue)}
+                            </button>
+
+                            <AnimatePresence>
+                              {statusMenuOpenForId === l.id ? (
+                                <motion.div
+                                  className="leads-status-menu"
+                                  initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                                  exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                                  transition={{ duration: 0.14 }}
+                                >
+                                  {STATUS_OPTIONS.map((opt) => (
+                                    <button
+                                      key={opt.value}
+                                      type="button"
+                                      className={`leads-status-menu-item ${opt.value === statusValue ? 'is-active' : ''}`}
+                                      onClick={async () => {
+                                        await updateStatus(l.id, opt.value)
+                                        setStatusMenuOpenForId(null)
+                                      }}
+                                    >
+                                      <span className={`leads-status-dot leads-status-dot-${opt.color}`} />
+                                      <span>{opt.label}</span>
+                                    </button>
+                                  ))}
+                                </motion.div>
+                              ) : null}
+                            </AnimatePresence>
                           </div>
                         </div>
                       </motion.div>

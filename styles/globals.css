@@ -7311,6 +7311,26 @@
             background: rgba(0,181,255,0.04);
         }
 
+        .leads-row-yellow {
+            background: rgba(255, 214, 96, 0.03);
+        }
+
+        .leads-row-blue {
+            background: rgba(0, 181, 255, 0.03);
+        }
+
+        .leads-row-red {
+            background: rgba(255, 96, 96, 0.028);
+        }
+
+        .leads-row-green {
+            background: rgba(72, 214, 140, 0.03);
+        }
+
+        .leads-row-gray {
+            background: rgba(255,255,255,0.02);
+        }
+
         .leads-tr.is-active {
             background: rgba(0,181,255,0.07);
             border-bottom-color: rgba(0,181,255,0.18);
@@ -7374,7 +7394,69 @@
             align-items: center;
             gap: 8px;
             min-width: 0;
+            position: relative;
         }
+
+        .leads-status-btn {
+            border: 0;
+            padding: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .leads-status-menu {
+            position: absolute;
+            top: 36px;
+            right: 0;
+            width: 210px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(10, 12, 18, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+            padding: 8px;
+            z-index: 10;
+        }
+
+        .leads-status-menu-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 10px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: rgba(255,255,255,0.88);
+            font-weight: 900;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .leads-status-menu-item:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        .leads-status-menu-item.is-active {
+            background: rgba(0,181,255,0.10);
+            border-color: rgba(0,181,255,0.22);
+            color: rgba(255,255,255,0.95);
+        }
+
+        .leads-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
+        }
+
+        .leads-status-dot-yellow { background: rgba(255, 214, 96, 0.95); }
+        .leads-status-dot-blue { background: rgba(0, 181, 255, 0.95); }
+        .leads-status-dot-red { background: rgba(255, 96, 96, 0.95); }
+        .leads-status-dot-green { background: rgba(72, 214, 140, 0.95); }
+        .leads-status-dot-gray { background: rgba(255,255,255,0.70); }
 
         .leads-status {
             font-size: 12px;
