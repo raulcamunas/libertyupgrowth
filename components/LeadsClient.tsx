@@ -111,8 +111,8 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   }
 
   return (
-    <div className="erp-miniapp">
-      <div className="erp-miniapp-card">
+    <div className="erp-miniapp leads-full">
+      <div className="erp-miniapp-card leads-card">
         <div className="leads-head">
           <div>
             <div className="erp-miniapp-title">Leads</div>
@@ -165,16 +165,16 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
           </div>
         </div>
 
-        <div className="leads-grid">
-          <motion.div
-            className="leads-list"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            {filtered.length === 0 ? (
-              <div className="leads-empty">Sin resultados.</div>
-            ) : (
+        <motion.div
+          className="leads-list"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          {filtered.length === 0 ? (
+            <div className="leads-empty">Sin resultados.</div>
+          ) : (
+            <div className="leads-table-scroll">
               <div className="leads-table">
                 <div className="leads-thead">
                   <div className="leads-th">Fecha</div>
@@ -193,15 +193,21 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                       <motion.div
                         key={l.id}
                         className={`leads-tr ${isActive ? 'is-active' : ''}`}
-                        onClick={() => setSelectedId(l.id)}
+                        onClick={() => {
+                          setSelectedId(l.id)
+                          setShowJson(false)
+                        }}
                         role="button"
                         tabIndex={0}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') setSelectedId(l.id)
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setSelectedId(l.id)
+                            setShowJson(false)
+                          }
                         }}
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.18, delay: Math.min(idx * 0.006, 0.18) }}
+                        transition={{ duration: 0.18, delay: Math.min(idx * 0.004, 0.18) }}
                       >
                         <div className="leads-td leads-td-date">{formatDate(l.created_at)}</div>
                         <div className="leads-td leads-td-name">{leadTitle(l)}</div>
@@ -233,31 +239,36 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                   })}
                 </div>
               </div>
-            )}
-          </motion.div>
+            </div>
+          )}
+        </motion.div>
 
-          <div className="leads-detail">
-            <AnimatePresence mode="wait">
-              {selected ? (
-                <motion.div
-                  key={selected.id}
-                  className="leads-detail-card"
-                  initial={{ opacity: 0, x: 12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -12 }}
-                  transition={{ duration: 0.2 }}
-                >
+        <AnimatePresence>
+          {selected ? (
+            <motion.div
+              className="leads-drawer-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              onClick={() => setSelectedId(null)}
+            >
+              <motion.div
+                className="leads-drawer"
+                initial={{ x: 40, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 40, opacity: 0 }}
+                transition={{ duration: 0.18 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="leads-detail-card">
                   <div className="leads-detail-top">
                     <div>
                       <div className="leads-detail-title">{leadTitle(selected)}</div>
                       <div className="leads-detail-subtitle">{formatDate(selected.created_at)}</div>
                     </div>
                     <div className="leads-detail-actions">
-                      <button
-                        className="leads-json-toggle"
-                        onClick={() => setShowJson((v) => !v)}
-                        type="button"
-                      >
+                      <button className="leads-json-toggle" onClick={() => setShowJson((v) => !v)} type="button">
                         {showJson ? 'Ocultar JSON' : 'Ver JSON'}
                       </button>
                       <button
@@ -268,6 +279,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         type="button"
                       >
                         Copiar JSON
+                      </button>
+                      <button className="leads-drawer-close" onClick={() => setSelectedId(null)} type="button">
+                        Cerrar
                       </button>
                     </div>
                   </div>
@@ -304,22 +318,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                       </motion.div>
                     ) : null}
                   </AnimatePresence>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="empty"
-                  className="leads-detail-card"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="leads-empty">Selecciona un lead para ver el detalle.</div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
     </div>
   )
