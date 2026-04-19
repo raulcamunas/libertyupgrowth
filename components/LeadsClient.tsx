@@ -539,7 +539,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                       >
                         Copiar JSON
                       </button>
-                      <button className="leads-drawer-close" onClick={() => setSelectedId(null)} type="button">
+                      <button className="leads-drawer-close" onClick={() => setDrawerLeadId(null)} type="button">
                         Cerrar
                       </button>
                     </div>
