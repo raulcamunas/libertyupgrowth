@@ -7591,6 +7591,14 @@
             gap: 10px;
         }
 
+        .leads-note-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            flex: 0 0 auto;
+        }
+
         .leads-note-del-btn {
             width: 26px;
             height: 26px;
@@ -7601,6 +7609,13 @@
             font-weight: 900;
             cursor: pointer;
             flex: 0 0 auto;
+        }
+
+        .leads-note-add-btn--inline {
+            margin-top: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 10px;
         }
 
         .leads-note-text {
@@ -7716,14 +7731,20 @@
             -webkit-backdrop-filter: blur(6px);
             z-index: 60;
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
         }
 
         .leads-drawer {
             width: min(520px, 92vw);
-            height: 100vh;
+            max-height: min(720px, 86vh);
             padding: 16px;
             overflow: auto;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(10, 12, 16, 0.86);
+            box-shadow: 0 24px 70px rgba(0,0,0,0.55);
         }
 
         .leads-drawer-close {
@@ -8061,7 +8082,7 @@
             }
 
             .leads-drawer {
-                width: 100vw;
+                width: min(560px, 96vw);
                 padding: 14px;
             }
 

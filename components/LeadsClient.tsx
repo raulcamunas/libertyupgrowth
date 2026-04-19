@@ -696,17 +696,33 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                       {en.ts}
                                       {en.author ? ` · ${en.author}` : ''}
                                     </div>
-                                    <button
-                                      type="button"
-                                      className="leads-note-del-btn"
-                                      onClick={() => {
-                                        const next = entries.slice()
-                                        next.splice(i, 1)
-                                        setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
-                                      }}
-                                    >
-                                      ×
-                                    </button>
+                                    <div className="leads-note-actions">
+                                      {i === entries.length - 1 ? (
+                                        <button
+                                          type="button"
+                                          className="leads-note-add-btn leads-note-add-btn--inline"
+                                          onClick={() => {
+                                            const stamp = nowStampEs()
+                                            const next = entries.slice()
+                                            next.push({ ts: stamp, author: currentAuthorName || undefined, text: '' })
+                                            setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                                          }}
+                                        >
+                                          +
+                                        </button>
+                                      ) : null}
+                                      <button
+                                        type="button"
+                                        className="leads-note-del-btn"
+                                        onClick={() => {
+                                          const next = entries.slice()
+                                          next.splice(i, 1)
+                                          setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                                        }}
+                                      >
+                                        ×
+                                      </button>
+                                    </div>
                                   </div>
                                 ) : null}
                                 <textarea
@@ -723,18 +739,20 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                               </div>
                             ))}
                           </div>
-                          <button
-                            type="button"
-                            className="leads-note-add-btn"
-                            onClick={() => {
-                              const stamp = nowStampEs()
-                              const next = entries.slice()
-                              next.push({ ts: stamp, author: currentAuthorName || undefined, text: '' })
-                              setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
-                            }}
-                          >
-                            +
-                          </button>
+                          {entries.length === 0 ? (
+                            <button
+                              type="button"
+                              className="leads-note-add-btn"
+                              onClick={() => {
+                                const stamp = nowStampEs()
+                                const next = entries.slice()
+                                next.push({ ts: stamp, author: currentAuthorName || undefined, text: '' })
+                                setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                              }}
+                            >
+                              +
+                            </button>
+                          ) : null}
                         </div>
 
                         <div className="leads-td leads-td-extra" onClick={(e) => e.stopPropagation()}>
@@ -919,6 +937,13 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                       <div className="leads-detail-subtitle">{formatDate(selected.created_at)}</div>
                     </div>
                     <div className="leads-detail-actions">
+                      <button
+                        className="leads-drawer-delete"
+                        onClick={() => setDeleteId(selected.id)}
+                        type="button"
+                      >
+                        Borrar
+                      </button>
                       <button className="leads-json-toggle" onClick={() => setShowJson((v) => !v)} type="button">
                         {showJson ? 'Ocultar JSON' : 'Ver JSON'}
                       </button>
@@ -933,13 +958,6 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                       </button>
                       <button className="leads-drawer-close" onClick={() => setDrawerLeadId(null)} type="button">
                         Cerrar
-                      </button>
-                      <button
-                        className="leads-drawer-delete"
-                        onClick={() => setDeleteId(selected.id)}
-                        type="button"
-                      >
-                        Borrar
                       </button>
                     </div>
                   </div>
