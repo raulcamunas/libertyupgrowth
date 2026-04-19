@@ -84,6 +84,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [statusMenuPos, setStatusMenuPos] = useState<{ id: string; top: number; left: number } | null>(null)
   const [notesOverrideById, setNotesOverrideById] = useState<Record<string, string>>({})
 
+  const [baseStatusById, setBaseStatusById] = useState<Record<string, LeadStatus>>({})
+  const [baseNotesById, setBaseNotesById] = useState<Record<string, string>>({})
+
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string>('')
   const [colWidths, setColWidths] = useState<Record<ColumnKey, number>>(COLUMN_DEFAULT_WIDTH)
@@ -94,6 +97,23 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   } | null>(null)
 
   const notesRefById = useRef<Record<string, HTMLTextAreaElement | null>>({})
+
+  useEffect(() => {
+    setBaseStatusById((prev) => {
+      const next = { ...prev }
+      for (const l of leads) {
+        if (!next[l.id]) next[l.id] = ((l.status || 'new') as LeadStatus) || 'new'
+      }
+      return next
+    })
+    setBaseNotesById((prev) => {
+      const next = { ...prev }
+      for (const l of leads) {
+        if (!Object.prototype.hasOwnProperty.call(next, l.id)) next[l.id] = l.notes || ''
+      }
+      return next
+    })
+  }, [leads])
 
   useEffect(() => {
     const onDown = () => {
@@ -133,7 +153,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     return leads
       .filter((l) => {
         if (sourceFilter !== 'all' && (l.source || '') !== sourceFilter) return false
-        const currentStatus = statusOverrideById[l.id] || ((l.status || 'new') as LeadStatus)
+        const currentStatus = statusOverrideById[l.id] || baseStatusById[l.id] || ((l.status || 'new') as LeadStatus)
         if (statusFilter !== 'all' && currentStatus !== statusFilter) return false
         return true
       })
@@ -143,7 +163,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         const json = JSON.stringify(l.payload || {}).toLowerCase()
         return meta.includes(q) || json.includes(q)
       })
-  }, [leads, query, sourceFilter, statusFilter, statusOverrideById])
+  }, [leads, query, sourceFilter, statusFilter, statusOverrideById, baseStatusById])
 
   useEffect(() => {
     Object.values(notesRefById.current).forEach((el) => {
@@ -191,6 +211,18 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       })
 
       await Promise.all(ops)
+
+      setBaseStatusById((prev) => {
+        const next = { ...prev }
+        for (const [id, st] of Object.entries(statusOverrideById)) next[id] = st
+        return next
+      })
+
+      setBaseNotesById((prev) => {
+        const next = { ...prev }
+        for (const [id, notes] of Object.entries(notesOverrideById)) next[id] = notes
+        return next
+      })
 
       setStatusOverrideById({})
       setNotesOverrideById({})
@@ -372,9 +404,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                 <div className="leads-tbody">
                   {filtered.map((l, idx) => {
                     const isActive = l.id === selectedId
-                    const statusValue = statusOverrideById[l.id] || (((l.status || 'new') as LeadStatus) || 'new')
+                    const statusValue = statusOverrideById[l.id] || baseStatusById[l.id] || (((l.status || 'new') as LeadStatus) || 'new')
                     const statusColor = statusColorByValue(statusValue)
-                    const notesValue = notesOverrideById[l.id] ?? (l.notes || '')
+                    const notesValue = notesOverrideById[l.id] ?? baseNotesById[l.id] ?? (l.notes || '')
                     return (
                       <motion.div
                         key={l.id}
