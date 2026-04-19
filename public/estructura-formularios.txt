@@ -20,7 +20,7 @@ PREGUNTAS COMUNES (aparecen en todos los tipos de negocio)
 
 Sección: "Datos de contacto"
 - Tu nombre
-- Teléfono personal de contacto (técnico)
+- Teléfono donde el técnico te contactará
 - Web o Instagram (si aplica)
 
 Sección: "Datos del negocio"
@@ -34,14 +34,14 @@ Sección: "WhatsApp y Bot"
   - Sí
   - No
 
-Sección: "Equipo"
-- Nombre de los profesionales que trabajan en el negocio
+Sección: "Equipo" (no aplica en tatuajes)
+- Nombre de los profesionales que trabajan en tu negocio
 
 Sección: "Horarios y agenda"
 - Horario de apertura general
 - Días de apertura
 - Días cerrados fijos
-- Intervalo de citas (slots)
+- ¿Cuánto dura una cita de promedio? En la siguiente pestaña podrás profundizar
   - 15 min
   - 30 min
   - 45 min

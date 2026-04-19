@@ -420,6 +420,86 @@ function SelectOrCustom({
   )
 }
 
+function ProfessionalsField({
+  label,
+  required,
+  value,
+  placeholder,
+  onChange,
+}: {
+  label: string
+  required?: boolean
+  value: string
+  placeholder?: string
+  onChange: (v: string) => void
+}) {
+  const list = useMemo(() => {
+    const parts = String(value || '')
+      .split('\n')
+      .map((p) => p.trim())
+      .filter(Boolean)
+    return parts.length > 0 ? parts : ['']
+  }, [value])
+
+  const setAt = (idx: number, next: string) => {
+    const nextList = list.map((v, i) => (i === idx ? next : v))
+    const cleaned = nextList.map((v) => String(v || '').trim()).filter(Boolean)
+    onChange(cleaned.join('\n'))
+  }
+
+  const add = () => {
+    const cleaned = list.map((v) => String(v || '').trim()).filter(Boolean)
+    onChange([...cleaned, ''].join('\n'))
+  }
+
+  const remove = () => {
+    const cleaned = list.map((v) => String(v || '').trim()).filter(Boolean)
+    const next = cleaned.slice(0, Math.max(0, cleaned.length - 1))
+    onChange(next.join('\n'))
+  }
+
+  return (
+    <div className="formulario-field">
+      <div className="formulario-label">
+        {label}
+        {required ? <span className="formulario-required"> *</span> : null}
+      </div>
+
+      <div className="formulario-artist-top" style={{ padding: 0, marginBottom: 10 }}>
+        <div className="formulario-artist-title" style={{ margin: 0 }}>
+          Añade los profesionales (uno por línea)
+        </div>
+        <div className="formulario-artist-counter">
+          <button
+            type="button"
+            className="formulario-artist-btn"
+            onClick={remove}
+            disabled={list.filter((v) => String(v || '').trim()).filter(Boolean).length <= 1}
+          >
+            −
+          </button>
+          <div className="formulario-artist-count">{list.filter((v) => String(v || '').trim()).filter(Boolean).length || 1}</div>
+          <button type="button" className="formulario-artist-btn" onClick={add}>
+            +
+          </button>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gap: 10 }}>
+        {list.map((p, idx) => (
+          <input
+            key={idx}
+            className="formulario-input"
+            value={p}
+            placeholder={placeholder || 'Ej: Ana (color)'}
+            onChange={(e) => setAt(idx, e.target.value)}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function InputField({
   field,
   value,
@@ -430,6 +510,18 @@ function InputField({
   onChange: (v: string) => void
 }) {
   const commonClass = 'formulario-input'
+
+  if (field.key === 'profesionales') {
+    return (
+      <ProfessionalsField
+        label={field.label}
+        required={field.required}
+        value={value}
+        placeholder={field.placeholder}
+        onChange={onChange}
+      />
+    )
+  }
 
   if (field.type === 'select' && field.allowCustom && field.options) {
     return (
@@ -517,7 +609,7 @@ export default function FormularioPage() {
     { key: 'nombre', label: 'Tu nombre', placeholder: 'Ej: Raúl', required: true },
     { key: 'sector', label: 'Sector', placeholder: 'Ej: Peluquería, Fisio, Tatuajes...', required: true },
     { key: 'direccionCompleta', label: 'Dirección completa', placeholder: 'Calle, número, piso, ciudad, CP', required: true },
-    { key: 'telefonoContactoPersonal', label: 'Teléfono personal de contacto (técnico)', type: 'tel', placeholder: 'Ej: +34 600 000 000', required: true },
+    { key: 'telefonoContactoPersonal', label: 'Teléfono donde el técnico te contactará', type: 'tel', placeholder: 'Ej: +34 600 000 000', required: true },
     { key: 'telefonoBot', label: '¿A qué número de teléfono vamos a instalar el Bot?', type: 'tel', placeholder: 'Ej: +34 600 000 000', required: true },
     {
       key: 'whatsappBusinessActivo',
@@ -531,7 +623,7 @@ export default function FormularioPage() {
     },
     {
       key: 'profesionales',
-      label: 'Nombre de los profesionales que trabajan en el negocio',
+      label: 'Nombre de los profesionales que trabajan en tu negocio',
       placeholder: 'Ej: Ana (color), Juan (cortes), etc.',
       type: 'textarea',
       required: true,
@@ -541,7 +633,7 @@ export default function FormularioPage() {
     { key: 'diasCerradosFijos', label: 'Días cerrados fijos', placeholder: 'Ej: Domingos y festivos' },
     {
       key: 'intervaloCitas',
-      label: 'Intervalo de citas (slots)',
+      label: '¿Cuánto dura una cita de promedio? En la siguiente pestaña podrás profundizar',
       type: 'select',
       allowCustom: true,
       required: true,
@@ -700,12 +792,14 @@ export default function FormularioPage() {
       fields: ['telefonoBot', 'whatsappBusinessActivo'],
     })
 
-    groups.push({
-      id: 'equipo',
-      title: 'Equipo',
-      subtitle: 'El bot puede mencionar profesionales y repartir derivaciones.',
-      fields: ['profesionales'],
-    })
+    if (form.businessType !== 'tatuajes') {
+      groups.push({
+        id: 'equipo',
+        title: 'Equipo',
+        subtitle: 'El bot puede mencionar profesionales y repartir derivaciones.',
+        fields: ['profesionales'],
+      })
+    }
 
     groups.push({
       id: 'horarios',
