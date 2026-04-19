@@ -18,7 +18,7 @@ export default function ErpSidebar({
     <aside className="erp-sidebar">
       <div className="erp-sidebar-top">
         <div className="erp-brand">
-          <Image src="/logo.png" alt="Liberty Seller" width={22} height={22} className="erp-brand-logo" />
+          <Image src="/logo.png" alt="Liberty Seller" width={44} height={44} className="erp-brand-logo" />
         </div>
       </div>
 
