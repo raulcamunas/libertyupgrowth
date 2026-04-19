@@ -56,7 +56,7 @@ function leadSubtitle(l: LeadRow) {
 
 export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [query, setQuery] = useState('')
-  const [selectedId, setSelectedId] = useState<string | null>(leads[0]?.id || null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all')
   const [sourceFilter, setSourceFilter] = useState<string>('all')
   const [savingId, setSavingId] = useState<string | null>(null)

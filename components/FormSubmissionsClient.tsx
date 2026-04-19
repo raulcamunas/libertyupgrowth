@@ -49,7 +49,7 @@ function getSummary(payload: any) {
 
 export default function FormSubmissionsClient({ submissions }: { submissions: FormSubmissionRow[] }) {
   const [query, setQuery] = useState('')
-  const [selectedId, setSelectedId] = useState<string | null>(submissions[0]?.id || null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
