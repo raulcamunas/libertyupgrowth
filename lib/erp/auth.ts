@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { ERP_APPS } from '@/lib/erp/apps'
+import { createServerClient } from '@supabase/ssr'
 
 export type ErpRole = 'admin' | 'user'
 
@@ -32,12 +33,31 @@ export async function getErpPermissionsByEmail(email?: string | null): Promise<E
 
   if (!email) return { role: 'user', allowedAppIds: [] }
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (supabaseUrl && serviceRoleKey) {
+    const supabaseAdmin = createServerClient(supabaseUrl, serviceRoleKey, {
+      cookies: {
+        getAll() {
+          return []
+        },
+        setAll() {},
+      },
+    })
+
+    const { data } = await supabaseAdmin
+      .from('erp_user_permissions')
+      .select('allowed_app_ids')
+      .eq('email', email.toLowerCase())
+      .maybeSingle()
+
+    const allowed = Array.isArray((data as any)?.allowed_app_ids) ? ((data as any).allowed_app_ids as string[]) : []
+    return { role, allowedAppIds: allowed }
+  }
+
   const supabase = await createClient()
-  const { data } = await supabase
-    .from('erp_user_permissions')
-    .select('allowed_app_ids')
-    .eq('email', email)
-    .maybeSingle()
+  const { data } = await supabase.from('erp_user_permissions').select('allowed_app_ids').eq('email', email.toLowerCase()).maybeSingle()
 
   const allowed = Array.isArray((data as any)?.allowed_app_ids) ? ((data as any).allowed_app_ids as string[]) : []
   return { role, allowedAppIds: allowed }

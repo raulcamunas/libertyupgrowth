@@ -72,7 +72,9 @@ function leadSubtitle(l: LeadRow) {
   return bits.join(' · ')
 }
 
-function notesToEntries(raw: string): Array<{ ts: string; text: string }> {
+type NoteEntry = { ts: string; text: string; author?: string }
+
+function notesToEntries(raw: string): NoteEntry[] {
   const cleaned = (raw || '').trim()
   if (!cleaned) return []
   const blocks = cleaned
@@ -80,11 +82,11 @@ function notesToEntries(raw: string): Array<{ ts: string; text: string }> {
     .map((b) => b.trim())
     .filter(Boolean)
 
-  const out: Array<{ ts: string; text: string }> = []
+  const out: NoteEntry[] = []
   for (const b of blocks) {
-    const m = b.match(/^\[([^\]]+)\]\s*[\n\r]*([\s\S]*)$/)
+    const m = b.match(/^\[([^\]|]+?)(?:\s*\|\s*([^\]]+))?\]\s*[\n\r]*([\s\S]*)$/)
     if (m) {
-      out.push({ ts: m[1].trim(), text: (m[2] || '').trim() })
+      out.push({ ts: (m[1] || '').trim(), author: (m[2] || '').trim() || undefined, text: (m[3] || '').trim() })
     } else {
       out.push({ ts: '', text: b })
     }
@@ -92,13 +94,14 @@ function notesToEntries(raw: string): Array<{ ts: string; text: string }> {
   return out
 }
 
-function entriesToNotes(entries: Array<{ ts: string; text: string }>): string {
+function entriesToNotes(entries: NoteEntry[]): string {
   return entries
     .map((e) => {
       const text = (e.text || '').trimEnd()
       if (!text && !e.ts) return ''
       if (!e.ts) return text
-      return `[${e.ts}]\n${text}`.trimEnd()
+      const head = e.author ? `[${e.ts} | ${e.author}]` : `[${e.ts}]`
+      return `${head}\n${text}`.trimEnd()
     })
     .filter(Boolean)
     .join('\n\n')
@@ -150,6 +153,15 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [addStatus, setAddStatus] = useState<LeadStatus>('new')
   const [addError, setAddError] = useState('')
 
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>('')
+
+  const currentAuthorName = useMemo(() => {
+    const email = (currentUserEmail || '').toLowerCase()
+    if (email === 'alejandro@libertyupgrowth.com') return 'Alejandro'
+    if (email === 'libertyupgrowth@gmail.com') return 'Raul'
+    return ''
+  }, [currentUserEmail])
+
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string>('')
 
@@ -168,14 +180,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     setBaseStatusById((prev) => {
       const next = { ...prev }
       for (const l of leads) {
-        if (!next[l.id]) next[l.id] = ((l.status || 'new') as LeadStatus) || 'new'
-      }
-      return next
-    })
-    setBaseNotesById((prev) => {
-      const next = { ...prev }
-      for (const l of leads) {
-        if (!Object.prototype.hasOwnProperty.call(next, l.id)) next[l.id] = l.notes || ''
+        if (!Object.prototype.hasOwnProperty.call(next, l.id)) next[l.id] = (l.status as LeadStatus) || 'new'
       }
       return next
     })
@@ -187,7 +192,23 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       }
       return next
     })
+
+    setLocalLeads(leads)
   }, [leads])
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const supabase = createClient()
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        if (user?.email) setCurrentUserEmail(user.email)
+      } catch {
+      }
+    }
+    void loadUser()
+  }, [])
 
   useEffect(() => {
     const onDown = () => {
@@ -669,7 +690,25 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                             {entries.length === 0 ? <div className="leads-notes-empty">Sin comentarios</div> : null}
                             {entries.map((en, i) => (
                               <div key={`${l.id}-${i}`} className="leads-note-entry">
-                                {en.ts ? <div className="leads-note-ts">{en.ts}</div> : null}
+                                {en.ts ? (
+                                  <div className="leads-note-meta">
+                                    <div className="leads-note-ts">
+                                      {en.ts}
+                                      {en.author ? ` · ${en.author}` : ''}
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="leads-note-del-btn"
+                                      onClick={() => {
+                                        const next = entries.slice()
+                                        next.splice(i, 1)
+                                        setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                                      }}
+                                    >
+                                      ×
+                                    </button>
+                                  </div>
+                                ) : null}
                                 <textarea
                                   className="leads-note-textarea"
                                   value={en.text}
@@ -690,7 +729,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                             onClick={() => {
                               const stamp = nowStampEs()
                               const next = entries.slice()
-                              next.push({ ts: stamp, text: '' })
+                              next.push({ ts: stamp, author: currentAuthorName || undefined, text: '' })
                               setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
                             }}
                           >
