@@ -7107,6 +7107,23 @@
             gap: 12px;
         }
 
+        .leads-detail-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .leads-json-toggle {
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.86);
+            padding: 8px 10px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
         .leads-detail-title {
             font-weight: 900;
             color: rgba(255,255,255,0.96);

@@ -60,6 +60,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all')
   const [sourceFilter, setSourceFilter] = useState<string>('all')
   const [savingId, setSavingId] = useState<string | null>(null)
+  const [showJson, setShowJson] = useState(false)
 
   const sources = useMemo(() => {
     const set = new Set<string>()
@@ -86,6 +87,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   }, [leads, query, sourceFilter, statusFilter])
 
   const selected = useMemo(() => filtered.find((l) => l.id === selectedId) || null, [filtered, selectedId])
+
+  const selectedJson = useMemo(() => {
+    if (!selected) return ''
+    return JSON.stringify(selected.payload || {}, null, 2)
+  }, [selected])
 
   const updateStatus = async (id: string, next: LeadStatus) => {
     setSavingId(id)
@@ -246,15 +252,24 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                       <div className="leads-detail-title">{leadTitle(selected)}</div>
                       <div className="leads-detail-subtitle">{formatDate(selected.created_at)}</div>
                     </div>
-                    <button
-                      className="leads-copy"
-                      onClick={async () => {
-                        await navigator.clipboard.writeText(JSON.stringify(selected.payload || {}, null, 2))
-                      }}
-                      type="button"
-                    >
-                      Copiar JSON
-                    </button>
+                    <div className="leads-detail-actions">
+                      <button
+                        className="leads-json-toggle"
+                        onClick={() => setShowJson((v) => !v)}
+                        type="button"
+                      >
+                        {showJson ? 'Ocultar JSON' : 'Ver JSON'}
+                      </button>
+                      <button
+                        className="leads-copy"
+                        onClick={async () => {
+                          await navigator.clipboard.writeText(selectedJson)
+                        }}
+                        type="button"
+                      >
+                        Copiar JSON
+                      </button>
+                    </div>
                   </div>
 
                   <div className="leads-kv">
@@ -276,9 +291,19 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     </div>
                   </div>
 
-                  <div className="leads-json">
-                    <pre>{JSON.stringify(selected.payload || {}, null, 2)}</pre>
-                  </div>
+                  <AnimatePresence>
+                    {showJson ? (
+                      <motion.div
+                        className="leads-json"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.18 }}
+                      >
+                        <pre>{selectedJson}</pre>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </motion.div>
               ) : (
                 <motion.div
