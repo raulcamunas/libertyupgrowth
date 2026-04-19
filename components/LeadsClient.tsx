@@ -132,6 +132,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [statusMenuPos, setStatusMenuPos] = useState<{ id: string; top: number; left: number } | null>(null)
   const [notesOverrideById, setNotesOverrideById] = useState<Record<string, string>>({})
 
+  const [dateOverrideById, setDateOverrideById] = useState<Record<string, string>>({})
+  const [baseDateById, setBaseDateById] = useState<Record<string, string>>({})
+  const [dateEditForId, setDateEditForId] = useState<string | null>(null)
+  const [dateEditValue, setDateEditValue] = useState<string>('')
+
   const [baseStatusById, setBaseStatusById] = useState<Record<string, LeadStatus>>({})
   const [baseNotesById, setBaseNotesById] = useState<Record<string, string>>({})
 
@@ -171,6 +176,14 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       const next = { ...prev }
       for (const l of leads) {
         if (!Object.prototype.hasOwnProperty.call(next, l.id)) next[l.id] = l.notes || ''
+      }
+      return next
+    })
+
+    setBaseDateById((prev) => {
+      const next = { ...prev }
+      for (const l of leads) {
+        if (!next[l.id]) next[l.id] = l.created_at
       }
       return next
     })
@@ -233,11 +246,13 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       })
       .slice()
       .sort((a, b) => {
-        const ta = new Date(a.created_at).getTime()
-        const tb = new Date(b.created_at).getTime()
+        const aIso = dateOverrideById[a.id] || baseDateById[a.id] || a.created_at
+        const bIso = dateOverrideById[b.id] || baseDateById[b.id] || b.created_at
+        const ta = new Date(aIso).getTime()
+        const tb = new Date(bIso).getTime()
         return tb - ta
       })
-  }, [allLeads, query, sourceFilter, statusFilter, statusOverrideById, baseStatusById])
+  }, [allLeads, query, sourceFilter, statusFilter, statusOverrideById, baseStatusById, dateOverrideById, baseDateById])
 
   useEffect(() => {
     Object.values(notesRefById.current).forEach((el) => {
@@ -253,8 +268,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   }, [selected])
 
   const isDirty = useMemo(() => {
-    return Object.keys(statusOverrideById).length > 0 || Object.keys(notesOverrideById).length > 0
-  }, [notesOverrideById, statusOverrideById])
+    return (
+      Object.keys(statusOverrideById).length > 0 ||
+      Object.keys(notesOverrideById).length > 0 ||
+      Object.keys(dateOverrideById).length > 0
+    )
+  }, [notesOverrideById, statusOverrideById, dateOverrideById])
 
   const saveAll = async () => {
     setSaveError('')
@@ -274,11 +293,13 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       const ids = new Set<string>()
       Object.keys(statusOverrideById).forEach((id) => ids.add(id))
       Object.keys(notesOverrideById).forEach((id) => ids.add(id))
+      Object.keys(dateOverrideById).forEach((id) => ids.add(id))
 
       const ops = Array.from(ids).map(async (id) => {
-        const update: { status?: LeadStatus; notes?: string } = {}
+        const update: { status?: LeadStatus; notes?: string; created_at?: string } = {}
         if (statusOverrideById[id]) update.status = statusOverrideById[id]
         if (Object.prototype.hasOwnProperty.call(notesOverrideById, id)) update.notes = notesOverrideById[id]
+        if (dateOverrideById[id]) update.created_at = dateOverrideById[id]
         if (Object.keys(update).length === 0) return
         const { error } = await supabase.from('leads').update(update).eq('id', id)
         if (error) throw error
@@ -298,8 +319,15 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         return next
       })
 
+      setBaseDateById((prev) => {
+        const next = { ...prev }
+        for (const [id, iso] of Object.entries(dateOverrideById)) next[id] = iso
+        return next
+      })
+
       setStatusOverrideById({})
       setNotesOverrideById({})
+      setDateOverrideById({})
 
       try {
         window.localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(colWidths))
@@ -574,6 +602,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     const statusColor = statusColorByValue(statusValue)
                     const notesValue = notesOverrideById[l.id] ?? baseNotesById[l.id] ?? (l.notes || '')
                     const entries = notesToEntries(notesValue)
+                    const createdAtValue = dateOverrideById[l.id] || baseDateById[l.id] || l.created_at
                     return (
                       <motion.div
                         key={l.id}
@@ -594,7 +623,22 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.18, delay: Math.min(idx * 0.004, 0.18) }}
                       >
-                        <div className="leads-td leads-td-date">{formatDate(l.created_at)}</div>
+                        <div className="leads-td leads-td-date" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            className="leads-date-btn"
+                            onClick={() => {
+                              const iso = createdAtValue
+                              const d = new Date(iso)
+                              const pad = (n: number) => String(n).padStart(2, '0')
+                              const local = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+                              setDateEditForId(l.id)
+                              setDateEditValue(local)
+                            }}
+                          >
+                            {formatDate(createdAtValue)}
+                          </button>
+                        </div>
                         <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
                           <div className="leads-status-wrap">
                             <button
@@ -716,6 +760,59 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
             </motion.div>
           ) : null}
         </AnimatePresence>
+
+      <AnimatePresence>
+        {dateEditForId ? (
+          <motion.div
+            className="leads-add-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.14 }}
+            onPointerDown={() => setDateEditForId(null)}
+          >
+            <motion.div
+              className="leads-add-modal"
+              initial={{ opacity: 0, y: 10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.98 }}
+              transition={{ duration: 0.16 }}
+              onPointerDown={(e) => e.stopPropagation()}
+            >
+              <div className="leads-add-title">Editar fecha</div>
+              <div className="leads-add-grid" style={{ gridTemplateColumns: '1fr' }}>
+                <label className="leads-add-field">
+                  <div className="leads-add-label">Fecha</div>
+                  <input
+                    className="leads-add-input"
+                    type="datetime-local"
+                    value={dateEditValue}
+                    onChange={(e) => setDateEditValue(e.target.value)}
+                  />
+                </label>
+              </div>
+
+              <div className="leads-add-actions">
+                <button className="leads-add-cancel" type="button" onClick={() => setDateEditForId(null)}>
+                  Cancelar
+                </button>
+                <button
+                  className="leads-add-create"
+                  type="button"
+                  onClick={() => {
+                    if (!dateEditForId) return
+                    const iso = new Date(dateEditValue).toISOString()
+                    setDateOverrideById((prev) => ({ ...prev, [dateEditForId]: iso }))
+                    setDateEditForId(null)
+                  }}
+                >
+                  Aplicar
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
         <AnimatePresence>
           {deleteId ? (
