@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { createClient } from '@/lib/supabase/client'
 
 type LeadRow = {
   id: string
@@ -14,6 +15,16 @@ type LeadRow = {
   status: string | null
   payload: any
 }
+
+type LeadStatus = 'new' | 'seguimiento' | 'llamar_despues' | 'no_interesa' | 'cerrado'
+
+const STATUS_OPTIONS: Array<{ value: LeadStatus; label: string; color: 'yellow' | 'blue' | 'red' | 'green' | 'gray' }> = [
+  { value: 'new', label: 'Nuevo', color: 'gray' },
+  { value: 'seguimiento', label: 'Seguimiento', color: 'yellow' },
+  { value: 'llamar_despues', label: 'Llamar después', color: 'blue' },
+  { value: 'no_interesa', label: 'No interesa', color: 'red' },
+  { value: 'cerrado', label: 'Cerrado', color: 'green' },
+]
 
 function formatDate(iso: string): string {
   try {
@@ -46,19 +57,52 @@ function leadSubtitle(l: LeadRow) {
 export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(leads[0]?.id || null)
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all')
+  const [sourceFilter, setSourceFilter] = useState<string>('all')
+  const [savingId, setSavingId] = useState<string | null>(null)
+
+  const sources = useMemo(() => {
+    const set = new Set<string>()
+    leads.forEach((l) => {
+      if (l.source) set.add(l.source)
+    })
+    return Array.from(set).sort((a, b) => a.localeCompare(b))
+  }, [leads])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return leads
-
-    return leads.filter((l) => {
-      const meta = `${l.name || ''} ${l.email || ''} ${l.phone || ''} ${l.source || ''} ${l.status || ''}`.toLowerCase()
-      const json = JSON.stringify(l.payload || {}).toLowerCase()
-      return meta.includes(q) || json.includes(q)
-    })
-  }, [leads, query])
+    return leads
+      .filter((l) => {
+        if (sourceFilter !== 'all' && (l.source || '') !== sourceFilter) return false
+        if (statusFilter !== 'all' && (l.status || 'new') !== statusFilter) return false
+        return true
+      })
+      .filter((l) => {
+        if (!q) return true
+        const meta = `${l.name || ''} ${l.email || ''} ${l.phone || ''} ${l.source || ''} ${l.status || ''}`.toLowerCase()
+        const json = JSON.stringify(l.payload || {}).toLowerCase()
+        return meta.includes(q) || json.includes(q)
+      })
+  }, [leads, query, sourceFilter, statusFilter])
 
   const selected = useMemo(() => filtered.find((l) => l.id === selectedId) || null, [filtered, selectedId])
+
+  const updateStatus = async (id: string, next: LeadStatus) => {
+    setSavingId(id)
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('leads').update({ status: next }).eq('id', id)
+      if (error) throw error
+    } finally {
+      setSavingId(null)
+    }
+  }
+
+  const statusBadge = (status?: string | null) => {
+    const val = (status || 'new') as LeadStatus
+    const found = STATUS_OPTIONS.find((s) => s.value === val) || STATUS_OPTIONS[0]
+    return <span className={`leads-status leads-status-${found.color}`}>{found.label}</span>
+  }
 
   return (
     <div className="erp-miniapp">
@@ -69,13 +113,49 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
             <div className="erp-miniapp-subtitle">Entradas desde Sheets, Meta, etc.</div>
           </div>
 
-          <div className="leads-search">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar por nombre, email, teléfono..."
-              className="leads-input"
-            />
+          <div className="leads-controls">
+            <div className="leads-search">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar por nombre, email, teléfono..."
+                className="leads-input"
+              />
+            </div>
+
+            <div className="leads-filters">
+              <label className="leads-filter">
+                <span className="leads-filter-label">Estado</span>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as LeadStatus | 'all')}
+                  className="leads-select"
+                >
+                  <option value="all">Todos</option>
+                  {STATUS_OPTIONS.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="leads-filter">
+                <span className="leads-filter-label">Fuente</span>
+                <select
+                  value={sourceFilter}
+                  onChange={(e) => setSourceFilter(e.target.value)}
+                  className="leads-select"
+                >
+                  <option value="all">Todas</option>
+                  {sources.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -89,30 +169,64 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
             {filtered.length === 0 ? (
               <div className="leads-empty">Sin resultados.</div>
             ) : (
-              filtered.map((l, idx) => {
-                const isActive = l.id === selectedId
-                return (
-                  <motion.button
-                    key={l.id}
-                    className={`leads-item ${isActive ? 'is-active' : ''}`}
-                    onClick={() => setSelectedId(l.id)}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.18, delay: Math.min(idx * 0.01, 0.2) }}
-                    type="button"
-                  >
-                    <div className="leads-item-top">
-                      <div className="leads-item-title">{leadTitle(l)}</div>
-                      <div className="leads-item-date">{formatDate(l.created_at)}</div>
-                    </div>
-                    <div className="leads-item-subtitle">{leadSubtitle(l)}</div>
-                    <div className="leads-item-meta">
-                      {l.email ? <span className="leads-pill">{l.email}</span> : null}
-                      {l.phone ? <span className="leads-pill">{l.phone}</span> : null}
-                    </div>
-                  </motion.button>
-                )
-              })
+              <div className="leads-table">
+                <div className="leads-thead">
+                  <div className="leads-th">Fecha</div>
+                  <div className="leads-th">Nombre</div>
+                  <div className="leads-th">Teléfono</div>
+                  <div className="leads-th">Email</div>
+                  <div className="leads-th">Fuente</div>
+                  <div className="leads-th">Estado</div>
+                </div>
+
+                <div className="leads-tbody">
+                  {filtered.map((l, idx) => {
+                    const isActive = l.id === selectedId
+                    const statusValue = ((l.status || 'new') as LeadStatus) || 'new'
+                    return (
+                      <motion.div
+                        key={l.id}
+                        className={`leads-tr ${isActive ? 'is-active' : ''}`}
+                        onClick={() => setSelectedId(l.id)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') setSelectedId(l.id)
+                        }}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.18, delay: Math.min(idx * 0.006, 0.18) }}
+                      >
+                        <div className="leads-td leads-td-date">{formatDate(l.created_at)}</div>
+                        <div className="leads-td leads-td-name">{leadTitle(l)}</div>
+                        <div className="leads-td">{l.phone || '-'}</div>
+                        <div className="leads-td">{l.email || '-'}</div>
+                        <div className="leads-td">{l.source || '-'}</div>
+                        <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
+                          <div className="leads-status-wrap">
+                            {statusBadge(statusValue)}
+                            <select
+                              className="leads-status-select"
+                              value={statusValue}
+                              disabled={savingId === l.id}
+                              onChange={async (e) => {
+                                const next = e.target.value as LeadStatus
+                                await updateStatus(l.id, next)
+                              }}
+                            >
+                              {STATUS_OPTIONS.map((s) => (
+                                <option key={s.value} value={s.value}>
+                                  {s.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )
+                  })}
+                </div>
+              </div>
             )}
           </motion.div>
 
