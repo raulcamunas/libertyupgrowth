@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
 
-type BusinessType = 'peluqueria' | 'fisioterapeuta' | 'psicologo' | 'estetica' | 'tatuajes'
+import { getDefaultFormSchema, type BusinessType, type FormSchema, type FormStep, type FormQuestion } from '@/lib/forms/schema'
 
 type TattooArtist = {
   name: string
@@ -94,7 +94,7 @@ type FormState = {
   estPreciosOrientativos: string
   estBonos: string
   estContraindicaciones: string
-}
+} & Record<string, any>
 
 function ArtistSelector({
   artists,
@@ -350,7 +350,7 @@ const initialState: FormState = {
 }
 
 type Field = {
-  key: keyof FormState
+  key: string
   label: string
   placeholder?: string
   type?: 'text' | 'tel' | 'textarea' | 'select'
@@ -596,6 +596,7 @@ export default function FormularioPage() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [schema, setSchema] = useState<FormSchema | null>(null)
 
   const businessOptions: { type: BusinessType; label: string; desc: string }[] = [
     { type: 'peluqueria', label: 'Peluquería', desc: 'Cortes, color, tratamientos, estética capilar.' },
@@ -605,322 +606,66 @@ export default function FormularioPage() {
     { type: 'tatuajes', label: 'Estudio de tatuajes', desc: 'Tatuajes, piercings, reservas, políticas.' },
   ]
 
-  const commonFields: Field[] = [
-    { key: 'nombre', label: 'Tu nombre', placeholder: 'Ej: Raúl', required: true },
-    { key: 'sector', label: 'Sector', placeholder: 'Ej: Peluquería, Fisio, Tatuajes...', required: true },
-    { key: 'direccionCompleta', label: 'Dirección completa', placeholder: 'Calle, número, piso, ciudad, CP', required: true },
-    { key: 'telefonoContactoPersonal', label: 'Teléfono donde el técnico te contactará', type: 'tel', placeholder: 'Ej: +34 600 000 000', required: true },
-    { key: 'telefonoBot', label: '¿A qué número de teléfono vamos a instalar el Bot?', type: 'tel', placeholder: 'Ej: +34 600 000 000', required: true },
-    {
-      key: 'whatsappBusinessActivo',
-      label: '¿Tienes WhatsApp Business activo para este número?',
-      type: 'select',
-      required: true,
-      options: [
-        { value: 'si', label: 'Sí' },
-        { value: 'no', label: 'No' },
-      ],
-    },
-    {
-      key: 'profesionales',
-      label: 'Nombre de los profesionales que trabajan en tu negocio',
-      placeholder: 'Ej: Ana (color), Juan (cortes), etc.',
-      type: 'textarea',
-      required: true,
-    },
-    { key: 'horarioApertura', label: 'Horario de apertura general', placeholder: 'Ej: 10:00-14:00 y 16:00-20:00', required: true },
-    { key: 'diasApertura', label: 'Días de apertura', placeholder: 'Ej: Lunes a viernes, sábados mañana', required: true },
-    { key: 'diasCerradosFijos', label: 'Días cerrados fijos', placeholder: 'Ej: Domingos y festivos' },
-    {
-      key: 'intervaloCitas',
-      label: '¿Cuánto dura una cita de promedio? En la siguiente pestaña podrás profundizar',
-      type: 'select',
-      allowCustom: true,
-      required: true,
-      placeholder: 'Ej: 30 min / 45 min / 60 min',
-      options: [
-        { value: '15 min', label: '15 min' },
-        { value: '30 min', label: '30 min' },
-        { value: '45 min', label: '45 min' },
-        { value: '60 min', label: '60 min' },
-        { value: '90 min', label: '90 min' },
-      ],
-    },
-    { key: 'webInstagram', label: 'Web o Instagram (si aplica)', placeholder: 'Ej: https://instagram.com/tu-negocio' },
-    {
-      key: 'idioma',
-      label: 'Idioma principal de atención',
-      type: 'select',
-      allowCustom: true,
-      placeholder: 'Ej: Español',
-      options: [
-        { value: 'Español', label: 'Español' },
-        { value: 'Inglés', label: 'Inglés' },
-        { value: 'Español e Inglés', label: 'Español e Inglés' },
-      ],
-    },
-    { key: 'notas', label: 'Notas adicionales', type: 'textarea', placeholder: 'Cualquier detalle que el técnico deba saber.' },
-  ]
-  const sectorSpecificFields = useMemo((): Field[] => {
-    switch (form.businessType) {
-      case 'tatuajes':
-        return [
-          {
-            key: 'tattooEspecialidades',
-            label: 'Especialidades de los artistas (Dany, David, Alejo, Giulia)',
-            placeholder: 'Ej: Dany — realismo; Giulia — acuarela',
-            type: 'textarea',
-            required: true,
-          },
-          {
-            key: 'tattooPiercings',
-            label: '¿Todos los artistas hacen piercings o solo algunos?',
-            placeholder: 'Indica quién y cómo se gestiona.',
-            type: 'textarea',
-            required: true,
-          },
-          {
-            key: 'tattooCoverups',
-            label: '¿Todos hacen cover-ups o es especialidad de alguno?',
-            type: 'textarea',
-            required: true,
-          },
-          {
-            key: 'tattooArtistasNuevos',
-            label: '¿Algún artista no coge clientes nuevos o trabaja solo por proyectos?',
-            type: 'textarea',
-            required: true,
-          },
-          {
-            key: 'tattooHorarioArtistas',
-            label: 'Horario de cada artista (si difiere)',
-            placeholder: 'Ej: Todos mar-sáb; Alejo solo por tardes',
-            type: 'textarea',
-          },
-          { key: 'tattooPrecioPiercing', label: 'Precio del piercing (o rango por zona)', type: 'textarea' },
-          { key: 'tattooMinimoSesion', label: '¿Tenéis precio mínimo de sesión?', type: 'textarea' },
-          { key: 'tattooPreciosHoraOCerrado', label: '¿Precios por hora o precio cerrado según pieza?', type: 'textarea' },
-          { key: 'tattooDeposito', label: '¿Pedís señal/depósito para reservar sesión? ¿Cuánto?', type: 'textarea' },
-          { key: 'tattooOfertas', label: '¿Hacéis ofertas especiales (2x1, descuentos, etc.)?', type: 'textarea' },
-          { key: 'tattooIntervaloCitas', label: 'Intervalo entre citas (30 min / 60 min...)', type: 'text' },
-          { key: 'tattooConsultaPrevia', label: 'Consulta previa para piezas grandes: ¿obligatoria o recomendada? ¿Cuánto dura?', type: 'textarea' },
-          { key: 'tattooZonasEspeciales', label: '¿Tatuáis en cara, cuello, manos o zonas especiales?', type: 'textarea' },
-          { key: 'tattooMenores', label: '¿Aceptáis menores de 18 con autorización?', type: 'textarea' },
-          { key: 'tattooWalkins', label: '¿Aceptáis walk-ins si hay hueco o solo con cita?', type: 'textarea' },
-          { key: 'tattooPoliticaTardanza', label: '¿Qué pasa si un cliente llega tarde o no aparece?', type: 'textarea' },
-          { key: 'tattooDerivacion', label: 'Derivación: si el bot no puede resolver algo, ¿a quién derivamos y cómo se llama?', type: 'textarea', required: true },
-          { key: 'tattooTelefonoLlamadas', label: '¿Hay un número para llamadas o solo WhatsApp?', type: 'textarea' },
-        ]
-      case 'peluqueria':
-        return [
-          { key: 'hairServiciosPrincipales', label: 'Servicios principales', placeholder: 'Corte, color, mechas, tratamientos...', type: 'textarea', required: true },
-          { key: 'hairServiciosColor', label: '¿Cómo gestionáis los servicios de color? (duración, prueba, etc.)', type: 'textarea' },
-          { key: 'hairPreciosOrientativos', label: 'Precios orientativos (rangos)', placeholder: 'Ej: corte 15-25€, mechas 60-120€', type: 'textarea' },
-          { key: 'hairTiempoMedioServicios', label: 'Tiempo medio por servicio', placeholder: 'Ej: corte 30min, mechas 120min', type: 'textarea' },
-        ]
-      case 'fisioterapeuta':
-        return [
-          { key: 'physioEspecialidades', label: 'Especialidades', placeholder: 'Deportiva, suelo pélvico, rehabilitación...', type: 'textarea', required: true },
-          { key: 'physioDuracionSesiones', label: 'Duración de sesiones', placeholder: 'Ej: 45min / 60min', type: 'text', required: true },
-          { key: 'physioPrecios', label: 'Precios (rango)', placeholder: 'Ej: 40-60€', type: 'textarea' },
-          { key: 'physioPrimeraConsulta', label: '¿La primera consulta tiene condiciones especiales?', type: 'textarea' },
-        ]
-      case 'psicologo':
-        return [
-          { key: 'psyModalidad', label: 'Modalidad', placeholder: 'Presencial / online / ambas', type: 'text', required: true },
-          { key: 'psyDuracionSesiones', label: 'Duración de sesiones', placeholder: 'Ej: 50min', type: 'text', required: true },
-          { key: 'psyPrecios', label: 'Precios (rango)', placeholder: 'Ej: 50-80€', type: 'textarea' },
-          { key: 'psyUrgencias', label: 'Urgencias: ¿cómo se gestionan?', type: 'textarea' },
-        ]
-      case 'estetica':
-        return [
-          { key: 'estServiciosPrincipales', label: 'Servicios principales', placeholder: 'Facial, corporal, depilación...', type: 'textarea', required: true },
-          { key: 'estPreciosOrientativos', label: 'Precios orientativos (rangos)', type: 'textarea' },
-          { key: 'estBonos', label: '¿Tenéis bonos o packs? Describe condiciones', type: 'textarea' },
-          { key: 'estContraindicaciones', label: 'Contraindicaciones o políticas (si aplica)', type: 'textarea' },
-        ]
-      default:
-        return []
+  useEffect(() => {
+    const bt = form.businessType
+    if (!bt) {
+      setSchema(null)
+      return
+    }
+    let active = true
+
+    ;(async () => {
+      try {
+        const res = await fetch(`/api/form-schema?businessType=${encodeURIComponent(bt)}`)
+        const json = await res.json()
+        const next = (json?.schema as FormSchema) || getDefaultFormSchema(bt)
+        if (!active) return
+        setSchema(next)
+      } catch {
+        if (!active) return
+        setSchema(getDefaultFormSchema(bt))
+      }
+    })()
+
+    return () => {
+      active = false
     }
   }, [form.businessType])
 
-  const fieldByKey = useMemo(() => {
-    const all = [...commonFields, ...sectorSpecificFields]
-    const map = new Map<keyof FormState, Field>()
-    for (const f of all) map.set(f.key, f)
-    return map
-  }, [commonFields, sectorSpecificFields])
-
-  const stepGroups = useMemo(() => {
-    const groups: {
-      id: string
-      title: string
-      subtitle: string
-      fields: (keyof FormState)[]
-    }[] = []
-
-    // Step 0 is business type selection (no fields here)
-    groups.push({
+  const uiSteps = useMemo(() => {
+    const intro = {
       id: 'intro',
       title: 'Personalicemos tu bot',
       subtitle:
         'Elige tu tipo de negocio para adaptar el onboarding. Si crees que falta información importante, no te preocupes: al final del formulario podrás añadir cualquier detalle en el campo de notas.',
-      fields: [],
-    })
-
-    if (!form.businessType) return groups
-
-    // Comunes (más pasos, menos preguntas)
-    groups.push({
-      id: 'contacto',
-      title: 'Datos de contacto',
-      subtitle: 'Para que el técnico pueda ayudarte durante el alta.',
-      fields: ['nombre', 'telefonoContactoPersonal', 'webInstagram'],
-    })
-
-    groups.push({
-      id: 'negocio',
-      title: 'Datos del negocio',
-      subtitle: 'Ubicación y contexto para afinar el bot.',
-      fields: ['sector', 'direccionCompleta', 'idioma'],
-    })
-
-    groups.push({
-      id: 'whatsapp',
-      title: 'WhatsApp y Bot',
-      subtitle: 'Configurar el número correcto desde el principio.',
-      fields: ['telefonoBot', 'whatsappBusinessActivo'],
-    })
-
-    if (form.businessType !== 'tatuajes') {
-      groups.push({
-        id: 'equipo',
-        title: 'Equipo',
-        subtitle: 'El bot puede mencionar profesionales y repartir derivaciones.',
-        fields: ['profesionales'],
-      })
+      kind: 'fields' as const,
+      fields: [] as FormQuestion[],
     }
+    const tail = (schema?.steps || []) as FormStep[]
+    return [intro, ...tail]
+  }, [schema])
 
-    groups.push({
-      id: 'horarios',
-      title: 'Horarios y agenda',
-      subtitle: 'Con esto el bot ofrecerá citas coherentes.',
-      fields: ['horarioApertura', 'diasApertura', 'diasCerradosFijos', 'intervaloCitas'],
-    })
+  const totalSteps = uiSteps.length
 
-    // Sector específico
-    if (form.businessType === 'tatuajes') {
-      groups.push({
-        id: 'tattoo-artistas',
-        title: 'Artistas',
-        subtitle: 'Añade los nombres una sola vez y luego personalizamos preguntas por artista.',
-        fields: [],
-      })
-      groups.push({
-        id: 'tattoo-precios',
-        title: 'Servicios y precios',
-        subtitle: 'Para responder preguntas típicas y filtrar mejor.',
-        fields: ['tattooPrecioPiercing', 'tattooMinimoSesion', 'tattooPreciosHoraOCerrado', 'tattooDeposito', 'tattooOfertas'],
-      })
-      groups.push({
-        id: 'tattoo-politicas',
-        title: 'Políticas del estudio',
-        subtitle: 'Reglas clave: walk-ins, menores, zonas, etc.',
-        fields: ['tattooConsultaPrevia', 'tattooZonasEspeciales', 'tattooMenores', 'tattooWalkins', 'tattooPoliticaTardanza'],
-      })
-      groups.push({
-        id: 'tattoo-derivacion',
-        title: 'Derivación',
-        subtitle: 'Si el bot no puede resolver algo, ¿qué hacemos?',
-        fields: ['tattooDerivacion', 'tattooTelefonoLlamadas', 'tattooIntervaloCitas'],
-      })
-    }
-
-    if (form.businessType === 'peluqueria') {
-      groups.push({
-        id: 'hair-servicios',
-        title: 'Servicios',
-        subtitle: 'Qué ofreces y cómo lo gestionas.',
-        fields: ['hairServiciosPrincipales', 'hairServiciosColor'],
-      })
-      groups.push({
-        id: 'hair-precios',
-        title: 'Tiempos y precios',
-        subtitle: 'Ayuda al bot a orientar y reservar mejor.',
-        fields: ['hairPreciosOrientativos', 'hairTiempoMedioServicios'],
-      })
-    }
-
-    if (form.businessType === 'fisioterapeuta') {
-      groups.push({
-        id: 'physio-servicios',
-        title: 'Servicios',
-        subtitle: 'Especialidades y duración.',
-        fields: ['physioEspecialidades', 'physioDuracionSesiones'],
-      })
-      groups.push({
-        id: 'physio-precios',
-        title: 'Precios y primera consulta',
-        subtitle: 'Para resolver dudas frecuentes.',
-        fields: ['physioPrecios', 'physioPrimeraConsulta'],
-      })
-    }
-
-    if (form.businessType === 'psicologo') {
-      groups.push({
-        id: 'psy-servicios',
-        title: 'Servicios',
-        subtitle: 'Modalidad y duración.',
-        fields: ['psyModalidad', 'psyDuracionSesiones'],
-      })
-      groups.push({
-        id: 'psy-precios',
-        title: 'Precios y urgencias',
-        subtitle: 'Políticas para casos especiales.',
-        fields: ['psyPrecios', 'psyUrgencias'],
-      })
-    }
-
-    if (form.businessType === 'estetica') {
-      groups.push({
-        id: 'est-servicios',
-        title: 'Servicios',
-        subtitle: 'Qué haces y para quién.',
-        fields: ['estServiciosPrincipales', 'estContraindicaciones'],
-      })
-      groups.push({
-        id: 'est-precios',
-        title: 'Precios y packs',
-        subtitle: 'Bonos, rangos, condiciones.',
-        fields: ['estPreciosOrientativos', 'estBonos'],
-      })
-    }
-
-    groups.push({
-      id: 'final',
-      title: 'Últimos detalles',
-      subtitle: 'Cualquier cosa extra que el técnico deba saber.',
-      fields: ['notas'],
-    })
-
-    return groups
-  }, [form.businessType])
-
-  const totalSteps = stepGroups.length
-
-  const currentGroup = stepGroups[Math.min(step, stepGroups.length - 1)]
+  const currentGroup = uiSteps[Math.min(step, uiSteps.length - 1)]
 
   const currentFields = useMemo(() => {
     if (!currentGroup) return [] as Field[]
-    return currentGroup.fields
-      .map((k) => fieldByKey.get(k))
-      .filter((f): f is Field => Boolean(f))
-  }, [currentGroup, fieldByKey])
+    return (currentGroup.fields || []).map((q) => ({
+      key: q.key,
+      label: q.label,
+      placeholder: q.placeholder,
+      type: q.type,
+      options: q.options,
+      required: q.required,
+      allowCustom: q.allowCustom,
+    }))
+  }, [currentGroup])
 
   const canContinue = useMemo(() => {
     if (step === 0) return Boolean(form.businessType)
 
-    if (currentGroup?.id === 'horarios') {
+    if (currentGroup?.kind === 'horarios') {
       const openDays = Object.values(form.horarioSemanal || {}).filter((d) => d.open)
       if (openDays.length === 0) return false
       const allHaveHours = openDays.every((d) => String(d.from || '').trim() && String(d.to || '').trim())
@@ -928,7 +673,7 @@ export default function FormularioPage() {
       return String(form.intervaloCitas || '').trim().length > 0
     }
 
-    if (currentGroup?.id === 'tattoo-artistas') {
+    if (currentGroup?.kind === 'tattoo_artistas') {
       if (!Array.isArray(form.tattooArtists) || form.tattooArtists.length === 0) return false
       return form.tattooArtists.every((a) => String(a?.name || '').trim().length > 0)
     }
@@ -936,7 +681,7 @@ export default function FormularioPage() {
     const requiredKeys = currentFields.filter((f) => f.required).map((f) => f.key)
     if (requiredKeys.length === 0) return true
     return requiredKeys.every((k) => String(form[k] || '').trim().length > 0)
-  }, [step, form, currentFields])
+  }, [step, form, currentFields, currentGroup])
 
   useEffect(() => {
     if (!form.horarioSemanal) return
@@ -1088,7 +833,7 @@ export default function FormularioPage() {
                   </div>
                 ) : null}
 
-                {currentGroup?.id === 'horarios' ? (
+                {currentGroup?.kind === 'horarios' ? (
                   <div className="formulario-fields">
                     <WeeklyScheduleEditor
                       value={form.horarioSemanal}
@@ -1096,16 +841,31 @@ export default function FormularioPage() {
                     />
 
                     <div className="formulario-schedule-extra">
-                      <InputField
-                        field={commonFields.find((f) => f.key === 'intervaloCitas')!}
-                        value={String(form.intervaloCitas || '')}
-                        onChange={(v) => setForm((p) => ({ ...p, intervaloCitas: v }))}
-                      />
+                      {(() => {
+                        const q = (currentGroup.fields || []).find((x: any) => x?.key === 'intervaloCitas') as any
+                        if (!q) return null
+                        const field: Field = {
+                          key: q.key,
+                          label: q.label,
+                          placeholder: q.placeholder,
+                          type: q.type,
+                          options: q.options,
+                          required: q.required,
+                          allowCustom: q.allowCustom,
+                        }
+                        return (
+                          <InputField
+                            field={field}
+                            value={String(form.intervaloCitas || '')}
+                            onChange={(v) => setForm((p) => ({ ...p, intervaloCitas: v }))}
+                          />
+                        )
+                      })()}
                     </div>
                   </div>
                 ) : null}
 
-                {currentGroup?.id === 'tattoo-artistas' ? (
+                {currentGroup?.kind === 'tattoo_artistas' ? (
                   <div className="formulario-fields">
                     <ArtistSelector
                       artists={form.tattooArtists}
@@ -1224,7 +984,7 @@ export default function FormularioPage() {
                   </div>
                 ) : null}
 
-                {step > 0 && currentGroup?.id !== 'tattoo-artistas' && currentGroup?.id !== 'horarios' ? (
+                {step > 0 && currentGroup?.kind !== 'tattoo_artistas' && currentGroup?.kind !== 'horarios' ? (
                   <motion.div className="formulario-fields" variants={listVariants} initial="initial" animate="animate">
                     {currentFields.map((f) => (
                       <motion.div key={String(f.key)} variants={itemVariants}>
