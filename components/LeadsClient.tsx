@@ -99,6 +99,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     return () => window.removeEventListener('pointerdown', onDown)
   }, [])
 
+  const autosizeTextarea = (el: HTMLTextAreaElement) => {
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight}px`
+  }
+
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(COL_STORAGE_KEY)
@@ -388,14 +393,10 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                             rows={1}
                             onChange={(e) => {
                               setNotesOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))
-                              e.currentTarget.style.height = 'auto'
-                              e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
+                              autosizeTextarea(e.currentTarget)
                             }}
-                            onInput={(e) => {
-                              const el = e.currentTarget
-                              el.style.height = 'auto'
-                              el.style.height = `${el.scrollHeight}px`
-                            }}
+                            onInput={(e) => autosizeTextarea(e.currentTarget)}
+                            onFocus={(e) => autosizeTextarea(e.currentTarget)}
                           />
                         </div>
                         <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
@@ -404,7 +405,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                               type="button"
                               className="leads-status-btn"
                               disabled={isSaving}
-                              onClick={(e) => {
+                              onPointerDown={(e) => {
                                 e.stopPropagation()
                                 setStatusMenuOpenForId((cur) => (cur === l.id ? null : l.id))
                               }}

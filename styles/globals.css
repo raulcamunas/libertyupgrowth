@@ -7369,6 +7369,8 @@
         .leads-td-notes {
             padding-top: 0;
             padding-bottom: 0;
+            overflow: visible;
+            white-space: normal;
         }
 
         .leads-notes-input {
@@ -7385,6 +7387,7 @@
             line-height: 1.25;
             box-sizing: border-box;
             display: block;
+            min-height: 34px;
         }
 
         .leads-extra-btn {
