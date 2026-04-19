@@ -72,6 +72,41 @@ function leadSubtitle(l: LeadRow) {
   return bits.join(' · ')
 }
 
+function notesToEntries(raw: string): Array<{ ts: string; text: string }> {
+  const cleaned = (raw || '').trim()
+  if (!cleaned) return []
+  const blocks = cleaned
+    .split(/\n\s*\n/g)
+    .map((b) => b.trim())
+    .filter(Boolean)
+
+  const out: Array<{ ts: string; text: string }> = []
+  for (const b of blocks) {
+    const m = b.match(/^\[([^\]]+)\]\s*[\n\r]*([\s\S]*)$/)
+    if (m) {
+      out.push({ ts: m[1].trim(), text: (m[2] || '').trim() })
+    } else {
+      out.push({ ts: '', text: b })
+    }
+  }
+  return out
+}
+
+function nowStampEs() {
+  try {
+    const d = new Date()
+    return new Intl.DateTimeFormat('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(d)
+  } catch {
+    return new Date().toISOString()
+  }
+}
+
 export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -96,6 +131,8 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [addNotes, setAddNotes] = useState('')
   const [addStatus, setAddStatus] = useState<LeadStatus>('new')
   const [addError, setAddError] = useState('')
+
+  const [noteDraftById, setNoteDraftById] = useState<Record<string, string>>({})
 
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string>('')
@@ -182,6 +219,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         const meta = `${l.name || ''} ${l.email || ''} ${l.phone || ''} ${l.source || ''} ${l.status || ''}`.toLowerCase()
         const json = JSON.stringify(l.payload || {}).toLowerCase()
         return meta.includes(q) || json.includes(q)
+      })
+      .slice()
+      .sort((a, b) => {
+        const ta = new Date(a.created_at).getTime()
+        const tb = new Date(b.created_at).getTime()
+        return tb - ta
       })
   }, [allLeads, query, sourceFilter, statusFilter, statusOverrideById, baseStatusById])
 
@@ -519,6 +562,8 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     const statusValue = statusOverrideById[l.id] || baseStatusById[l.id] || (((l.status || 'new') as LeadStatus) || 'new')
                     const statusColor = statusColorByValue(statusValue)
                     const notesValue = notesOverrideById[l.id] ?? baseNotesById[l.id] ?? (l.notes || '')
+                    const entries = notesToEntries(notesValue)
+                    const draft = noteDraftById[l.id] || ''
                     return (
                       <motion.div
                         key={l.id}
@@ -566,21 +611,38 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         <div className="leads-td">{l.email || '-'}</div>
 
                         <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
-                          <textarea
-                            className="leads-notes-input"
-                            value={notesValue}
-                            placeholder="Escribe aquí notas..."
-                            rows={1}
-                            ref={(el) => {
-                              notesRefById.current[l.id] = el
-                            }}
-                            onChange={(e) => {
-                              setNotesOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))
-                              autosizeTextarea(e.currentTarget)
-                            }}
-                            onInput={(e) => autosizeTextarea(e.currentTarget)}
-                            onFocus={(e) => autosizeTextarea(e.currentTarget)}
-                          />
+                          <div className="leads-notes-entries">
+                            {entries.length === 0 ? <div className="leads-notes-empty">Sin comentarios</div> : null}
+                            {entries.map((en, i) => (
+                              <div key={`${l.id}-${i}`} className="leads-note-entry">
+                                {en.ts ? <div className="leads-note-ts">{en.ts}</div> : null}
+                                <div className="leads-note-text">{en.text || '-'}</div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="leads-note-compose">
+                            <textarea
+                              className="leads-note-compose-input"
+                              value={draft}
+                              placeholder="Añadir comentario..."
+                              rows={2}
+                              onChange={(e) => setNoteDraftById((prev) => ({ ...prev, [l.id]: e.target.value }))}
+                            />
+                            <button
+                              type="button"
+                              className="leads-note-compose-btn"
+                              disabled={!draft.trim()}
+                              onClick={() => {
+                                const stamp = nowStampEs()
+                                const nextBlock = `[${stamp}]\n${draft.trim()}`
+                                const nextNotes = notesValue.trim() ? `${notesValue.trim()}\n\n${nextBlock}` : nextBlock
+                                setNotesOverrideById((prev) => ({ ...prev, [l.id]: nextNotes }))
+                                setNoteDraftById((prev) => ({ ...prev, [l.id]: '' }))
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
                         </div>
 
                         <div className="leads-td leads-td-extra" onClick={(e) => e.stopPropagation()}>
