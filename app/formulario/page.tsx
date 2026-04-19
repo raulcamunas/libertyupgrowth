@@ -29,6 +29,8 @@ type WeeklySchedule = Record<DayKey, DaySchedule>
 type FormState = {
   businessType: BusinessType | ''
 
+  nombre: string
+
   sector: string
   direccionCompleta: string
   telefonoContactoPersonal: string
@@ -278,6 +280,8 @@ function WeeklyScheduleEditor({
 const initialState: FormState = {
   businessType: '',
 
+  nombre: '',
+
   sector: '',
   direccionCompleta: '',
   telefonoContactoPersonal: '',
@@ -372,7 +376,8 @@ function SelectOrCustom({
 }) {
   const optionValues = useMemo(() => new Set(options.map((o) => o.value)), [options])
   const isCustom = value !== '' && !optionValues.has(value)
-  const selectValue = isCustom ? '__custom__' : value
+  const [customMode, setCustomMode] = useState(isCustom)
+  const selectValue = customMode || isCustom ? '__custom__' : value
 
   return (
     <label className="formulario-field">
@@ -386,9 +391,11 @@ function SelectOrCustom({
         onChange={(e) => {
           const v = e.target.value
           if (v === '__custom__') {
-            if (!isCustom) onChange('')
+            setCustomMode(true)
+            if (!isCustom && optionValues.has(value)) onChange('')
             return
           }
+          setCustomMode(false)
           onChange(v)
         }}
       >
@@ -507,10 +514,11 @@ export default function FormularioPage() {
   ]
 
   const commonFields: Field[] = [
+    { key: 'nombre', label: 'Tu nombre', placeholder: 'Ej: Raúl', required: true },
     { key: 'sector', label: 'Sector', placeholder: 'Ej: Peluquería, Fisio, Tatuajes...', required: true },
     { key: 'direccionCompleta', label: 'Dirección completa', placeholder: 'Calle, número, piso, ciudad, CP', required: true },
     { key: 'telefonoContactoPersonal', label: 'Teléfono personal de contacto (técnico)', type: 'tel', placeholder: 'Ej: +34 600 000 000', required: true },
-    { key: 'telefonoBot', label: 'Número de teléfono para el Bot', type: 'tel', placeholder: 'Ej: +34 600 000 000', required: true },
+    { key: 'telefonoBot', label: '¿A qué número de teléfono vamos a instalar el Bot?', type: 'tel', placeholder: 'Ej: +34 600 000 000', required: true },
     {
       key: 'whatsappBusinessActivo',
       label: '¿Tienes WhatsApp Business activo para este número?',
@@ -663,7 +671,8 @@ export default function FormularioPage() {
     groups.push({
       id: 'intro',
       title: 'Personalicemos tu bot',
-      subtitle: 'Elige tu tipo de negocio para adaptar el onboarding.',
+      subtitle:
+        'Elige tu tipo de negocio para adaptar el onboarding. Si crees que falta información importante, no te preocupes: al final del formulario podrás añadir cualquier detalle en el campo de notas.',
       fields: [],
     })
 
@@ -674,7 +683,7 @@ export default function FormularioPage() {
       id: 'contacto',
       title: 'Datos de contacto',
       subtitle: 'Para que el técnico pueda ayudarte durante el alta.',
-      fields: ['telefonoContactoPersonal', 'webInstagram'],
+      fields: ['nombre', 'telefonoContactoPersonal', 'webInstagram'],
     })
 
     groups.push({

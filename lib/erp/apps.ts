@@ -25,6 +25,14 @@ export const ERP_APPS: ErpApp[] = [
     adminOnly: true,
   },
   {
+    id: 'info-clientes',
+    name: 'Info clientes',
+    description: 'Clientes con contrato firmado',
+    href: '/app/apps/info-clientes',
+    icon: 'fa-solid fa-file-signature',
+    adminOnly: true,
+  },
+  {
     id: 'usuarios',
     name: 'Usuarios',
     description: 'Gestión de accesos y permisos',

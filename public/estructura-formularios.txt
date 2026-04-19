@@ -1,0 +1,136 @@
+LIBERTY UPGROWTH — ESTRUCTURA DE FORMULARIOS (ONBOARDING /formulario)
+
+Este documento resume la estructura (secciones + preguntas) tal y como está implementada en el formulario onboarding en:
+- app/formulario/page.tsx
+
+================================================================================
+0) PASO INICIAL (común)
+================================================================================
+Sección: "Personalicemos tu bot"
+- Selección de tipo de negocio:
+  - Peluquería
+  - Fisioterapeuta
+  - Psicólogo
+  - Centro de estética
+  - Estudio de tatuajes
+
+================================================================================
+PREGUNTAS COMUNES (aparecen en todos los tipos de negocio)
+================================================================================
+
+Sección: "Datos de contacto"
+- Tu nombre
+- Teléfono personal de contacto (técnico)
+- Web o Instagram (si aplica)
+
+Sección: "Datos del negocio"
+- Sector
+- Dirección completa
+- Idioma principal de atención
+
+Sección: "WhatsApp y Bot"
+- ¿A qué número de teléfono vamos a instalar el Bot?
+- ¿Tienes WhatsApp Business activo para este número?
+  - Sí
+  - No
+
+Sección: "Equipo"
+- Nombre de los profesionales que trabajan en el negocio
+
+Sección: "Horarios y agenda"
+- Horario de apertura general
+- Días de apertura
+- Días cerrados fijos
+- Intervalo de citas (slots)
+  - 15 min
+  - 30 min
+  - 45 min
+  - 60 min
+  - 90 min
+  - (Permite personalizar)
+
+Sección final: "Últimos detalles"
+- Notas adicionales
+
+================================================================================
+TIPO DE NEGOCIO: PELUQUERÍA (businessType = "peluqueria")
+================================================================================
+
+Sección: "Servicios"
+- Servicios principales
+- ¿Cómo gestionáis los servicios de color? (duración, prueba, etc.)
+
+Sección: "Tiempos y precios"
+- Precios orientativos (rangos)
+- Tiempo medio por servicio
+
+================================================================================
+TIPO DE NEGOCIO: FISIOTERAPEUTA (businessType = "fisioterapeuta")
+================================================================================
+
+Sección: "Servicios"
+- Especialidades
+- Duración de sesiones
+
+Sección: "Precios y primera consulta"
+- Precios (rango)
+- ¿La primera consulta tiene condiciones especiales?
+
+================================================================================
+TIPO DE NEGOCIO: PSICÓLOGO (businessType = "psicologo")
+================================================================================
+
+Sección: "Servicios"
+- Modalidad
+- Duración de sesiones
+
+Sección: "Precios y urgencias"
+- Precios (rango)
+- Urgencias: ¿cómo se gestionan?
+
+================================================================================
+TIPO DE NEGOCIO: CENTRO DE ESTÉTICA (businessType = "estetica")
+================================================================================
+
+Sección: "Servicios"
+- Servicios principales
+- Contraindicaciones o políticas (si aplica)
+
+Sección: "Precios y packs"
+- Precios orientativos (rangos)
+- ¿Tenéis bonos o packs? Describe condiciones
+
+================================================================================
+TIPO DE NEGOCIO: ESTUDIO DE TATUAJES (businessType = "tatuajes")
+================================================================================
+
+Sección: "Artistas" (paso de preparación)
+- Añade los nombres de los artistas (lista)
+
+Sección: "Servicios y precios"
+- Precio del piercing (o rango por zona)
+- ¿Tenéis precio mínimo de sesión?
+- ¿Precios por hora o precio cerrado según pieza?
+- ¿Pedís señal/depósito para reservar sesión? ¿Cuánto?
+- ¿Hacéis ofertas especiales (2x1, descuentos, etc.)?
+
+Sección: "Políticas del estudio"
+- Consulta previa para piezas grandes: ¿obligatoria o recomendada? ¿Cuánto dura?
+- ¿Tatuáis en cara, cuello, manos o zonas especiales?
+- ¿Aceptáis menores de 18 con autorización?
+- ¿Aceptáis walk-ins si hay hueco o solo con cita?
+- ¿Qué pasa si un cliente llega tarde o no aparece?
+
+Sección: "Derivación"
+- Derivación: si el bot no puede resolver algo, ¿a quién derivamos y cómo se llama?
+- ¿Hay un número para llamadas o solo WhatsApp?
+- Intervalo entre citas (30 min / 60 min...)
+
+================================================================================
+NOTAS IMPORTANTES
+================================================================================
+- En la implementación actual (app/formulario/page.tsx), los campos "ciudad" y el bloque detallado de "horarioSemanal" existen en el estado, pero la UI está pensada para resumir horarios en:
+  - Horario de apertura general
+  - Días de apertura
+  - Días cerrados fijos
+- Este documento refleja las secciones/preguntas visibles definidas en stepGroups + commonFields + sectorSpecificFields.
