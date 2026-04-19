@@ -20,14 +20,14 @@ type LeadRow = {
   payload: any
 }
 
-type ColumnKey = 'name' | 'phone' | 'email' | 'notes' | 'status' | 'extra'
+type ColumnKey = 'status' | 'name' | 'phone' | 'email' | 'notes' | 'extra'
 
 const COLUMN_DEFAULT_WIDTH: Record<ColumnKey, number> = {
+  status: 200,
   name: 260,
   phone: 180,
   email: 280,
   notes: 520,
-  status: 200,
   extra: 140,
 }
 
@@ -80,6 +80,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [showJson, setShowJson] = useState(false)
   const [statusOverrideById, setStatusOverrideById] = useState<Record<string, LeadStatus>>({})
   const [statusMenuOpenForId, setStatusMenuOpenForId] = useState<string | null>(null)
+  const [statusMenuPos, setStatusMenuPos] = useState<{ id: string; top: number; left: number } | null>(null)
   const [notesOverrideById, setNotesOverrideById] = useState<Record<string, string>>({})
 
   const [isSaving, setIsSaving] = useState(false)
@@ -91,9 +92,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     startWidth: number
   } | null>(null)
 
+  const notesRefById = useRef<Record<string, HTMLTextAreaElement | null>>({})
+
   useEffect(() => {
     const onDown = () => {
       setStatusMenuOpenForId(null)
+      setStatusMenuPos(null)
     }
     window.addEventListener('pointerdown', onDown)
     return () => window.removeEventListener('pointerdown', onDown)
@@ -139,6 +143,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         return meta.includes(q) || json.includes(q)
       })
   }, [leads, query, sourceFilter, statusFilter, statusOverrideById])
+
+  useEffect(() => {
+    Object.values(notesRefById.current).forEach((el) => {
+      if (el) autosizeTextarea(el)
+    })
+  }, [notesOverrideById, leads.length])
 
   const selected = useMemo(() => filtered.find((l) => l.id === drawerLeadId) || null, [filtered, drawerLeadId])
 
@@ -210,11 +220,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
   const gridTemplate = useMemo(() => {
     const parts = [
+      `${colWidths.status}px`,
       `${colWidths.name}px`,
       `${colWidths.phone}px`,
       `${colWidths.email}px`,
       `${colWidths.notes}px`,
-      `${colWidths.status}px`,
       `${colWidths.extra}px`,
     ]
     return parts.join(' ')
@@ -223,7 +233,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const resizeStops = useMemo(() => {
     const stops: Array<{ key: ColumnKey; left: number }> = []
     let acc = 0
-    ;(['name', 'phone', 'email', 'notes', 'status'] as ColumnKey[]).forEach((k) => {
+    ;(['status', 'name', 'phone', 'email', 'notes'] as ColumnKey[]).forEach((k) => {
       acc += colWidths[k]
       stops.push({ key: k, left: acc })
     })
@@ -339,11 +349,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
             <div className="leads-table-scroll">
               <div className="leads-table">
                 <div className="leads-thead" style={{ gridTemplateColumns: gridTemplate }}>
+                  <div className="leads-th">Estado</div>
                   <div className="leads-th">Nombre</div>
                   <div className="leads-th">Teléfono</div>
                   <div className="leads-th">Email</div>
                   <div className="leads-th">Notas</div>
-                  <div className="leads-th">Estado</div>
                   <div className="leads-th">Datos extra</div>
 
                   {resizeStops.map((s) => (
@@ -382,23 +392,6 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.18, delay: Math.min(idx * 0.004, 0.18) }}
                       >
-                        <div className="leads-td leads-td-name">{leadTitle(l)}</div>
-                        <div className="leads-td">{l.phone || '-'}</div>
-                        <div className="leads-td">{l.email || '-'}</div>
-                        <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
-                          <textarea
-                            className="leads-notes-input"
-                            value={notesValue}
-                            placeholder="Escribe aquí notas..."
-                            rows={1}
-                            onChange={(e) => {
-                              setNotesOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))
-                              autosizeTextarea(e.currentTarget)
-                            }}
-                            onInput={(e) => autosizeTextarea(e.currentTarget)}
-                            onFocus={(e) => autosizeTextarea(e.currentTarget)}
-                          />
-                        </div>
                         <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
                           <div className="leads-status-wrap">
                             <button
@@ -407,40 +400,39 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                               disabled={isSaving}
                               onPointerDown={(e) => {
                                 e.stopPropagation()
+                                const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect()
+                                const menuWidth = 210
+                                const left = Math.min(window.innerWidth - menuWidth - 12, Math.max(12, rect.left))
+                                const top = rect.bottom + 8
+                                setStatusMenuPos({ id: l.id, top, left })
                                 setStatusMenuOpenForId((cur) => (cur === l.id ? null : l.id))
                               }}
                             >
                               {statusBadge(statusValue)}
                             </button>
-
-                            <AnimatePresence>
-                              {statusMenuOpenForId === l.id ? (
-                                <motion.div
-                                  className="leads-status-menu"
-                                  initial={{ opacity: 0, y: 6, scale: 0.98 }}
-                                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                                  exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                                  transition={{ duration: 0.14 }}
-                                  onPointerDown={(e) => e.stopPropagation()}
-                                >
-                                  {STATUS_OPTIONS.map((opt) => (
-                                    <button
-                                      key={opt.value}
-                                      type="button"
-                                      className={`leads-status-menu-item ${opt.value === statusValue ? 'is-active' : ''}`}
-                                      onClick={async () => {
-                                        setStatusOverrideById((prev) => ({ ...prev, [l.id]: opt.value }))
-                                        setStatusMenuOpenForId(null)
-                                      }}
-                                    >
-                                      <span className={`leads-status-dot leads-status-dot-${opt.color}`} />
-                                      <span>{opt.label}</span>
-                                    </button>
-                                  ))}
-                                </motion.div>
-                              ) : null}
-                            </AnimatePresence>
                           </div>
+                        </div>
+
+                        <div className="leads-td leads-td-name">{leadTitle(l)}</div>
+                        <div className="leads-td">{l.phone || '-'}</div>
+                        <div className="leads-td">{l.email || '-'}</div>
+
+                        <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
+                          <textarea
+                            className="leads-notes-input"
+                            value={notesValue}
+                            placeholder="Escribe aquí notas..."
+                            rows={1}
+                            ref={(el) => {
+                              notesRefById.current[l.id] = el
+                            }}
+                            onChange={(e) => {
+                              setNotesOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))
+                              autosizeTextarea(e.currentTarget)
+                            }}
+                            onInput={(e) => autosizeTextarea(e.currentTarget)}
+                            onFocus={(e) => autosizeTextarea(e.currentTarget)}
+                          />
                         </div>
 
                         <div className="leads-td leads-td-extra" onClick={(e) => e.stopPropagation()}>
@@ -463,6 +455,48 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
             </div>
           )}
         </motion.div>
+
+        <AnimatePresence>
+          {statusMenuOpenForId && statusMenuPos ? (
+            <motion.div
+              className="leads-status-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.12 }}
+              onPointerDown={() => {
+                setStatusMenuOpenForId(null)
+                setStatusMenuPos(null)
+              }}
+            >
+              <motion.div
+                className="leads-status-menu"
+                style={{ top: statusMenuPos.top, left: statusMenuPos.left }}
+                initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                transition={{ duration: 0.14 }}
+                onPointerDown={(e) => e.stopPropagation()}
+              >
+                {STATUS_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={`leads-status-menu-item ${opt.value === (statusOverrideById[statusMenuPos.id] || 'new') ? 'is-active' : ''}`}
+                    onClick={() => {
+                      setStatusOverrideById((prev) => ({ ...prev, [statusMenuPos.id]: opt.value }))
+                      setStatusMenuOpenForId(null)
+                      setStatusMenuPos(null)
+                    }}
+                  >
+                    <span className={`leads-status-dot leads-status-dot-${opt.color}`} />
+                    <span>{opt.label}</span>
+                  </button>
+                ))}
+              </motion.div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
 
         <AnimatePresence>
           {selected ? (

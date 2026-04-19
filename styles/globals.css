@@ -7388,6 +7388,7 @@
             box-sizing: border-box;
             display: block;
             min-height: 34px;
+            padding-top: 9px;
         }
 
         .leads-extra-btn {
@@ -7505,9 +7506,7 @@
         }
 
         .leads-status-menu {
-            position: absolute;
-            top: 36px;
-            right: 0;
+            position: fixed;
             width: 210px;
             border-radius: 16px;
             border: 1px solid rgba(255,255,255,0.14);
@@ -7517,6 +7516,12 @@
             box-shadow: 0 18px 60px rgba(0,0,0,0.55);
             padding: 8px;
             z-index: 10;
+        }
+
+        .leads-status-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9;
         }
 
         .leads-status-menu-item {
