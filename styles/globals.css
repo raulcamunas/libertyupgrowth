@@ -6148,7 +6148,12 @@
             padding: 36px 16px 64px;
             position: relative;
             overflow: hidden;
-            background: var(--bg-color);
+            background: radial-gradient(1200px 600px at 20% -10%, rgba(0, 181, 255, 0.20), rgba(0, 181, 255, 0) 60%),
+                        radial-gradient(900px 520px at 85% 10%, rgba(0, 120, 255, 0.18), rgba(0, 120, 255, 0) 62%),
+                        radial-gradient(900px 520px at 45% 110%, rgba(99, 102, 241, 0.14), rgba(99, 102, 241, 0) 60%),
+                        linear-gradient(135deg, #06111a 0%, #071423 45%, #06111a 100%);
+            background-size: 160% 160%;
+            animation: gradientShift 22s ease infinite;
         }
 
         .formulario-page::before {
@@ -6170,8 +6175,8 @@
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06), rgba(255,255,255,0) 55%),
-                linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.55));
+                radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08), rgba(255,255,255,0) 55%),
+                linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.42));
             pointer-events: none;
             z-index: 0;
         }
@@ -6183,7 +6188,7 @@
                 linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
             background-size: 44px 44px;
-            opacity: 0.18;
+            opacity: 0.14;
             mask-image: radial-gradient(circle at 50% 20%, rgba(0,0,0,1), rgba(0,0,0,0) 62%);
             pointer-events: none;
             z-index: 0;
@@ -6198,10 +6203,11 @@
 
         .formulario-card {
             border-radius: 18px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.03);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.10);
+            background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 55%, rgba(0,181,255,0.04) 100%);
+            backdrop-filter: blur(22px) saturate(160%);
+            -webkit-backdrop-filter: blur(22px) saturate(160%);
+            box-shadow: 0 30px 90px rgba(0,0,0,0.38), 0 0 0 1px rgba(255,255,255,0.04) inset;
             overflow: hidden;
         }
 
@@ -6282,7 +6288,7 @@
             text-align: left;
             border-radius: 14px;
             border: 1px solid rgba(255,255,255,0.10);
-            background: rgba(0,0,0,0.25);
+            background: rgba(255,255,255,0.04);
             padding: 14px;
             cursor: pointer;
             transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
@@ -6344,7 +6350,7 @@
             height: 50px;
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(0,0,0,0.35);
+            background: rgba(255,255,255,0.05);
             color: #fff;
             padding: 0 14px;
             outline: none;
@@ -6373,6 +6379,49 @@
             justify-content: space-between;
             gap: 12px;
             border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        @media (max-width: 860px) {
+            .formulario-container {
+                max-width: 720px;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .formulario-page {
+                padding: 18px 12px 48px;
+            }
+
+            .formulario-card {
+                border-radius: 16px;
+            }
+
+            .formulario-header {
+                padding: 16px 14px 12px;
+            }
+
+            .formulario-step-question {
+                padding: 16px 14px;
+            }
+
+            .formulario-type-grid {
+                grid-template-columns: 1fr;
+                padding: 0 14px 16px;
+            }
+
+            .formulario-fields {
+                grid-template-columns: 1fr;
+                padding: 16px 14px;
+            }
+
+            .formulario-actions {
+                padding: 12px 14px 14px;
+                flex-direction: column;
+            }
+
+            .formulario-btn {
+                width: 100%;
+            }
         }
 
         .formulario-artist-wrap {

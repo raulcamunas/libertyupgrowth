@@ -18,6 +18,11 @@ export default async function FormulariosMiniAppPage() {
   const user = await getErpUserOrRedirect(redirect, '/app/login')
   await requireErpAppAccess(redirect, user.email, 'formularios')
 
+  const adminEmail = process.env.ERP_ADMIN_EMAIL
+  const canEditSchemas = Boolean(
+    adminEmail && user.email && user.email.toLowerCase() === adminEmail.toLowerCase() && user.email.toLowerCase() !== 'adrian@libertyupgrowth.com'
+  )
+
   const supabase = await createClient()
 
   const { data, error } = await supabase
@@ -38,5 +43,5 @@ export default async function FormulariosMiniAppPage() {
     )
   }
 
-  return <FormSubmissionsClient submissions={(data || []) as FormSubmissionRow[]} />
+  return <FormSubmissionsClient submissions={(data || []) as FormSubmissionRow[]} canEditSchemas={canEditSchemas} />
 }

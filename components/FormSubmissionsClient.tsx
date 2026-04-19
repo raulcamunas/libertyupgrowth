@@ -272,8 +272,13 @@ function formatCopyText(submission: FormSubmissionRow) {
   }
   return lines.join('\n')
 }
-
-export default function FormSubmissionsClient({ submissions }: { submissions: FormSubmissionRow[] }) {
+export default function FormSubmissionsClient({
+  submissions,
+  canEditSchemas = false,
+}: {
+  submissions: FormSubmissionRow[]
+  canEditSchemas?: boolean
+}) {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [tab, setTab] = useState<'envios' | 'formularios'>('envios')
@@ -285,6 +290,7 @@ export default function FormSubmissionsClient({ submissions }: { submissions: Fo
   const [schemaError, setSchemaError] = useState('')
 
   useEffect(() => {
+    if (!canEditSchemas) return
     let active = true
     ;(async () => {
       try {
@@ -313,12 +319,13 @@ export default function FormSubmissionsClient({ submissions }: { submissions: Fo
     return () => {
       active = false
     }
-  }, [])
+  }, [canEditSchemas])
 
   useEffect(() => {
+    if (!canEditSchemas) return
     const s = schemasByType[schemaType]
     setSchemaDraft(cloneJson(s || getDefaultFormSchema(schemaType)))
-  }, [schemaType, schemasByType])
+  }, [canEditSchemas, schemaType, schemasByType])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -342,7 +349,13 @@ export default function FormSubmissionsClient({ submissions }: { submissions: Fo
 
   const schemasReady = Object.keys(schemasByType || {}).length > 0
 
+  useEffect(() => {
+    if (canEditSchemas) return
+    setTab('envios')
+  }, [canEditSchemas])
+
   const saveSchema = async () => {
+    if (!canEditSchemas) return
     setSchemaError('')
     setSchemaSaving(true)
     try {
@@ -466,9 +479,11 @@ export default function FormSubmissionsClient({ submissions }: { submissions: Fo
             <button type="button" className="formsub-copy" onClick={() => setTab('envios')}>
               Envíos
             </button>
-            <button type="button" className="formsub-copy" onClick={() => setTab('formularios')}>
-              Formularios
-            </button>
+            {canEditSchemas ? (
+              <button type="button" className="formsub-copy" onClick={() => setTab('formularios')}>
+                Formularios
+              </button>
+            ) : null}
           </div>
 
           <div className="formsub-search">
