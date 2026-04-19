@@ -45,14 +45,47 @@ export async function GET() {
 
   try {
     const supabaseAdmin = createSupabaseAdmin()
-    const { data, error } = await supabaseAdmin
+    const { data: permsData, error: permsError } = await supabaseAdmin
       .from('erp_user_permissions')
       .select('email, allowed_app_ids')
-      .order('email', { ascending: true })
 
-    if (error) throw error
+    if (permsError) throw permsError
 
-    return NextResponse.json({ rows: data || [] })
+    const permsByEmail = new Map<string, string[]>()
+    for (const row of permsData || []) {
+      const email = typeof (row as any)?.email === 'string' ? ((row as any).email as string).toLowerCase() : ''
+      const allowed = Array.isArray((row as any)?.allowed_app_ids) ? ((row as any).allowed_app_ids as string[]) : []
+      if (email) permsByEmail.set(email, allowed)
+    }
+
+    const rows: Array<{ id: string; email: string; created_at: string | null; allowed_app_ids: string[] }> = []
+    let page = 1
+    const perPage = 200
+
+    while (true) {
+      const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers({ page, perPage })
+      if (listError) throw listError
+
+      const users = listData?.users || []
+      for (const u of users) {
+        const email = (u.email || '').toLowerCase()
+        if (!email) continue
+        rows.push({
+          id: u.id,
+          email,
+          created_at: (u.created_at as any) || null,
+          allowed_app_ids: permsByEmail.get(email) || [],
+        })
+      }
+
+      if (users.length < perPage) break
+      page += 1
+      if (page > 20) break
+    }
+
+    rows.sort((a, b) => a.email.localeCompare(b.email))
+
+    return NextResponse.json({ rows })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || 'Internal server error' }, { status: 500 })
   }
