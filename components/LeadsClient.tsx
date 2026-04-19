@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 
@@ -19,6 +19,19 @@ type LeadRow = {
   notes?: string | null
   payload: any
 }
+
+type ColumnKey = 'name' | 'phone' | 'email' | 'notes' | 'status' | 'extra'
+
+const COLUMN_DEFAULT_WIDTH: Record<ColumnKey, number> = {
+  name: 260,
+  phone: 180,
+  email: 280,
+  notes: 520,
+  status: 200,
+  extra: 140,
+}
+
+const COL_STORAGE_KEY = 'leads_col_widths_v1'
 
 type LeadStatus = 'new' | 'seguimiento' | 'llamar_despues' | 'no_interesa' | 'cerrado'
 
@@ -64,30 +77,30 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [drawerLeadId, setDrawerLeadId] = useState<string | null>(null)
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all')
   const [sourceFilter, setSourceFilter] = useState<string>('all')
-  const [savingId, setSavingId] = useState<string | null>(null)
   const [showJson, setShowJson] = useState(false)
   const [statusOverrideById, setStatusOverrideById] = useState<Record<string, LeadStatus>>({})
   const [statusMenuOpenForId, setStatusMenuOpenForId] = useState<string | null>(null)
   const [notesOverrideById, setNotesOverrideById] = useState<Record<string, string>>({})
-  const [savingNotesId, setSavingNotesId] = useState<string | null>(null)
 
-  const updateNotes = async (id: string, next: string) => {
-    setSavingNotesId(id)
-    setNotesOverrideById((prev: Record<string, string>) => ({ ...prev, [id]: next }))
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string>('')
+  const [colWidths, setColWidths] = useState<Record<ColumnKey, number>>(COLUMN_DEFAULT_WIDTH)
+  const resizingRef = useRef<{
+    key: ColumnKey
+    startX: number
+    startWidth: number
+  } | null>(null)
+
+  useEffect(() => {
     try {
-      const supabase = createClient()
-      const { error } = await supabase.from('leads').update({ notes: next }).eq('id', id)
-      if (error) throw error
+      const raw = window.localStorage.getItem(COL_STORAGE_KEY)
+      if (!raw) return
+      const parsed = JSON.parse(raw) as Partial<Record<ColumnKey, number>>
+      setColWidths((prev) => ({ ...prev, ...parsed }))
     } catch {
-      setNotesOverrideById((prev: Record<string, string>) => {
-        const copy = { ...prev }
-        delete copy[id]
-        return copy
-      })
-    } finally {
-      setSavingNotesId(null)
+      // ignore
     }
-  }
+  }, [])
 
   const sources = useMemo(() => {
     const set = new Set<string>()
@@ -121,21 +134,52 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     return JSON.stringify(selected.payload || {}, null, 2)
   }, [selected])
 
-  const updateStatus = async (id: string, next: LeadStatus) => {
-    setSavingId(id)
-    setStatusOverrideById((prev) => ({ ...prev, [id]: next }))
+  const isDirty = useMemo(() => {
+    return Object.keys(statusOverrideById).length > 0 || Object.keys(notesOverrideById).length > 0
+  }, [notesOverrideById, statusOverrideById])
+
+  const saveAll = async () => {
+    setSaveError('')
+    if (!isDirty) {
+      try {
+        window.localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(colWidths))
+      } catch {
+        // ignore
+      }
+      return
+    }
+
+    setIsSaving(true)
     try {
       const supabase = createClient()
-      const { error } = await supabase.from('leads').update({ status: next }).eq('id', id)
-      if (error) throw error
-    } catch {
-      setStatusOverrideById((prev) => {
-        const copy = { ...prev }
-        delete copy[id]
-        return copy
+
+      const ids = new Set<string>()
+      Object.keys(statusOverrideById).forEach((id) => ids.add(id))
+      Object.keys(notesOverrideById).forEach((id) => ids.add(id))
+
+      const ops = Array.from(ids).map(async (id) => {
+        const update: { status?: LeadStatus; notes?: string } = {}
+        if (statusOverrideById[id]) update.status = statusOverrideById[id]
+        if (Object.prototype.hasOwnProperty.call(notesOverrideById, id)) update.notes = notesOverrideById[id]
+        if (Object.keys(update).length === 0) return
+        const { error } = await supabase.from('leads').update(update).eq('id', id)
+        if (error) throw error
       })
+
+      await Promise.all(ops)
+
+      setStatusOverrideById({})
+      setNotesOverrideById({})
+
+      try {
+        window.localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(colWidths))
+      } catch {
+        // ignore
+      }
+    } catch (e: any) {
+      setSaveError(e?.message || 'No se ha podido guardar')
     } finally {
-      setSavingId(null)
+      setIsSaving(false)
     }
   }
 
@@ -150,6 +194,59 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     const found = STATUS_OPTIONS.find((s) => s.value === val) || STATUS_OPTIONS[0]
     return found.color
   }
+
+  const gridTemplate = useMemo(() => {
+    const parts = [
+      `${colWidths.name}px`,
+      `${colWidths.phone}px`,
+      `${colWidths.email}px`,
+      `${colWidths.notes}px`,
+      `${colWidths.status}px`,
+      `${colWidths.extra}px`,
+    ]
+    return parts.join(' ')
+  }, [colWidths])
+
+  const resizeStops = useMemo(() => {
+    const stops: Array<{ key: ColumnKey; left: number }> = []
+    let acc = 0
+    ;(['name', 'phone', 'email', 'notes', 'status'] as ColumnKey[]).forEach((k) => {
+      acc += colWidths[k]
+      stops.push({ key: k, left: acc })
+    })
+    return stops
+  }, [colWidths])
+
+  const startResize = (key: ColumnKey, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    resizingRef.current = {
+      key,
+      startX: e.clientX,
+      startWidth: colWidths[key],
+    }
+  }
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const cur = resizingRef.current
+      if (!cur) return
+      const dx = e.clientX - cur.startX
+      setColWidths((prev) => ({
+        ...prev,
+        [cur.key]: Math.max(120, cur.startWidth + dx),
+      }))
+    }
+    const onUp = () => {
+      resizingRef.current = null
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+  }, [])
 
   return (
     <div className="erp-miniapp leads-full">
@@ -206,6 +303,16 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
           </div>
         </div>
 
+        <div className="leads-savebar">
+          <div className="leads-savebar-left">
+            {isDirty ? <span className="leads-unsaved">Cambios sin guardar</span> : <span className="leads-saved">Todo guardado</span>}
+            {saveError ? <span className="leads-save-error">{saveError}</span> : null}
+          </div>
+          <button className="leads-save-btn" type="button" onClick={saveAll} disabled={isSaving}>
+            {isSaving ? 'Guardando...' : 'Guardar'}
+          </button>
+        </div>
+
         <motion.div
           className="leads-list"
           initial={{ opacity: 0, y: 6 }}
@@ -217,13 +324,22 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
           ) : (
             <div className="leads-table-scroll">
               <div className="leads-table">
-                <div className="leads-thead">
+                <div className="leads-thead" style={{ gridTemplateColumns: gridTemplate }}>
                   <div className="leads-th">Nombre</div>
                   <div className="leads-th">Teléfono</div>
                   <div className="leads-th">Email</div>
+                  <div className="leads-th">Notas</div>
                   <div className="leads-th">Estado</div>
-                  <div className="leads-th">Respuesta a llamada y seguimiento</div>
                   <div className="leads-th">Datos extra</div>
+
+                  {resizeStops.map((s) => (
+                    <div
+                      key={s.key}
+                      className="leads-resize"
+                      style={{ left: `${s.left - 5}px` }}
+                      onMouseDown={(e) => startResize(s.key, e)}
+                    />
+                  ))}
                 </div>
 
                 <div className="leads-tbody">
@@ -236,6 +352,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                       <motion.div
                         key={l.id}
                         className={`leads-tr leads-row-${statusColor} ${isActive ? 'is-active' : ''}`}
+                        style={{ gridTemplateColumns: gridTemplate }}
                         onClick={() => {
                           setSelectedId(l.id)
                         }}
@@ -255,15 +372,21 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         <div className="leads-td">{l.phone || '-'}</div>
                         <div className="leads-td">{l.email || '-'}</div>
                         <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
-                          <input
+                          <textarea
                             className="leads-notes-input"
                             value={notesValue}
-                            placeholder="Escribe aquí el seguimiento de la llamada..."
-                            onChange={(e) => setNotesOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))}
-                            onBlur={async (e) => {
-                              await updateNotes(l.id, e.target.value)
+                            placeholder="Escribe aquí notas..."
+                            rows={1}
+                            onChange={(e) => {
+                              setNotesOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))
+                              e.currentTarget.style.height = 'auto'
+                              e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
                             }}
-                            disabled={savingNotesId === l.id}
+                            onInput={(e) => {
+                              const el = e.currentTarget
+                              el.style.height = 'auto'
+                              el.style.height = `${el.scrollHeight}px`
+                            }}
                           />
                         </div>
                         <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
@@ -271,7 +394,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                             <button
                               type="button"
                               className="leads-status-btn"
-                              disabled={savingId === l.id}
+                              disabled={isSaving}
                               onClick={() => setStatusMenuOpenForId((cur) => (cur === l.id ? null : l.id))}
                             >
                               {statusBadge(statusValue)}
@@ -292,7 +415,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                       type="button"
                                       className={`leads-status-menu-item ${opt.value === statusValue ? 'is-active' : ''}`}
                                       onClick={async () => {
-                                        await updateStatus(l.id, opt.value)
+                                        setStatusOverrideById((prev) => ({ ...prev, [l.id]: opt.value }))
                                         setStatusMenuOpenForId(null)
                                       }}
                                     >
