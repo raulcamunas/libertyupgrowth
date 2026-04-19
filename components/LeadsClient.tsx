@@ -403,14 +403,13 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
                 <div className="leads-tbody">
                   {filtered.map((l, idx) => {
-                    const isActive = l.id === selectedId
                     const statusValue = statusOverrideById[l.id] || baseStatusById[l.id] || (((l.status || 'new') as LeadStatus) || 'new')
                     const statusColor = statusColorByValue(statusValue)
                     const notesValue = notesOverrideById[l.id] ?? baseNotesById[l.id] ?? (l.notes || '')
                     return (
                       <motion.div
                         key={l.id}
-                        className={`leads-tr leads-row-${statusColor} ${isActive ? 'is-active' : ''}`}
+                        className={`leads-tr leads-row-${statusColor}`}
                         style={{ gridTemplateColumns: gridTemplate }}
                         onClick={() => {
                           setSelectedId(l.id)
