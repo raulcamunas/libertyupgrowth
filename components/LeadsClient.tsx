@@ -89,6 +89,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
   const [localLeads, setLocalLeads] = useState<LeadRow[]>([])
   const [addOpen, setAddOpen] = useState(false)
+  const [addCreatedAt, setAddCreatedAt] = useState('')
   const [addName, setAddName] = useState('')
   const [addEmail, setAddEmail] = useState('')
   const [addPhone, setAddPhone] = useState('')
@@ -267,10 +268,10 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       }
 
       const supabase = createClient()
-      const now = new Date().toISOString()
+      const createdAt = addCreatedAt ? new Date(addCreatedAt).toISOString() : new Date().toISOString()
       const payload = {
         source: 'Manual',
-        created_time: now,
+        created_time: createdAt,
         full_name: addName.trim() || null,
         email: addEmail.trim() || null,
         phone_number: addPhone.trim() || null,
@@ -281,6 +282,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       const { data, error } = await supabase
         .from('leads')
         .insert({
+          created_at: createdAt,
           source: 'Manual',
           name: addName.trim() || null,
           email: addEmail.trim() || null,
@@ -300,6 +302,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       setBaseNotesById((prev) => ({ ...prev, [row.id]: row.notes || addNotes.trim() }))
 
       setAddOpen(false)
+      setAddCreatedAt('')
       setAddName('')
       setAddEmail('')
       setAddPhone('')
@@ -795,6 +798,15 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
               {addError ? <div className="leads-add-error">{addError}</div> : null}
 
               <div className="leads-add-grid">
+                <label className="leads-add-field">
+                  <div className="leads-add-label">Fecha</div>
+                  <input
+                    className="leads-add-input"
+                    type="datetime-local"
+                    value={addCreatedAt}
+                    onChange={(e) => setAddCreatedAt(e.target.value)}
+                  />
+                </label>
                 <label className="leads-add-field">
                   <div className="leads-add-label">Nombre</div>
                   <input className="leads-add-input" value={addName} onChange={(e) => setAddName(e.target.value)} />
