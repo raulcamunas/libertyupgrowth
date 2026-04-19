@@ -63,9 +63,11 @@ export default function ErpSidebar({
         })}
       </nav>
 
-      <div className="erp-sidebar-bottom">
-        <div className="erp-role">{role === 'admin' ? 'Admin' : 'Usuario'}</div>
-      </div>
+      {!collapsed ? (
+        <div className="erp-sidebar-bottom">
+          <div className="erp-role">{role === 'admin' ? 'Admin' : 'Usuario'}</div>
+        </div>
+      ) : null}
     </aside>
   )
 }

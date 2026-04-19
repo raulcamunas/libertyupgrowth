@@ -6720,6 +6720,11 @@
             margin: 0 0 12px 6px;
         }
 
+        html.erp-sidebar-collapsed .erp-sidebar-toggle {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         html.erp-sidebar-collapsed .erp-sidebar {
             padding: 18px 10px;
         }
@@ -6734,10 +6739,18 @@
             gap: 0;
             padding-left: 0;
             padding-right: 0;
+            width: 46px;
+            height: 46px;
+            padding: 0;
+            margin-left: auto;
+            margin-right: auto;
+            grid-template-columns: 1fr;
         }
 
         html.erp-sidebar-collapsed .erp-nav-item i {
             margin: 0;
+            font-size: 18px;
+            opacity: 0.95;
         }
 
         html.erp-sidebar-collapsed .erp-sidebar-bottom {
@@ -7210,9 +7223,58 @@
             margin: 0;
             padding: 12px;
             font-size: 12px;
-            line-height: 1.45;
+            line-height: 1.5;
             color: rgba(255,255,255,0.78);
             white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .formsub-sections {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .formsub-section {
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(0,0,0,0.18);
+            padding: 12px;
+        }
+
+        .formsub-section-title {
+            font-weight: 900;
+            color: rgba(255,255,255,0.92);
+            margin-bottom: 10px;
+        }
+
+        .formsub-section-rows {
+            display: grid;
+            gap: 8px;
+        }
+
+        .formsub-row {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 10px;
+            align-items: baseline;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .formsub-row-label {
+            font-size: 12px;
+            font-weight: 900;
+            color: rgba(255,255,255,0.58);
+        }
+
+        .formsub-row-value {
+            font-size: 13px;
+            font-weight: 850;
+            color: rgba(255,255,255,0.88);
             word-break: break-word;
         }
 
