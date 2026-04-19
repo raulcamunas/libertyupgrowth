@@ -87,6 +87,15 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [baseStatusById, setBaseStatusById] = useState<Record<string, LeadStatus>>({})
   const [baseNotesById, setBaseNotesById] = useState<Record<string, string>>({})
 
+  const [localLeads, setLocalLeads] = useState<LeadRow[]>([])
+  const [addOpen, setAddOpen] = useState(false)
+  const [addName, setAddName] = useState('')
+  const [addEmail, setAddEmail] = useState('')
+  const [addPhone, setAddPhone] = useState('')
+  const [addNotes, setAddNotes] = useState('')
+  const [addStatus, setAddStatus] = useState<LeadStatus>('new')
+  const [addError, setAddError] = useState('')
+
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string>('')
   const [colWidths, setColWidths] = useState<Record<ColumnKey, number>>(COLUMN_DEFAULT_WIDTH)
@@ -142,15 +151,22 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
   const sources = useMemo(() => {
     const set = new Set<string>()
-    leads.forEach((l) => {
+    ;[...localLeads, ...leads].forEach((l) => {
       if (l.source) set.add(l.source)
     })
     return Array.from(set).sort((a, b) => a.localeCompare(b))
-  }, [leads])
+  }, [leads, localLeads])
+
+  const allLeads = useMemo(() => {
+    const map = new Map<string, LeadRow>()
+    for (const l of leads) map.set(l.id, l)
+    for (const l of localLeads) map.set(l.id, l)
+    return Array.from(map.values())
+  }, [leads, localLeads])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return leads
+    return allLeads
       .filter((l) => {
         if (sourceFilter !== 'all' && (l.source || '') !== sourceFilter) return false
         const currentStatus = statusOverrideById[l.id] || baseStatusById[l.id] || ((l.status || 'new') as LeadStatus)
@@ -163,13 +179,13 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         const json = JSON.stringify(l.payload || {}).toLowerCase()
         return meta.includes(q) || json.includes(q)
       })
-  }, [leads, query, sourceFilter, statusFilter, statusOverrideById, baseStatusById])
+  }, [allLeads, query, sourceFilter, statusFilter, statusOverrideById, baseStatusById])
 
   useEffect(() => {
     Object.values(notesRefById.current).forEach((el) => {
       if (el) autosizeTextarea(el)
     })
-  }, [notesOverrideById, leads.length])
+  }, [notesOverrideById, allLeads.length])
 
   const selected = useMemo(() => filtered.find((l) => l.id === drawerLeadId) || null, [filtered, drawerLeadId])
 
@@ -236,6 +252,58 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       setSaveError(e?.message || 'No se ha podido guardar')
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const createManualLead = async () => {
+    setAddError('')
+    try {
+      if (!addName.trim() && !addEmail.trim() && !addPhone.trim()) {
+        setAddError('Rellena al menos nombre, email o teléfono.')
+        return
+      }
+
+      const supabase = createClient()
+      const now = new Date().toISOString()
+      const payload = {
+        source: 'Manual',
+        created_time: now,
+        full_name: addName.trim() || null,
+        email: addEmail.trim() || null,
+        phone_number: addPhone.trim() || null,
+        notes: addNotes.trim() || null,
+        status: addStatus,
+      }
+
+      const { data, error } = await supabase
+        .from('leads')
+        .insert({
+          source: 'Manual',
+          name: addName.trim() || null,
+          email: addEmail.trim() || null,
+          phone: addPhone.trim() || null,
+          status: addStatus,
+          notes: addNotes.trim() || '',
+          payload,
+        })
+        .select('*')
+        .single()
+
+      if (error) throw error
+
+      const row = data as LeadRow
+      setLocalLeads((prev) => [row, ...prev])
+      setBaseStatusById((prev) => ({ ...prev, [row.id]: (row.status as LeadStatus) || addStatus }))
+      setBaseNotesById((prev) => ({ ...prev, [row.id]: row.notes || addNotes.trim() }))
+
+      setAddOpen(false)
+      setAddName('')
+      setAddEmail('')
+      setAddPhone('')
+      setAddNotes('')
+      setAddStatus('new')
+    } catch (e: any) {
+      setAddError(e?.message || 'No se ha podido crear el lead')
     }
   }
 
@@ -358,6 +426,10 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                 </select>
               </label>
             </div>
+
+            <button className="leads-add-btn" type="button" onClick={() => setAddOpen(true)}>
+              Añadir lead
+            </button>
           </div>
         </div>
 
@@ -614,6 +686,69 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
           ) : null}
         </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {addOpen ? (
+          <motion.div
+            className="leads-add-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.14 }}
+            onPointerDown={() => setAddOpen(false)}
+          >
+            <motion.div
+              className="leads-add-modal"
+              initial={{ opacity: 0, y: 10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.98 }}
+              transition={{ duration: 0.16 }}
+              onPointerDown={(e) => e.stopPropagation()}
+            >
+              <div className="leads-add-title">Añadir lead</div>
+              {addError ? <div className="leads-add-error">{addError}</div> : null}
+
+              <div className="leads-add-grid">
+                <label className="leads-add-field">
+                  <div className="leads-add-label">Nombre</div>
+                  <input className="leads-add-input" value={addName} onChange={(e) => setAddName(e.target.value)} />
+                </label>
+                <label className="leads-add-field">
+                  <div className="leads-add-label">Email</div>
+                  <input className="leads-add-input" value={addEmail} onChange={(e) => setAddEmail(e.target.value)} />
+                </label>
+                <label className="leads-add-field">
+                  <div className="leads-add-label">Teléfono</div>
+                  <input className="leads-add-input" value={addPhone} onChange={(e) => setAddPhone(e.target.value)} />
+                </label>
+                <label className="leads-add-field">
+                  <div className="leads-add-label">Estado</div>
+                  <select className="leads-add-input" value={addStatus} onChange={(e) => setAddStatus(e.target.value as LeadStatus)}>
+                    {STATUS_OPTIONS.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="leads-add-field leads-add-field-full">
+                  <div className="leads-add-label">Notas</div>
+                  <textarea className="leads-add-textarea" value={addNotes} onChange={(e) => setAddNotes(e.target.value)} rows={4} />
+                </label>
+              </div>
+
+              <div className="leads-add-actions">
+                <button className="leads-add-cancel" type="button" onClick={() => setAddOpen(false)}>
+                  Cancelar
+                </button>
+                <button className="leads-add-create" type="button" onClick={createManualLead}>
+                  Crear
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   )
 }

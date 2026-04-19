@@ -7312,6 +7312,129 @@
             white-space: nowrap;
         }
 
+        .leads-add-btn {
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.90);
+            padding: 8px 12px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .leads-add-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            display: grid;
+            place-items: center;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 16px;
+        }
+
+        .leads-add-modal {
+            width: min(720px, 100%);
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(10, 12, 18, 0.92);
+            box-shadow: 0 22px 80px rgba(0,0,0,0.65);
+            padding: 16px;
+        }
+
+        .leads-add-title {
+            font-weight: 900;
+            font-size: 16px;
+            color: rgba(255,255,255,0.95);
+        }
+
+        .leads-add-error {
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 96, 96, 0.24);
+            background: rgba(255, 96, 96, 0.10);
+            color: rgba(255, 220, 220, 0.95);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .leads-add-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .leads-add-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .leads-add-field-full {
+            grid-column: 1 / -1;
+        }
+
+        .leads-add-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.60);
+            font-weight: 900;
+        }
+
+        .leads-add-input,
+        .leads-add-textarea {
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(0,0,0,0.25);
+            color: rgba(255,255,255,0.92);
+            padding: 10px 12px;
+            outline: none;
+        }
+
+        .leads-add-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .leads-add-actions {
+            margin-top: 14px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .leads-add-cancel {
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.90);
+            padding: 8px 12px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .leads-add-create {
+            border-radius: 12px;
+            border: 1px solid rgba(0,181,255,0.25);
+            background: rgba(0,181,255,0.12);
+            color: rgba(0,181,255,0.98);
+            padding: 8px 12px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 720px) {
+            .leads-add-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .leads-table {
             border-radius: 16px;
             border: 1px solid rgba(255,255,255,0.10);
