@@ -63,65 +63,151 @@ function getSummary(payload: any) {
   const email = pickFirst(payload, ['email', 'correo'])
   const sector = pickFirst(payload, ['tipoNegocio', 'sector', 'businessType'])
 
-  const title = business || name || email || 'Envío'
+  const title = business || name || sector || email || 'Formulario'
   const subtitle = [sector, name || email].filter(Boolean).join(' · ')
 
   return { title, subtitle }
 }
 
+function formatValue(v: any): string {
+  if (v === null || v === undefined) return ''
+  if (typeof v === 'string') return v.trim()
+  if (typeof v === 'number' && Number.isFinite(v)) return String(v)
+  if (typeof v === 'boolean') return v ? 'Sí' : 'No'
+  if (Array.isArray(v)) {
+    const names = v
+      .map((x) => {
+        if (typeof x === 'string') return x.trim()
+        if (typeof x === 'object' && x && typeof x.name === 'string') return x.name.trim()
+        return ''
+      })
+      .filter(Boolean)
+    if (names.length) return names.join(', ')
+    return ''
+  }
+  if (typeof v === 'object') return ''
+  return ''
+}
+
+const FIELD_LABELS: Record<string, string> = {
+  nombre: 'Nombre',
+  nombreNegocio: 'Nombre del negocio',
+  businessType: 'Tipo de negocio',
+
+  sector: 'Sector',
+  direccionCompleta: 'Dirección completa',
+  ciudad: 'Ciudad',
+  idioma: 'Idioma principal de atención',
+
+  telefonoContactoPersonal: 'Teléfono personal de contacto (técnico)',
+  webInstagram: 'Web o Instagram',
+
+  telefonoBot: 'Número de teléfono para el Bot',
+  whatsappBusinessActivo: '¿Tienes WhatsApp Business activo para este número?',
+
+  profesionales: 'Nombre de los profesionales que trabajan en el negocio',
+
+  horarioApertura: 'Horario de apertura general',
+  diasApertura: 'Días de apertura',
+  diasCerradosFijos: 'Días cerrados fijos',
+  intervaloCitas: 'Intervalo de citas (slots)',
+
+  tattooArtists: 'Artistas',
+  tattooEspecialidades: 'Especialidades de los artistas',
+  tattooPiercings: '¿Todos los artistas hacen piercings o solo algunos?',
+  tattooCoverups: '¿Todos hacen cover-ups o es especialidad de alguno?',
+  tattooArtistasNuevos: '¿Algún artista no coge clientes nuevos o trabaja solo por proyectos?',
+  tattooHorarioArtistas: 'Horario de cada artista (si difiere)',
+  tattooPrecioPiercing: 'Precio del piercing (o rango por zona)',
+  tattooMinimoSesion: '¿Tenéis precio mínimo de sesión?',
+  tattooPreciosHoraOCerrado: '¿Precios por hora o precio cerrado según pieza?',
+  tattooDeposito: '¿Pedís señal/depósito para reservar sesión? ¿Cuánto?',
+  tattooOfertas: '¿Hacéis ofertas especiales?',
+  tattooIntervaloCitas: 'Intervalo entre citas',
+  tattooConsultaPrevia: 'Consulta previa para piezas grandes',
+  tattooZonasEspeciales: '¿Tatuáis en cara, cuello, manos o zonas especiales?',
+  tattooMenores: '¿Aceptáis menores de 18 con autorización?',
+  tattooWalkins: '¿Aceptáis walk-ins si hay hueco o solo con cita?',
+  tattooPoliticaTardanza: '¿Qué pasa si un cliente llega tarde o no aparece?',
+  tattooDerivacion: 'Derivación',
+  tattooTelefonoLlamadas: '¿Hay un número para llamadas o solo WhatsApp?',
+
+  hairServiciosPrincipales: 'Servicios principales',
+  hairServiciosColor: '¿Cómo gestionáis los servicios de color?',
+  hairPreciosOrientativos: 'Precios orientativos (rangos)',
+  hairTiempoMedioServicios: 'Tiempo medio por servicio',
+
+  physioEspecialidades: 'Especialidades',
+  physioDuracionSesiones: 'Duración de sesiones',
+  physioPrecios: 'Precios (rango)',
+  physioPrimeraConsulta: '¿La primera consulta tiene condiciones especiales?',
+
+  psyModalidad: 'Modalidad',
+  psyDuracionSesiones: 'Duración de sesiones',
+  psyPrecios: 'Precios (rango)',
+  psyUrgencias: 'Urgencias: ¿cómo se gestionan?',
+
+  estServiciosPrincipales: 'Servicios principales',
+  estContraindicaciones: 'Contraindicaciones o políticas (si aplica)',
+  estPreciosOrientativos: 'Precios orientativos (rangos)',
+  estBonos: '¿Tenéis bonos o packs? Describe condiciones',
+
+  notas: 'Notas adicionales',
+}
+
+function buildPhase(payload: any, title: string, keys: string[]) {
+  const items: Array<{ label: string; value: string }> = []
+  for (const k of keys) {
+    const raw = payload?.[k]
+    const value = formatValue(raw)
+    if (!value) continue
+    items.push({ label: FIELD_LABELS[k] || k, value })
+  }
+  return { title, items }
+}
+
 function getDetailSections(payload: any) {
-  const business = pickFirst(payload, ['nombreNegocio', 'nombreCentro', 'empresa', 'businessName'])
-  const sector = pickFirst(payload, ['tipoNegocio', 'sector', 'businessType'])
-  const employees = pickFirst(payload, ['empleados']) || pickFirstNumber(payload, ['numEmpleados', 'employees', 'employeeCount'])
-  const city = pickFirst(payload, ['ciudad', 'city'])
+  const businessType = String(payload?.businessType || '').trim()
+  const base = [
+    buildPhase(payload, 'Fase 1 · Contacto', ['nombre', 'telefonoContactoPersonal', 'webInstagram']),
+    buildPhase(payload, 'Fase 2 · Negocio', ['nombreNegocio', 'sector', 'direccionCompleta', 'ciudad', 'idioma']),
+    buildPhase(payload, 'Fase 3 · WhatsApp y Bot', ['telefonoBot', 'whatsappBusinessActivo']),
+    buildPhase(payload, 'Fase 4 · Equipo', ['profesionales']),
+    buildPhase(payload, 'Fase 5 · Horarios y agenda', ['horarioApertura', 'diasApertura', 'diasCerradosFijos', 'intervaloCitas']),
+  ]
 
-  const name = pickFirst(payload, ['nombre', 'nombreCompleto', 'fullName'])
-  const phone = pickFirst(payload, ['telefono', 'tel', 'phone', 'movil', 'mobile'])
-  const email = pickFirst(payload, ['email', 'correo'])
+  const sectorSpecific: Array<{ title: string; items: Array<{ label: string; value: string }> }> = []
 
-  const usaAgendaDigital = pickFirstBoolean(payload, ['usaAgendaDigital', 'isSeller'])
-  const availability = pickFirst(payload, ['disponibilidad', 'availability'])
+  if (businessType === 'tatuajes') {
+    sectorSpecific.push(buildPhase(payload, 'Fase 6 · Artistas', ['tattooArtists', 'tattooEspecialidades', 'tattooPiercings', 'tattooCoverups', 'tattooArtistasNuevos', 'tattooHorarioArtistas']))
+    sectorSpecific.push(buildPhase(payload, 'Fase 7 · Servicios y precios', ['tattooPrecioPiercing', 'tattooMinimoSesion', 'tattooPreciosHoraOCerrado', 'tattooDeposito', 'tattooOfertas']))
+    sectorSpecific.push(buildPhase(payload, 'Fase 8 · Políticas', ['tattooConsultaPrevia', 'tattooZonasEspeciales', 'tattooMenores', 'tattooWalkins', 'tattooPoliticaTardanza']))
+    sectorSpecific.push(buildPhase(payload, 'Fase 9 · Derivación', ['tattooDerivacion', 'tattooTelefonoLlamadas', 'tattooIntervaloCitas']))
+  }
 
-  const pain = pickFirst(payload, ['painPoint', 'dolor', 'problema', 'pain_point'])
-  const current = pickFirst(payload, ['situacionActual', 'currentSituation', 'current_situation'])
-  const objective = pickFirst(payload, ['objetivo', 'objective', 'goal'])
+  if (businessType === 'peluqueria') {
+    sectorSpecific.push(buildPhase(payload, 'Fase 6 · Servicios', ['hairServiciosPrincipales', 'hairServiciosColor']))
+    sectorSpecific.push(buildPhase(payload, 'Fase 7 · Tiempos y precios', ['hairPreciosOrientativos', 'hairTiempoMedioServicios']))
+  }
 
-  const rows = (items: Array<{ label: string; value: string }>) => items.filter((i) => i.value)
+  if (businessType === 'fisioterapeuta') {
+    sectorSpecific.push(buildPhase(payload, 'Fase 6 · Servicios', ['physioEspecialidades', 'physioDuracionSesiones']))
+    sectorSpecific.push(buildPhase(payload, 'Fase 7 · Precios y primera consulta', ['physioPrecios', 'physioPrimeraConsulta']))
+  }
 
-  return [
-    {
-      title: 'Negocio',
-      items: rows([
-        { label: 'Nombre', value: business },
-        { label: 'Sector', value: sector },
-        { label: 'Empleados', value: employees },
-        { label: 'Ciudad', value: city },
-      ]),
-    },
-    {
-      title: 'Contacto',
-      items: rows([
-        { label: 'Nombre', value: name },
-        { label: 'Teléfono', value: phone },
-        { label: 'Email', value: email },
-      ]),
-    },
-    {
-      title: 'Operativa',
-      items: rows([
-        { label: 'Usa agenda digital', value: usaAgendaDigital },
-        { label: 'Disponibilidad', value: availability },
-      ]),
-    },
-    {
-      title: 'Contexto',
-      items: rows([
-        { label: 'Punto de dolor', value: pain },
-        { label: 'Situación actual', value: current },
-        { label: 'Objetivo', value: objective },
-      ]),
-    },
-  ].filter((s) => s.items.length > 0)
+  if (businessType === 'psicologo') {
+    sectorSpecific.push(buildPhase(payload, 'Fase 6 · Servicios', ['psyModalidad', 'psyDuracionSesiones']))
+    sectorSpecific.push(buildPhase(payload, 'Fase 7 · Precios y urgencias', ['psyPrecios', 'psyUrgencias']))
+  }
+
+  if (businessType === 'estetica') {
+    sectorSpecific.push(buildPhase(payload, 'Fase 6 · Servicios', ['estServiciosPrincipales', 'estContraindicaciones']))
+    sectorSpecific.push(buildPhase(payload, 'Fase 7 · Precios y packs', ['estPreciosOrientativos', 'estBonos']))
+  }
+
+  const tail = [buildPhase(payload, 'Fase final · Notas', ['notas'])]
+
+  return [...base, ...sectorSpecific, ...tail].filter((s) => s.items.length > 0)
 }
 
 function formatCopyText(submission: FormSubmissionRow) {
