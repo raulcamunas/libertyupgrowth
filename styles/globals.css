@@ -7269,12 +7269,12 @@
             border: 1px solid rgba(255,255,255,0.10);
             background: rgba(0,0,0,0.18);
             overflow: hidden;
-            min-width: 1920px;
+            min-width: 980px;
         }
 
         .leads-thead {
             display: grid;
-            grid-template-columns: 140px 240px 170px 280px 160px 200px 320px 320px 320px 220px;
+            grid-template-columns: 260px 180px 280px 220px 1fr 140px;
             gap: 0;
             padding: 10px 10px;
             background: rgba(255,255,255,0.04);
@@ -7300,7 +7300,7 @@
 
         .leads-tr {
             display: grid;
-            grid-template-columns: 140px 240px 170px 280px 160px 200px 320px 320px 320px 220px;
+            grid-template-columns: 260px 180px 280px 220px 1fr 140px;
             padding: 10px 10px;
             border-bottom: 1px solid rgba(255,255,255,0.06);
             cursor: pointer;
@@ -7320,6 +7320,18 @@
             padding: 8px 10px;
             color: rgba(255,255,255,0.88);
             outline: none;
+        }
+
+        .leads-extra-btn {
+            border-radius: 12px;
+            border: 1px solid rgba(0,181,255,0.22);
+            background: rgba(0,181,255,0.10);
+            color: rgba(0,181,255,0.95);
+            padding: 8px 10px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
         }
 
         .leads-notes-input::placeholder {

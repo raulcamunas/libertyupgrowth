@@ -61,6 +61,7 @@ function leadSubtitle(l: LeadRow) {
 export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [drawerLeadId, setDrawerLeadId] = useState<string | null>(null)
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all')
   const [sourceFilter, setSourceFilter] = useState<string>('all')
   const [savingId, setSavingId] = useState<string | null>(null)
@@ -113,7 +114,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       })
   }, [leads, query, sourceFilter, statusFilter, statusOverrideById])
 
-  const selected = useMemo(() => filtered.find((l) => l.id === selectedId) || null, [filtered, selectedId])
+  const selected = useMemo(() => filtered.find((l) => l.id === drawerLeadId) || null, [filtered, drawerLeadId])
 
   const selectedJson = useMemo(() => {
     if (!selected) return ''
@@ -217,16 +218,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
             <div className="leads-table-scroll">
               <div className="leads-table">
                 <div className="leads-thead">
-                  <div className="leads-th">Fecha</div>
                   <div className="leads-th">Nombre</div>
                   <div className="leads-th">Teléfono</div>
                   <div className="leads-th">Email</div>
-                  <div className="leads-th">Fuente</div>
-                  <div className="leads-th">Adset</div>
-                  <div className="leads-th">Dolor</div>
-                  <div className="leads-th">Situación</div>
-                  <div className="leads-th">Notas</div>
                   <div className="leads-th">Estado</div>
+                  <div className="leads-th">Respuesta a llamada y seguimiento</div>
+                  <div className="leads-th">Datos extra</div>
                 </div>
 
                 <div className="leads-tbody">
@@ -241,7 +238,6 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         className={`leads-tr leads-row-${statusColor} ${isActive ? 'is-active' : ''}`}
                         onClick={() => {
                           setSelectedId(l.id)
-                          setShowJson(false)
                         }}
                         role="button"
                         tabIndex={0}
@@ -255,19 +251,14 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.18, delay: Math.min(idx * 0.004, 0.18) }}
                       >
-                        <div className="leads-td leads-td-date">{formatDate(l.created_at)}</div>
                         <div className="leads-td leads-td-name">{leadTitle(l)}</div>
                         <div className="leads-td">{l.phone || '-'}</div>
                         <div className="leads-td">{l.email || '-'}</div>
-                        <div className="leads-td">{l.source || '-'}</div>
-                        <div className="leads-td">{l.adset_name || '-'}</div>
-                        <div className="leads-td">{l.pain_point || '-'}</div>
-                        <div className="leads-td">{l.current_situation || '-'}</div>
                         <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
                           <input
                             className="leads-notes-input"
                             value={notesValue}
-                            placeholder="Escribe notas..."
+                            placeholder="Escribe aquí el seguimiento de la llamada..."
                             onChange={(e) => setNotesOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))}
                             onBlur={async (e) => {
                               await updateNotes(l.id, e.target.value)
@@ -314,6 +305,19 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                             </AnimatePresence>
                           </div>
                         </div>
+
+                        <div className="leads-td leads-td-extra" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            className="leads-extra-btn"
+                            onClick={() => {
+                              setDrawerLeadId(l.id)
+                              setShowJson(false)
+                            }}
+                          >
+                            Datos extra
+                          </button>
+                        </div>
                       </motion.div>
                     )
                   })}
@@ -331,7 +335,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              onClick={() => setSelectedId(null)}
+              onClick={() => setDrawerLeadId(null)}
             >
               <motion.div
                 className="leads-drawer"
