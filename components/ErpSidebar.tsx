@@ -19,7 +19,6 @@ export default function ErpSidebar({
       <div className="erp-sidebar-top">
         <div className="erp-brand">
           <Image src="/logo.png" alt="Liberty Seller" width={22} height={22} className="erp-brand-logo" />
-          <div className="erp-brand-name">Liberty Seller</div>
         </div>
       </div>
 
