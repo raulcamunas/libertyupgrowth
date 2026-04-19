@@ -312,6 +312,22 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     )
   }, [notesOverrideById, statusOverrideById, dateOverrideById])
 
+  const persistNotesNow = async (id: string, nextNotes: string) => {
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('leads').update({ notes: nextNotes }).eq('id', id)
+      if (error) throw error
+
+      setBaseNotesById((prev) => ({ ...prev, [id]: nextNotes }))
+      setNotesOverrideById((prev) => {
+        const copy = { ...prev }
+        delete copy[id]
+        return copy
+      })
+    } catch {
+    }
+  }
+
   const saveAll = async () => {
     setSaveError('')
     if (!isDirty) {
@@ -733,7 +749,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                             const stamp = nowStampEs()
                                             const next = entries.slice()
                                             next.push({ ts: stamp, author: currentAuthorName || undefined, text: '' })
-                                            setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                                            const nextNotes = entriesToNotes(next)
+                                            setNotesOverrideById((prev) => ({ ...prev, [l.id]: nextNotes }))
+                                            void persistNotesNow(l.id, nextNotes)
                                           }}
                                         >
                                           +
@@ -745,7 +763,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                         onClick={() => {
                                           const next = entries.slice()
                                           next.splice(i, 1)
-                                          setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                                          const nextNotes = entriesToNotes(next)
+                                          setNotesOverrideById((prev) => ({ ...prev, [l.id]: nextNotes }))
+                                          void persistNotesNow(l.id, nextNotes)
                                         }}
                                       >
                                         ×
@@ -775,7 +795,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                 const stamp = nowStampEs()
                                 const next = entries.slice()
                                 next.push({ ts: stamp, author: currentAuthorName || undefined, text: '' })
-                                setNotesOverrideById((prev) => ({ ...prev, [l.id]: entriesToNotes(next) }))
+                                const nextNotes = entriesToNotes(next)
+                                setNotesOverrideById((prev) => ({ ...prev, [l.id]: nextNotes }))
+                                void persistNotesNow(l.id, nextNotes)
                               }}
                             >
                               +

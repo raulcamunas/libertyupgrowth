@@ -7720,6 +7720,10 @@
             width: 28px;
             height: 28px;
             border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.72);
+            font-weight: 900;
             display: grid;
             place-items: center;
             line-height: 1;
