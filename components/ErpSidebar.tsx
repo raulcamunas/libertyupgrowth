@@ -6,12 +6,14 @@ import { ERP_APPS } from '@/lib/erp/apps'
 
 export default function ErpSidebar({
   role,
+  allowedAppIds,
 }: {
   role: 'admin' | 'user'
+  allowedAppIds: string[]
 }) {
   const pathname = usePathname()
 
-  const visible = ERP_APPS.filter((a) => (a.adminOnly ? role === 'admin' : true))
+  const visible = ERP_APPS.filter((a) => (a.adminOnly ? role === 'admin' : true)).filter((a) => a.id === 'home' || allowedAppIds.includes(a.id))
 
   return (
     <aside className="erp-sidebar">

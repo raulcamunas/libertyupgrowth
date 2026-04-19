@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation'
 import { ERP_APPS } from '@/lib/erp/apps'
-import { getErpRoleByEmail, getErpUserOrRedirect } from '@/lib/erp/auth'
+import { getErpPermissionsByEmail, getErpUserOrRedirect } from '@/lib/erp/auth'
 
 export const dynamic = 'force-dynamic'
 
 export default async function ErpMiniAppPage({ params }: { params: { slug: string } }) {
   const user = await getErpUserOrRedirect(redirect, '/app/login')
-  const role = getErpRoleByEmail(user.email)
+  const perms = await getErpPermissionsByEmail(user.email)
 
   const app = ERP_APPS.find((a) => a.href === `/app/apps/${params.slug}`)
 
@@ -14,7 +14,11 @@ export default async function ErpMiniAppPage({ params }: { params: { slug: strin
     redirect('/app')
   }
 
-  if (app.adminOnly && role !== 'admin') {
+  if (app.adminOnly && perms.role !== 'admin') {
+    redirect('/app')
+  }
+
+  if (perms.role !== 'admin' && !perms.allowedAppIds.includes(app.id)) {
     redirect('/app')
   }
 

@@ -55,7 +55,7 @@ export default function ErpLoginPage() {
         <div className="erp-login-brand">
           <div className="erp-brand">
             <div className="erp-brand-dot" />
-            <div className="erp-brand-name">Liberty Seller</div>
+            <div className="erp-brand-name">Liberty UpGrowth</div>
           </div>
           <div className="erp-login-title">Acceso al ERP</div>
           <div className="erp-login-subtitle">Inicia sesión para acceder a tus mini apps</div>
@@ -75,7 +75,7 @@ export default function ErpLoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="erp-login-input"
-              placeholder="libertyupgrowth@gmail.com"
+              placeholder=""
               required
             />
           </label>

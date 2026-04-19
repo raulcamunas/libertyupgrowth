@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { getErpRoleByEmail, getErpUserOrRedirect } from '@/lib/erp/auth'
+import { getErpPermissionsByEmail, getErpUserOrRedirect } from '@/lib/erp/auth'
 import ErpSidebar from '@/components/ErpSidebar'
 import LogoutButton from '@/components/LogoutButton'
 
@@ -7,15 +7,17 @@ export const dynamic = 'force-dynamic'
 
 export default async function ErpLayout({ children }: { children: React.ReactNode }) {
   const user = await getErpUserOrRedirect(redirect, '/app/login')
-  const role = getErpRoleByEmail(user.email)
+  const perms = await getErpPermissionsByEmail(user.email)
 
   return (
     <div className="erp-shell">
-      <ErpSidebar role={role} />
+      <ErpSidebar role={perms.role} allowedAppIds={perms.allowedAppIds} />
       <div className="erp-main">
         <header className="erp-topbar">
           <div className="erp-topbar-left">
-            <div className="erp-topbar-title">Aplicaciones Instaladas</div>
+            <div className="erp-sidebar-bottom">
+              <div className="erp-role">{perms.role === 'admin' ? 'Admin' : 'Usuario'}</div>
+            </div>
             <div className="erp-topbar-subtitle">Selecciona una aplicación para comenzar</div>
           </div>
           <div className="erp-topbar-right">

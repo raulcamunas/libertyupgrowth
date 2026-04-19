@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getErpUserOrRedirect } from '@/lib/erp/auth'
+import { getErpUserOrRedirect, requireErpAppAccess } from '@/lib/erp/auth'
 import LeadsClient from '@/components/LeadsClient'
 
 export const dynamic = 'force-dynamic'
@@ -22,7 +22,8 @@ type LeadRow = {
 }
 
 export default async function LeadsMiniAppPage() {
-  await getErpUserOrRedirect(redirect, '/app/login')
+  const user = await getErpUserOrRedirect(redirect, '/app/login')
+  await requireErpAppAccess(redirect, user.email, 'leads')
 
   const supabase = await createClient()
 

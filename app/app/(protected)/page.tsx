@@ -1,15 +1,17 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ERP_APPS } from '@/lib/erp/apps'
-import { getErpRoleByEmail, getErpUserOrRedirect } from '@/lib/erp/auth'
+import { getErpPermissionsByEmail, getErpUserOrRedirect } from '@/lib/erp/auth'
 
 export const dynamic = 'force-dynamic'
 
 export default async function ErpHomePage() {
   const user = await getErpUserOrRedirect(redirect, '/app/login')
-  const role = getErpRoleByEmail(user.email)
+  const perms = await getErpPermissionsByEmail(user.email)
 
-  const visible = ERP_APPS.filter((a) => (a.adminOnly ? role === 'admin' : true)).filter((a) => a.id !== 'home')
+  const visible = ERP_APPS.filter((a) => (a.adminOnly ? perms.role === 'admin' : true))
+    .filter((a) => a.id !== 'home')
+    .filter((a) => perms.role === 'admin' || perms.allowedAppIds.includes(a.id))
 
   if (visible.length === 0) {
     return (

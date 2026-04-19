@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getErpUserOrRedirect } from '@/lib/erp/auth'
+import { getErpUserOrRedirect, requireErpAppAccess } from '@/lib/erp/auth'
 import FormSubmissionsClient from '@/components/FormSubmissionsClient'
 
 export const dynamic = 'force-dynamic'
@@ -15,7 +15,8 @@ type FormSubmissionRow = {
 }
 
 export default async function FormulariosMiniAppPage() {
-  await getErpUserOrRedirect(redirect, '/app/login')
+  const user = await getErpUserOrRedirect(redirect, '/app/login')
+  await requireErpAppAccess(redirect, user.email, 'formularios')
 
   const supabase = await createClient()
 
