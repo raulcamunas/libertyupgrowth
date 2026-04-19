@@ -283,6 +283,16 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
   const selected = useMemo(() => filtered.find((l) => l.id === drawerLeadId) || null, [filtered, drawerLeadId])
 
+  const leadCounts = useMemo(() => {
+    const by: Record<string, number> = {}
+    for (const opt of STATUS_OPTIONS) by[opt.value] = 0
+    for (const l of allLeads) {
+      const val = (statusOverrideById[l.id] || baseStatusById[l.id] || ((l.status || 'new') as LeadStatus)) as LeadStatus
+      by[val] = (by[val] || 0) + 1
+    }
+    return { total: allLeads.length, by }
+  }, [allLeads, baseStatusById, statusOverrideById])
+
   const selectedJson = useMemo(() => {
     if (!selected) return ''
     return JSON.stringify(selected.payload || {}, null, 2)
@@ -525,6 +535,21 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
           <div>
             <div className="erp-miniapp-title">Leads</div>
             <div className="erp-miniapp-subtitle">Entradas desde Sheets, Meta, etc.</div>
+          </div>
+
+          <div className="leads-stats" aria-label="Resumen de leads">
+            <div className="leads-stat">
+              <span className="leads-stat-dot leads-stat-dot-total" />
+              <span className="leads-stat-label">Total</span>
+              <span className="leads-stat-value">{leadCounts.total}</span>
+            </div>
+            {STATUS_OPTIONS.map((opt) => (
+              <div key={opt.value} className="leads-stat">
+                <span className={`leads-stat-dot leads-stat-dot-${opt.color}`} />
+                <span className="leads-stat-label">{opt.label}</span>
+                <span className="leads-stat-value">{leadCounts.by[opt.value] || 0}</span>
+              </div>
+            ))}
           </div>
 
           <div className="leads-controls">
