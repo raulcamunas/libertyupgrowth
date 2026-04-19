@@ -46,23 +46,43 @@ function isoDay(d: Date) {
   return `${y}-${m}-${day}`
 }
 
-export async function GET() {
+function parseYmd(v: string | null) {
+  if (!v) return null
+  const m = /^\d{4}-\d{2}-\d{2}$/.exec(v)
+  if (!m) return null
+  const d = new Date(`${v}T00:00:00.000Z`)
+  if (Number.isNaN(d.getTime())) return null
+  return d
+}
+
+export async function GET(request: Request) {
   const gate = await requireAdmin()
   if ('error' in gate) return gate.error
 
   try {
     const supabaseAdmin = createSupabaseAdmin()
 
-    const from = new Date()
-    from.setUTCDate(from.getUTCDate() - 29)
+    const url = new URL(request.url)
+    const fromParam = parseYmd(url.searchParams.get('from'))
+    const toParam = parseYmd(url.searchParams.get('to'))
+
+    const from = fromParam || new Date()
+    if (!fromParam) from.setUTCDate(from.getUTCDate() - 29)
     from.setUTCHours(0, 0, 0, 0)
+
+    const to = toParam || new Date()
+    to.setUTCHours(0, 0, 0, 0)
+
+    const toExclusive = new Date(to)
+    toExclusive.setUTCDate(toExclusive.getUTCDate() + 1)
 
     const { data, error } = await supabaseAdmin
       .from('leads')
       .select('created_at, source')
       .gte('created_at', from.toISOString())
+      .lt('created_at', toExclusive.toISOString())
       .order('created_at', { ascending: true })
-      .limit(5000)
+      .limit(50000)
 
     if (error) throw error
 
@@ -82,13 +102,16 @@ export async function GET() {
     }
 
     const days: Array<{ day: string; total: number; bySource: Record<string, number> }> = []
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date()
-      d.setUTCDate(d.getUTCDate() - i)
-      d.setUTCHours(0, 0, 0, 0)
-      const day = isoDay(d)
+    const cursor = new Date(from)
+    cursor.setUTCHours(0, 0, 0, 0)
+    const end = new Date(to)
+    end.setUTCHours(0, 0, 0, 0)
+
+    while (cursor.getTime() <= end.getTime()) {
+      const day = isoDay(cursor)
       const bucket = byDay.get(day) || { total: 0, bySource: {} }
       days.push({ day, total: bucket.total, bySource: bucket.bySource })
+      cursor.setUTCDate(cursor.getUTCDate() + 1)
     }
 
     return NextResponse.json({ days })
