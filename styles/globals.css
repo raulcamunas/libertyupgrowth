@@ -6957,7 +6957,8 @@
         }
 
         .erp-miniapp {
-            max-width: 880px;
+            width: 100%;
+            max-width: 100%;
         }
 
         .erp-miniapp-card {

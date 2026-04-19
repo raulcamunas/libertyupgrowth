@@ -61,6 +61,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [sourceFilter, setSourceFilter] = useState<string>('all')
   const [savingId, setSavingId] = useState<string | null>(null)
   const [showJson, setShowJson] = useState(false)
+  const [statusOverrideById, setStatusOverrideById] = useState<Record<string, LeadStatus>>({})
 
   const sources = useMemo(() => {
     const set = new Set<string>()
@@ -75,7 +76,8 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     return leads
       .filter((l) => {
         if (sourceFilter !== 'all' && (l.source || '') !== sourceFilter) return false
-        if (statusFilter !== 'all' && (l.status || 'new') !== statusFilter) return false
+        const currentStatus = statusOverrideById[l.id] || ((l.status || 'new') as LeadStatus)
+        if (statusFilter !== 'all' && currentStatus !== statusFilter) return false
         return true
       })
       .filter((l) => {
@@ -84,7 +86,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         const json = JSON.stringify(l.payload || {}).toLowerCase()
         return meta.includes(q) || json.includes(q)
       })
-  }, [leads, query, sourceFilter, statusFilter])
+  }, [leads, query, sourceFilter, statusFilter, statusOverrideById])
 
   const selected = useMemo(() => filtered.find((l) => l.id === selectedId) || null, [filtered, selectedId])
 
@@ -95,10 +97,17 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
   const updateStatus = async (id: string, next: LeadStatus) => {
     setSavingId(id)
+    setStatusOverrideById((prev) => ({ ...prev, [id]: next }))
     try {
       const supabase = createClient()
       const { error } = await supabase.from('leads').update({ status: next }).eq('id', id)
       if (error) throw error
+    } catch {
+      setStatusOverrideById((prev) => {
+        const copy = { ...prev }
+        delete copy[id]
+        return copy
+      })
     } finally {
       setSavingId(null)
     }
@@ -188,7 +197,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                 <div className="leads-tbody">
                   {filtered.map((l, idx) => {
                     const isActive = l.id === selectedId
-                    const statusValue = ((l.status || 'new') as LeadStatus) || 'new'
+                    const statusValue = statusOverrideById[l.id] || (((l.status || 'new') as LeadStatus) || 'new')
                     return (
                       <motion.div
                         key={l.id}
