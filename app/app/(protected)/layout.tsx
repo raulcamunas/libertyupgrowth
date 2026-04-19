@@ -15,7 +15,7 @@ export default async function ErpLayout({ children }: { children: React.ReactNod
       <div className="erp-main">
         <header className="erp-topbar">
           <div className="erp-topbar-left">
-            <div className="erp-sidebar-bottom">
+            <div className="erp-topbar-role">
               <div className="erp-role">{perms.role === 'admin' ? 'Admin' : 'Usuario'}</div>
             </div>
             <div className="erp-topbar-subtitle">Selecciona una aplicación para comenzar</div>
