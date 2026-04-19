@@ -6691,6 +6691,10 @@
             color: #fff;
         }
 
+        html.erp-sidebar-collapsed .erp-shell {
+            grid-template-columns: 76px 1fr;
+        }
+
         .erp-sidebar {
             position: sticky;
             top: 0;
@@ -6701,6 +6705,44 @@
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             overflow: hidden;
+        }
+
+        .erp-sidebar-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.80);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            margin: 0 0 12px 6px;
+        }
+
+        html.erp-sidebar-collapsed .erp-sidebar {
+            padding: 18px 10px;
+        }
+
+        html.erp-sidebar-collapsed .erp-nav-label,
+        html.erp-sidebar-collapsed .erp-nav-badge {
+            display: none;
+        }
+
+        html.erp-sidebar-collapsed .erp-nav-item {
+            justify-content: center;
+            gap: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        html.erp-sidebar-collapsed .erp-nav-item i {
+            margin: 0;
+        }
+
+        html.erp-sidebar-collapsed .erp-sidebar-bottom {
+            left: 10px;
+            right: 10px;
         }
 
         .erp-sidebar-top {
@@ -7656,28 +7698,34 @@
         }
 
         .leads-note-del-btn {
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.10);
             background: rgba(255,255,255,0.06);
             color: rgba(255,255,255,0.72);
             font-weight: 900;
+            font-size: 16px;
             cursor: pointer;
             flex: 0 0 auto;
             display: grid;
             place-items: center;
             line-height: 1;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         .leads-note-add-btn--inline {
             margin-top: 0;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 10px;
             display: grid;
             place-items: center;
             line-height: 1;
+            font-size: 16px;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         .leads-note-text {
@@ -7833,6 +7881,35 @@
         .leads-td-status {
             display: flex;
             justify-content: flex-start;
+        }
+
+        .leads-td-adset {
+            color: rgba(255,255,255,0.72);
+            font-weight: 800;
+            font-size: 12.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .leads-td-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .leads-ellipsis-btn {
+            width: 38px;
+            height: 32px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.86);
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            line-height: 1;
         }
 
         .leads-status-wrap {

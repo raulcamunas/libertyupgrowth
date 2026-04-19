@@ -17,6 +17,14 @@ export const ERP_APPS: ErpApp[] = [
     icon: 'fa-solid fa-house',
   },
   {
+    id: 'dashboard',
+    name: 'Dashboard',
+    description: 'Evolución de leads por día y fuente',
+    href: '/app/apps/dashboard',
+    icon: 'fa-solid fa-chart-line',
+    adminOnly: true,
+  },
+  {
     id: 'usuarios',
     name: 'Usuarios',
     description: 'Gestión de accesos y permisos',

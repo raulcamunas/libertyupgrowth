@@ -20,16 +20,16 @@ type LeadRow = {
   payload: any
 }
 
-type ColumnKey = 'date' | 'status' | 'name' | 'phone' | 'email' | 'notes' | 'extra'
+type ColumnKey = 'date' | 'adset' | 'status' | 'name' | 'phone' | 'notes' | 'actions'
 
 const COLUMN_DEFAULT_WIDTH: Record<ColumnKey, number> = {
   date: 150,
-  status: 200,
+  adset: 220,
+  status: 160,
   name: 260,
   phone: 180,
-  email: 280,
   notes: 520,
-  extra: 140,
+  actions: 64,
 }
 
 const COL_STORAGE_KEY = 'leads_col_widths_v1'
@@ -121,6 +121,12 @@ function nowStampEs() {
   } catch {
     return new Date().toISOString()
   }
+}
+
+function toDatetimeLocal(iso: string) {
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
 export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
@@ -476,12 +482,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const gridTemplate = useMemo(() => {
     const parts = [
       `${colWidths.date}px`,
+      `${colWidths.adset}px`,
       `${colWidths.status}px`,
       `${colWidths.name}px`,
       `${colWidths.phone}px`,
-      `${colWidths.email}px`,
       `${colWidths.notes}px`,
-      `${colWidths.extra}px`,
+      `${colWidths.actions}px`,
     ]
     return parts.join(' ')
   }, [colWidths])
@@ -489,7 +495,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const resizeStops = useMemo(() => {
     const stops: Array<{ key: ColumnKey; left: number }> = []
     let acc = 0
-    ;(['date', 'status', 'name', 'phone', 'email', 'notes'] as ColumnKey[]).forEach((k) => {
+    ;(['date', 'adset', 'status', 'name', 'phone', 'notes'] as ColumnKey[]).forEach((k) => {
       acc += colWidths[k]
       stops.push({ key: k, left: acc })
     })
@@ -625,12 +631,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
               <div className="leads-table">
                 <div className="leads-thead" style={{ gridTemplateColumns: gridTemplate }}>
                   <div className="leads-th">Fecha</div>
+                  <div className="leads-th">Adset</div>
                   <div className="leads-th">Estado</div>
                   <div className="leads-th">Nombre</div>
                   <div className="leads-th">Teléfono</div>
-                  <div className="leads-th">Email</div>
                   <div className="leads-th">Notas</div>
-                  <div className="leads-th">Datos extra</div>
+                  <div className="leads-th"></div>
 
                   {resizeStops.map((s) => (
                     <div
@@ -674,17 +680,15 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                             type="button"
                             className="leads-date-btn"
                             onClick={() => {
-                              const iso = createdAtValue
-                              const d = new Date(iso)
-                              const pad = (n: number) => String(n).padStart(2, '0')
-                              const local = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
                               setDateEditForId(l.id)
-                              setDateEditValue(local)
+                              setDateEditValue(toDatetimeLocal(dateOverrideById[l.id] || baseDateById[l.id] || l.created_at))
                             }}
                           >
                             {formatDate(createdAtValue)}
                           </button>
                         </div>
+
+                        <div className="leads-td leads-td-adset">{l.adset_name || '-'}</div>
                         <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
                           <div className="leads-status-wrap">
                             <button
@@ -708,7 +712,6 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
                         <div className="leads-td leads-td-name">{leadTitle(l)}</div>
                         <div className="leads-td">{l.phone || '-'}</div>
-                        <div className="leads-td">{l.email || '-'}</div>
 
                         <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
                           <div className="leads-notes-entries">
@@ -780,16 +783,18 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                           ) : null}
                         </div>
 
-                        <div className="leads-td leads-td-extra" onClick={(e) => e.stopPropagation()}>
+                        <div className="leads-td leads-td-actions" onClick={(e) => e.stopPropagation()}>
                           <button
                             type="button"
-                            className="leads-extra-btn"
+                            className="leads-ellipsis-btn"
                             onClick={() => {
                               setDrawerLeadId(l.id)
                               setShowJson(false)
                             }}
+                            aria-label="Más info"
+                            title="Más info"
                           >
-                            Datos extra
+                            ...
                           </button>
                         </div>
                       </motion.div>

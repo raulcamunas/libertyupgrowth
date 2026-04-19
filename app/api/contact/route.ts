@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 
 // Rate limiting simple en memoria (en producción usar Redis)
 const submissions = new Map<string, { count: number; resetAt: number }>()
@@ -102,6 +103,43 @@ export async function POST(request: NextRequest) {
       source: 'Hero Form',
       timestamp: new Date().toISOString(),
       ip: ip,
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    if (supabaseUrl && serviceRoleKey) {
+      try {
+        const supabaseAdmin = createServerClient(supabaseUrl, serviceRoleKey, {
+          cookies: {
+            getAll() {
+              return []
+            },
+            setAll() {},
+          },
+        })
+
+        const leadKey = (webhookData.email || '').trim()
+          ? `hero:${(webhookData.email || '').trim().toLowerCase()}`
+          : `hero:${(webhookData.phone || '').trim().replace(/\s+/g, '')}:${webhookData.timestamp}`
+
+        await supabaseAdmin
+          .from('leads')
+          .upsert(
+            {
+              lead_key: leadKey,
+              source: 'Hero Form',
+              name: webhookData.name || null,
+              email: webhookData.email || null,
+              phone: webhookData.phone || null,
+              status: 'new',
+              payload: webhookData,
+            },
+            { onConflict: 'lead_key' }
+          )
+      } catch {
+        // ignorar para no romper el formulario
+      }
     }
     
     console.log('📤 Sending to webhook:', webhookData)
