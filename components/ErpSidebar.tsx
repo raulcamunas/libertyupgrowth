@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ERP_APPS } from '@/lib/erp/apps'
-import Image from 'next/image'
 
 export default function ErpSidebar({
   role,
@@ -18,7 +17,10 @@ export default function ErpSidebar({
     <aside className="erp-sidebar">
       <div className="erp-sidebar-top">
         <div className="erp-brand">
-          <Image src="/logo.png" alt="Liberty Seller" width={44} height={44} className="erp-brand-logo" />
+          <div className="erp-brand-name">
+            <span className="erp-brand-name-main">Liberty</span>
+            <span className="erp-brand-name-accent">Seller</span>
+          </div>
         </div>
       </div>
 
