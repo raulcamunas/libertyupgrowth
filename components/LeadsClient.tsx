@@ -13,6 +13,10 @@ type LeadRow = {
   email: string | null
   phone: string | null
   status: string | null
+  adset_name?: string | null
+  pain_point?: string | null
+  current_situation?: string | null
+  notes?: string | null
   payload: any
 }
 
@@ -63,6 +67,26 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [showJson, setShowJson] = useState(false)
   const [statusOverrideById, setStatusOverrideById] = useState<Record<string, LeadStatus>>({})
   const [statusMenuOpenForId, setStatusMenuOpenForId] = useState<string | null>(null)
+  const [notesOverrideById, setNotesOverrideById] = useState<Record<string, string>>({})
+  const [savingNotesId, setSavingNotesId] = useState<string | null>(null)
+
+  const updateNotes = async (id: string, next: string) => {
+    setSavingNotesId(id)
+    setNotesOverrideById((prev: Record<string, string>) => ({ ...prev, [id]: next }))
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('leads').update({ notes: next }).eq('id', id)
+      if (error) throw error
+    } catch {
+      setNotesOverrideById((prev: Record<string, string>) => {
+        const copy = { ...prev }
+        delete copy[id]
+        return copy
+      })
+    } finally {
+      setSavingNotesId(null)
+    }
+  }
 
   const sources = useMemo(() => {
     const set = new Set<string>()
@@ -198,6 +222,10 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                   <div className="leads-th">Teléfono</div>
                   <div className="leads-th">Email</div>
                   <div className="leads-th">Fuente</div>
+                  <div className="leads-th">Adset</div>
+                  <div className="leads-th">Dolor</div>
+                  <div className="leads-th">Situación</div>
+                  <div className="leads-th">Notas</div>
                   <div className="leads-th">Estado</div>
                 </div>
 
@@ -206,6 +234,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     const isActive = l.id === selectedId
                     const statusValue = statusOverrideById[l.id] || (((l.status || 'new') as LeadStatus) || 'new')
                     const statusColor = statusColorByValue(statusValue)
+                    const notesValue = notesOverrideById[l.id] ?? (l.notes || '')
                     return (
                       <motion.div
                         key={l.id}
@@ -231,6 +260,21 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         <div className="leads-td">{l.phone || '-'}</div>
                         <div className="leads-td">{l.email || '-'}</div>
                         <div className="leads-td">{l.source || '-'}</div>
+                        <div className="leads-td">{l.adset_name || '-'}</div>
+                        <div className="leads-td">{l.pain_point || '-'}</div>
+                        <div className="leads-td">{l.current_situation || '-'}</div>
+                        <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
+                          <input
+                            className="leads-notes-input"
+                            value={notesValue}
+                            placeholder="Escribe notas..."
+                            onChange={(e) => setNotesOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))}
+                            onBlur={async (e) => {
+                              await updateNotes(l.id, e.target.value)
+                            }}
+                            disabled={savingNotesId === l.id}
+                          />
+                        </div>
                         <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
                           <div className="leads-status-wrap">
                             <button

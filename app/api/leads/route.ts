@@ -34,6 +34,31 @@ export async function POST(request: NextRequest) {
       received_at: new Date().toISOString(),
     }
 
+    const raw = body?.raw && typeof body.raw === 'object' ? body.raw : body
+
+    const adsetName: string | null =
+      typeof body?.adset_name === 'string'
+        ? body.adset_name
+        : typeof raw?.adset_name === 'string'
+          ? raw.adset_name
+          : null
+
+    const painPoint: string | null =
+      typeof body?.pain_point === 'string'
+        ? body.pain_point
+        : typeof raw?.['¿qué_es_lo_que_más_te_quema_de_gestionar_tus_citas_manualmente?'] === 'string'
+          ? raw?.['¿qué_es_lo_que_más_te_quema_de_gestionar_tus_citas_manualmente?']
+          : null
+
+    const currentSituation: string | null =
+      typeof body?.current_situation === 'string'
+        ? body.current_situation
+        : typeof raw?.['¿cuál_es_tu_situación_actual_con_la_gestión_de_citas?'] === 'string'
+          ? raw?.['¿cuál_es_tu_situación_actual_con_la_gestión_de_citas?']
+          : null
+
+    const notes: string | null = typeof body?.notes === 'string' ? body.notes : null
+
     const leadKey: string | null =
       typeof body?.lead_key === 'string'
         ? body.lead_key
@@ -64,6 +89,10 @@ export async function POST(request: NextRequest) {
           email: typeof body?.email === 'string' ? body.email : null,
           phone: typeof body?.phone === 'string' ? body.phone : null,
           status: typeof body?.status === 'string' ? body.status : 'new',
+          adset_name: adsetName,
+          pain_point: painPoint,
+          current_situation: currentSituation,
+          notes,
           payload,
         },
         { onConflict: 'lead_key' }

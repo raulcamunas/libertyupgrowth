@@ -14,6 +14,10 @@ type LeadRow = {
   email: string | null
   phone: string | null
   status: string | null
+  adset_name: string | null
+  pain_point: string | null
+  current_situation: string | null
+  notes: string | null
   payload: any
 }
 
@@ -24,7 +28,7 @@ export default async function LeadsMiniAppPage() {
 
   const { data, error } = await supabase
     .from('leads')
-    .select('id, created_at, lead_key, source, name, email, phone, status, payload')
+    .select('*')
     .order('created_at', { ascending: false })
     .limit(300)
 
