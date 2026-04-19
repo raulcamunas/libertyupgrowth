@@ -20,9 +20,10 @@ type LeadRow = {
   payload: any
 }
 
-type ColumnKey = 'status' | 'name' | 'phone' | 'email' | 'notes' | 'extra'
+type ColumnKey = 'date' | 'status' | 'name' | 'phone' | 'email' | 'notes' | 'extra'
 
 const COLUMN_DEFAULT_WIDTH: Record<ColumnKey, number> = {
+  date: 150,
   status: 200,
   name: 260,
   phone: 180,
@@ -220,6 +221,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
   const gridTemplate = useMemo(() => {
     const parts = [
+      `${colWidths.date}px`,
       `${colWidths.status}px`,
       `${colWidths.name}px`,
       `${colWidths.phone}px`,
@@ -233,7 +235,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const resizeStops = useMemo(() => {
     const stops: Array<{ key: ColumnKey; left: number }> = []
     let acc = 0
-    ;(['status', 'name', 'phone', 'email', 'notes'] as ColumnKey[]).forEach((k) => {
+    ;(['date', 'status', 'name', 'phone', 'email', 'notes'] as ColumnKey[]).forEach((k) => {
       acc += colWidths[k]
       stops.push({ key: k, left: acc })
     })
@@ -349,6 +351,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
             <div className="leads-table-scroll">
               <div className="leads-table">
                 <div className="leads-thead" style={{ gridTemplateColumns: gridTemplate }}>
+                  <div className="leads-th">Fecha</div>
                   <div className="leads-th">Estado</div>
                   <div className="leads-th">Nombre</div>
                   <div className="leads-th">Teléfono</div>
@@ -392,6 +395,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.18, delay: Math.min(idx * 0.004, 0.18) }}
                       >
+                        <div className="leads-td leads-td-date">{formatDate(l.created_at)}</div>
                         <div className="leads-td leads-td-status" onClick={(e) => e.stopPropagation()}>
                           <div className="leads-status-wrap">
                             <button
