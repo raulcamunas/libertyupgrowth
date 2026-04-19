@@ -15,15 +15,6 @@ export default function ErpSidebar({
 
   return (
     <aside className="erp-sidebar">
-      <div className="erp-sidebar-top">
-        <div className="erp-brand">
-          <div className="erp-brand-name">
-            <span className="erp-brand-name-main">Liberty</span>
-            <span className="erp-brand-name-accent">Seller</span>
-          </div>
-        </div>
-      </div>
-
       <nav className="erp-nav">
         {visible.map((app) => {
           const active = app.href === '/app' ? pathname === '/app' : pathname.startsWith(app.href)
