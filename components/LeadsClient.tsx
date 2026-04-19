@@ -92,6 +92,14 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   } | null>(null)
 
   useEffect(() => {
+    const onDown = () => {
+      setStatusMenuOpenForId(null)
+    }
+    window.addEventListener('pointerdown', onDown)
+    return () => window.removeEventListener('pointerdown', onDown)
+  }, [])
+
+  useEffect(() => {
     try {
       const raw = window.localStorage.getItem(COL_STORAGE_KEY)
       if (!raw) return
@@ -220,6 +228,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const startResize = (key: ColumnKey, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    setStatusMenuOpenForId(null)
     resizingRef.current = {
       key,
       startX: e.clientX,
@@ -395,7 +404,10 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                               type="button"
                               className="leads-status-btn"
                               disabled={isSaving}
-                              onClick={() => setStatusMenuOpenForId((cur) => (cur === l.id ? null : l.id))}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setStatusMenuOpenForId((cur) => (cur === l.id ? null : l.id))
+                              }}
                             >
                               {statusBadge(statusValue)}
                             </button>
@@ -408,6 +420,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                   animate={{ opacity: 1, y: 0, scale: 1 }}
                                   exit={{ opacity: 0, y: 6, scale: 0.98 }}
                                   transition={{ duration: 0.14 }}
+                                  onPointerDown={(e) => e.stopPropagation()}
                                 >
                                   {STATUS_OPTIONS.map((opt) => (
                                     <button

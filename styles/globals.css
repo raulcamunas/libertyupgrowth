@@ -7373,6 +7373,7 @@
 
         .leads-notes-input {
             width: 100%;
+            max-width: 100%;
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.12);
             background: rgba(0,0,0,0.22);
@@ -7382,6 +7383,8 @@
             resize: none;
             overflow: hidden;
             line-height: 1.25;
+            box-sizing: border-box;
+            display: block;
         }
 
         .leads-extra-btn {
@@ -7436,6 +7439,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            min-width: 0;
         }
 
         .leads-drawer-overlay {
