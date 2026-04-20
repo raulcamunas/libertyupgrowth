@@ -6513,10 +6513,29 @@
         }
 
         .formulario-artist-details {
+            grid-column: 1 / -1;
             border-radius: 14px;
             border: 1px solid rgba(255,255,255,0.10);
-            background: rgba(0,0,0,0.18);
+            background: rgba(255,255,255,0.03);
             padding: 14px;
+        }
+
+        .formulario-brand-logo {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .formulario-brand-logo img {
+            height: 36px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        @media (max-width: 720px) {
+            .formulario-brand-logo img {
+                height: 28px;
+            }
         }
 
         .formulario-artist-details-title {

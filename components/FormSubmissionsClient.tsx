@@ -175,6 +175,57 @@ function buildPhase(payload: any, title: string, keys: string[]) {
   return { title, items }
 }
 
+const DAY_LABELS: Record<string, string> = {
+  lun: 'Lunes',
+  mar: 'Martes',
+  mie: 'Miércoles',
+  jue: 'Jueves',
+  vie: 'Viernes',
+  sab: 'Sábado',
+  dom: 'Domingo',
+}
+
+function buildArtistItems(payload: any): Array<{ label: string; value: string }> {
+  const items: Array<{ label: string; value: string }> = []
+  const artists = Array.isArray(payload?.tattooArtists) ? payload.tattooArtists : []
+  artists.forEach((a: any, idx: number) => {
+    const prefix = `Artista ${idx + 1}${a?.name ? ` · ${String(a.name).trim()}` : ''}`
+    const parts: string[] = []
+    if (a?.specialties) parts.push(`Especialidades: ${String(a.specialties).trim()}`)
+    if (a?.schedule) parts.push(`Horario: ${String(a.schedule).trim()}`)
+    if (a?.takesNewClients) parts.push(`Nuevos clientes: ${a.takesNewClients === 'si' ? 'Sí' : 'No'}`)
+    if (a?.doesPiercings) parts.push(`Piercings: ${a.doesPiercings === 'si' ? 'Sí' : 'No'}`)
+    if (a?.doesCoverups) parts.push(`Cover-ups: ${a.doesCoverups === 'si' ? 'Sí' : 'No'}`)
+    items.push({ label: prefix, value: parts.length ? parts.join(' · ') : '(sin detalles)' })
+  })
+  return items
+}
+
+function buildHorariosItems(payload: any): Array<{ label: string; value: string }> {
+  const items: Array<{ label: string; value: string }> = []
+  const sem = payload?.horarioSemanal
+  if (sem && typeof sem === 'object') {
+    for (const key of ['lun', 'mar', 'mie', 'jue', 'vie', 'sab', 'dom']) {
+      const d = (sem as any)[key]
+      if (!d) continue
+      if (!d.open) {
+        items.push({ label: DAY_LABELS[key] || key, value: 'Cerrado' })
+        continue
+      }
+      const ranges: string[] = []
+      if (d.from && d.to) ranges.push(`${d.from}–${d.to}`)
+      if (d.from2 && d.to2) ranges.push(`${d.from2}–${d.to2}`)
+      items.push({ label: DAY_LABELS[key] || key, value: ranges.length ? ranges.join(' / ') : 'Abierto' })
+    }
+  }
+  const extras = ['horarioApertura', 'diasApertura', 'diasCerradosFijos', 'intervaloCitas']
+  for (const k of extras) {
+    const v = formatValue(payload?.[k])
+    if (v) items.push({ label: FIELD_LABELS[k] || k, value: v })
+  }
+  return items
+}
+
 function schemaToSections(payload: any, schema: FormSchema | null) {
   if (!schema || !Array.isArray(schema.steps)) return getDetailSections(payload)
 
@@ -184,12 +235,18 @@ function schemaToSections(payload: any, schema: FormSchema | null) {
     if (step.kind !== 'fields' && step.kind !== 'horarios' && step.kind !== 'tattoo_artistas') continue
     const items: Array<{ label: string; value: string }> = []
 
-    const fields = Array.isArray(step.fields) ? (step.fields as FormQuestion[]) : []
-    for (const q of fields) {
-      const raw = payload?.[q.key]
-      const value = formatValue(raw)
-      if (!value) continue
-      items.push({ label: q.label || FIELD_LABELS[q.key] || q.key, value })
+    if (step.kind === 'tattoo_artistas') {
+      items.push(...buildArtistItems(payload))
+    } else if (step.kind === 'horarios') {
+      items.push(...buildHorariosItems(payload))
+    } else {
+      const fields = Array.isArray(step.fields) ? (step.fields as FormQuestion[]) : []
+      for (const q of fields) {
+        const raw = payload?.[q.key]
+        const value = formatValue(raw)
+        if (!value) continue
+        items.push({ label: q.label || FIELD_LABELS[q.key] || q.key, value })
+      }
     }
 
     if (items.length === 0) continue
@@ -778,9 +835,6 @@ export default function FormSubmissionsClient({
                         <div className="formsub-item-date">{formatDate(s.created_at)}</div>
                       </div>
                       {subtitle ? <div className="formsub-item-subtitle">{subtitle}</div> : null}
-                      <div className="formsub-item-meta">
-                        {s.source ? <span className="formsub-pill">{s.source}</span> : null}
-                      </div>
                     </motion.button>
                   )
                 })

@@ -433,29 +433,42 @@ function ProfessionalsField({
   placeholder?: string
   onChange: (v: string) => void
 }) {
-  const list = useMemo(() => {
-    const parts = String(value || '')
-      .split('\n')
-      .map((p) => p.trim())
-      .filter(Boolean)
-    return parts.length > 0 ? parts : ['']
+  const [items, setItems] = useState<string[]>(() => {
+    const parts = String(value || '').split('\n')
+    const hasAny = parts.some((p) => p.trim())
+    return hasAny ? parts : ['']
+  })
+
+  useEffect(() => {
+    const incoming = String(value || '').split('\n').map((p) => p).filter((_, i, arr) => i < arr.length)
+    const incomingJoined = incoming.map((v) => v.trim()).filter(Boolean).join('\n')
+    const localJoined = items.map((v) => v.trim()).filter(Boolean).join('\n')
+    if (incomingJoined !== localJoined) {
+      const parts = String(value || '').split('\n')
+      const hasAny = parts.some((p) => p.trim())
+      setItems(hasAny ? parts : [''])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
 
+  const commit = (next: string[]) => {
+    setItems(next)
+    onChange(next.map((v) => v.trim()).filter(Boolean).join('\n'))
+  }
+
+  const list = items.length > 0 ? items : ['']
+
   const setAt = (idx: number, next: string) => {
-    const nextList = list.map((v, i) => (i === idx ? next : v))
-    const cleaned = nextList.map((v) => String(v || '').trim()).filter(Boolean)
-    onChange(cleaned.join('\n'))
+    commit(list.map((v, i) => (i === idx ? next : v)))
   }
 
   const add = () => {
-    const cleaned = list.map((v) => String(v || '').trim()).filter(Boolean)
-    onChange([...cleaned, ''].join('\n'))
+    commit([...list, ''])
   }
 
   const remove = () => {
-    const cleaned = list.map((v) => String(v || '').trim()).filter(Boolean)
-    const next = cleaned.slice(0, Math.max(0, cleaned.length - 1))
-    onChange(next.join('\n'))
+    if (list.length <= 1) return
+    commit(list.slice(0, -1))
   }
 
   return (
@@ -474,11 +487,11 @@ function ProfessionalsField({
             type="button"
             className="formulario-artist-btn"
             onClick={remove}
-            disabled={list.filter((v) => String(v || '').trim()).filter(Boolean).length <= 1}
+            disabled={list.length <= 1}
           >
             −
           </button>
-          <div className="formulario-artist-count">{list.filter((v) => String(v || '').trim()).filter(Boolean).length || 1}</div>
+          <div className="formulario-artist-count">{list.length}</div>
           <button type="button" className="formulario-artist-btn" onClick={add}>
             +
           </button>
@@ -769,7 +782,9 @@ export default function FormularioPage() {
         <div className="formulario-card">
           <div className="formulario-header">
             <div className="formulario-brand-row">
-              <div className="formulario-brand-pill">Liberty UpGrowth</div>
+              <div className="formulario-brand-logo">
+                <img src="/logo.png" alt="Liberty UpGrowth" />
+              </div>
               <div className="formulario-brand-step">
                 Paso {Math.min(step + 1, totalSteps)} / {totalSteps}
               </div>
