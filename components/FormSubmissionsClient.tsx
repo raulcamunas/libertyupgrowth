@@ -227,9 +227,18 @@ function buildHorariosItems(payload: any): Array<{ label: string; value: string 
 }
 
 function schemaToSections(payload: any, schema: FormSchema | null) {
-  if (!schema || !Array.isArray(schema.steps)) return getDetailSections(payload)
+  if (!schema || !Array.isArray(schema.steps)) {
+    const base = getDetailSections(payload)
+    const horariosItems = buildHorariosItems(payload)
+    if (horariosItems.length > 0 && !base.some((s) => s.title.toLowerCase().includes('horario'))) {
+      base.splice(Math.min(base.length, 4), 0, { title: 'Horarios y agenda', items: horariosItems })
+    }
+    return base
+  }
 
   const sections: Array<{ title: string; items: Array<{ label: string; value: string }> }> = []
+  let renderedHorarios = false
+  let renderedArtistas = false
 
   for (const step of schema.steps as FormStep[]) {
     if (step.kind !== 'fields' && step.kind !== 'horarios' && step.kind !== 'tattoo_artistas') continue
@@ -237,8 +246,10 @@ function schemaToSections(payload: any, schema: FormSchema | null) {
 
     if (step.kind === 'tattoo_artistas') {
       items.push(...buildArtistItems(payload))
+      if (items.length > 0) renderedArtistas = true
     } else if (step.kind === 'horarios') {
       items.push(...buildHorariosItems(payload))
+      if (items.length > 0) renderedHorarios = true
     } else {
       const fields = Array.isArray(step.fields) ? (step.fields as FormQuestion[]) : []
       for (const q of fields) {
@@ -251,6 +262,20 @@ function schemaToSections(payload: any, schema: FormSchema | null) {
 
     if (items.length === 0) continue
     sections.push({ title: step.title || step.id, items })
+  }
+
+  if (!renderedHorarios) {
+    const horariosItems = buildHorariosItems(payload)
+    if (horariosItems.length > 0) {
+      sections.push({ title: 'Horarios y agenda', items: horariosItems })
+    }
+  }
+
+  if (!renderedArtistas) {
+    const artistItems = buildArtistItems(payload)
+    if (artistItems.length > 0) {
+      sections.push({ title: 'Artistas', items: artistItems })
+    }
   }
 
   if (sections.length === 0) return getDetailSections(payload)
