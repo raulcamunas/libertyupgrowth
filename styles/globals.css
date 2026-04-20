@@ -8306,6 +8306,15 @@
             padding: 10px;
         }
 
+        .leads-kv-item-full {
+            grid-column: 1 / -1;
+        }
+
+        .leads-kv-value-multiline {
+            white-space: pre-wrap;
+            line-height: 1.45;
+        }
+
         .leads-kv-label {
             font-size: 12px;
             color: rgba(255,255,255,0.55);

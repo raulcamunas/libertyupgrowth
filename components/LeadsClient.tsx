@@ -63,6 +63,23 @@ function normalize(v: string | null | undefined) {
   return (v || '').trim()
 }
 
+function formatPainText(raw: string | null | undefined): string {
+  const s = (raw || '').trim()
+  if (!s) return ''
+  const parts = s
+    .split(/\|+/g)
+    .map((p) => p.trim())
+    .filter(Boolean)
+  const pretty = parts.map((p) => {
+    let t = p.replace(/_/g, ' ').trim()
+    t = t.replace(/\s*\.\s*$/g, '')
+    if (!t) return ''
+    return t.charAt(0).toUpperCase() + t.slice(1)
+  }).filter(Boolean)
+  if (pretty.length <= 1) return pretty[0] || ''
+  return pretty.map((p) => `• ${p}`).join('\n')
+}
+
 function leadTitle(l: LeadRow) {
   return normalize(l.name) || normalize(l.email) || normalize(l.phone) || l.lead_key || 'Lead'
 }
@@ -1030,6 +1047,18 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     <div className="leads-kv-item">
                       <div className="leads-kv-label">Estado</div>
                       <div className="leads-kv-value">{selected.status || '-'}</div>
+                    </div>
+                    <div className="leads-kv-item leads-kv-item-full">
+                      <div className="leads-kv-label">Dolor del cliente</div>
+                      <div className="leads-kv-value leads-kv-value-multiline">
+                        {formatPainText(selected.pain_point) || '-'}
+                      </div>
+                    </div>
+                    <div className="leads-kv-item leads-kv-item-full">
+                      <div className="leads-kv-label">Situación actual</div>
+                      <div className="leads-kv-value leads-kv-value-multiline">
+                        {formatPainText(selected.current_situation) || '-'}
+                      </div>
                     </div>
                   </div>
 
