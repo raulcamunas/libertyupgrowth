@@ -7280,6 +7280,22 @@
             cursor: pointer;
         }
 
+        .formsub-delete {
+            border-radius: 12px;
+            border: 1px solid rgba(255,90,95,0.40);
+            background: rgba(255,90,95,0.12);
+            color: rgba(255,180,180,0.95);
+            padding: 8px 10px;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .formsub-delete:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .formsub-json {
             margin-top: 12px;
             border-radius: 14px;

@@ -22,6 +22,7 @@ export default async function FormulariosMiniAppPage() {
   const canEditSchemas = Boolean(
     adminEmail && user.email && user.email.toLowerCase() === adminEmail.toLowerCase() && user.email.toLowerCase() !== 'adrian@libertyupgrowth.com'
   )
+  const canDelete = (user.email || '').toLowerCase() === 'libertyupgrowth@gmail.com'
 
   const supabase = await createClient()
 
@@ -43,5 +44,5 @@ export default async function FormulariosMiniAppPage() {
     )
   }
 
-  return <FormSubmissionsClient submissions={(data || []) as FormSubmissionRow[]} canEditSchemas={canEditSchemas} />
+  return <FormSubmissionsClient submissions={(data || []) as FormSubmissionRow[]} canEditSchemas={canEditSchemas} canDelete={canDelete} />
 }

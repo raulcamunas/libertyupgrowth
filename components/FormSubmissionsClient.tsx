@@ -357,9 +357,11 @@ function formatCopyText(submission: FormSubmissionRow) {
 export default function FormSubmissionsClient({
   submissions,
   canEditSchemas = false,
+  canDelete = false,
 }: {
   submissions: FormSubmissionRow[]
   canEditSchemas?: boolean
+  canDelete?: boolean
 }) {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -409,16 +411,44 @@ export default function FormSubmissionsClient({
     setSchemaDraft(cloneJson(s || getDefaultFormSchema(schemaType)))
   }, [canEditSchemas, schemaType, schemasByType])
 
+  const [items, setItems] = useState<FormSubmissionRow[]>(submissions)
+  useEffect(() => {
+    setItems(submissions)
+  }, [submissions])
+
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState('')
+
+  const handleDelete = async (id: string) => {
+    setDeleteError('')
+    setDeletingId(id)
+    try {
+      const res = await fetch(`/api/erp/form-submissions/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data?.error || 'No se ha podido borrar')
+      }
+      setItems((prev) => prev.filter((s) => s.id !== id))
+      setSelectedId((cur) => (cur === id ? null : cur))
+      setConfirmDeleteId(null)
+    } catch (e: any) {
+      setDeleteError(e?.message || 'Error al borrar')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return submissions
+    if (!q) return items
 
-    return submissions.filter((s) => {
+    return items.filter((s) => {
       const str = JSON.stringify(s.payload || {}).toLowerCase()
       const meta = `${s.source || ''}`.toLowerCase()
       return str.includes(q) || meta.includes(q)
     })
-  }, [query, submissions])
+  }, [query, items])
 
   const selected = useMemo(() => filtered.find((s) => s.id === selectedId) || null, [filtered, selectedId])
 
@@ -882,15 +912,27 @@ export default function FormSubmissionsClient({
                         <div className="formsub-detail-title">{getSummary(selected.payload).title}</div>
                         <div className="formsub-detail-subtitle">{formatDate(selected.created_at)}</div>
                       </div>
-                      <button
-                        className="formsub-copy"
-                        onClick={async () => {
-                          await navigator.clipboard.writeText(formatCopyText(selected))
-                        }}
-                        type="button"
-                      >
-                        Copiar info
-                      </button>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        <button
+                          className="formsub-copy"
+                          onClick={async () => {
+                            await navigator.clipboard.writeText(formatCopyText(selected))
+                          }}
+                          type="button"
+                        >
+                          Copiar info
+                        </button>
+                        {canDelete ? (
+                          <button
+                            className="formsub-delete"
+                            type="button"
+                            disabled={deletingId === selected.id}
+                            onClick={() => setConfirmDeleteId(selected.id)}
+                          >
+                            {deletingId === selected.id ? 'Borrando…' : 'Borrar'}
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
 
                     <div className="formsub-sections">
@@ -926,6 +968,56 @@ export default function FormSubmissionsClient({
           </div>
         )}
       </div>
+
+      <AnimatePresence>
+        {confirmDeleteId ? (
+          <motion.div
+            className="leads-add-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.14 }}
+            onPointerDown={() => (deletingId ? null : setConfirmDeleteId(null))}
+          >
+            <motion.div
+              className="leads-add-modal"
+              initial={{ opacity: 0, y: 10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.98 }}
+              transition={{ duration: 0.16 }}
+              onPointerDown={(e) => e.stopPropagation()}
+            >
+              <div className="leads-add-title">Borrar envío</div>
+              <div
+                className="leads-add-error"
+                style={{ borderColor: 'rgba(255,255,255,0.10)', background: 'rgba(0,0,0,0.18)', color: 'rgba(255,255,255,0.82)' }}
+              >
+                Esta acción no se puede deshacer.
+              </div>
+              {deleteError ? <div className="leads-add-error">{deleteError}</div> : null}
+
+              <div className="leads-add-actions">
+                <button
+                  className="leads-add-cancel"
+                  type="button"
+                  onClick={() => setConfirmDeleteId(null)}
+                  disabled={!!deletingId}
+                >
+                  Cancelar
+                </button>
+                <button
+                  className="leads-add-create"
+                  type="button"
+                  onClick={() => confirmDeleteId && handleDelete(confirmDeleteId)}
+                  disabled={!!deletingId}
+                >
+                  {deletingId ? 'Borrando…' : 'Borrar'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   )
 }
