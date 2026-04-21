@@ -190,6 +190,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [statusMenuPos, setStatusMenuPos] = useState<{ id: string; top: number; left: number } | null>(null)
   const [notesOverrideById, setNotesOverrideById] = useState<Record<string, string>>({})
 
+  const [nameOverrideById, setNameOverrideById] = useState<Record<string, string>>({})
+  const [baseNameById, setBaseNameById] = useState<Record<string, string>>({})
+  const [nameEditForId, setNameEditForId] = useState<string | null>(null)
+  const [nameEditValue, setNameEditValue] = useState<string>('')
+
   const [dateOverrideById, setDateOverrideById] = useState<Record<string, string>>({})
   const [baseDateById, setBaseDateById] = useState<Record<string, string>>({})
   const [dateEditForId, setDateEditForId] = useState<string | null>(null)
@@ -222,6 +227,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string>('')
+
+  const autosaveTimeoutRef = useRef<number | null>(null)
+  const autosaveIntervalRef = useRef<number | null>(null)
+  const autosaveDeadlineRef = useRef<number | null>(null)
+  const [autosaveSecondsLeft, setAutosaveSecondsLeft] = useState<number>(0)
   const [colWidths, setColWidths] = useState<Record<ColumnKey, number>>(COLUMN_DEFAULT_WIDTH)
   const resizingRef = useRef<{
     key: ColumnKey
@@ -236,6 +246,14 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       const next = { ...prev }
       for (const l of leads) {
         if (!Object.prototype.hasOwnProperty.call(next, l.id)) next[l.id] = (l.status as LeadStatus) || 'new'
+      }
+      return next
+    })
+
+    setBaseNameById((prev) => {
+      const next = { ...prev }
+      for (const l of leads) {
+        if (!Object.prototype.hasOwnProperty.call(next, l.id)) next[l.id] = normalize(l.name)
       }
       return next
     })
@@ -357,25 +375,78 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
     return (
       Object.keys(statusOverrideById).length > 0 ||
       Object.keys(notesOverrideById).length > 0 ||
+      Object.keys(nameOverrideById).length > 0 ||
       Object.keys(dateOverrideById).length > 0
     )
-  }, [notesOverrideById, statusOverrideById, dateOverrideById])
+  }, [notesOverrideById, statusOverrideById, nameOverrideById, dateOverrideById])
 
-  const persistNotesNow = async (id: string, nextNotes: string) => {
-    try {
-      const supabase = createClient()
-      const { error } = await supabase.from('leads').update({ notes: nextNotes }).eq('id', id)
-      if (error) throw error
-
-      setBaseNotesById((prev) => ({ ...prev, [id]: nextNotes }))
-      setNotesOverrideById((prev) => {
-        const copy = { ...prev }
-        delete copy[id]
-        return copy
-      })
-    } catch {
+  const clearAutosaveTimers = () => {
+    if (autosaveTimeoutRef.current) {
+      window.clearTimeout(autosaveTimeoutRef.current)
+      autosaveTimeoutRef.current = null
     }
+    if (autosaveIntervalRef.current) {
+      window.clearInterval(autosaveIntervalRef.current)
+      autosaveIntervalRef.current = null
+    }
+    autosaveDeadlineRef.current = null
+    setAutosaveSecondsLeft(0)
   }
+
+  const scheduleAutosave = () => {
+    if (isSaving) return
+    if (!isDirty) {
+      clearAutosaveTimers()
+      return
+    }
+
+    const deadline = Date.now() + 4000
+    autosaveDeadlineRef.current = deadline
+
+    if (autosaveTimeoutRef.current) window.clearTimeout(autosaveTimeoutRef.current)
+    if (autosaveIntervalRef.current) window.clearInterval(autosaveIntervalRef.current)
+
+    setAutosaveSecondsLeft(4)
+
+    autosaveIntervalRef.current = window.setInterval(() => {
+      const dl = autosaveDeadlineRef.current
+      if (!dl) return
+      const leftMs = Math.max(0, dl - Date.now())
+      const leftS = Math.ceil(leftMs / 1000)
+      setAutosaveSecondsLeft(leftS)
+    }, 200)
+
+    autosaveTimeoutRef.current = window.setTimeout(() => {
+      clearAutosaveTimers()
+      void saveAll()
+    }, 4000)
+  }
+
+  useEffect(() => {
+    scheduleAutosave()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusOverrideById, notesOverrideById, nameOverrideById, dateOverrideById])
+
+  useEffect(() => {
+    if (!isDirty) clearAutosaveTimers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDirty])
+
+  useEffect(() => {
+    if (isSaving) {
+      clearAutosaveTimers()
+      return
+    }
+    if (isDirty) scheduleAutosave()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSaving])
+
+  useEffect(() => {
+    return () => {
+      clearAutosaveTimers()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const saveAll = async () => {
     setSaveError('')
@@ -395,12 +466,14 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       const ids = new Set<string>()
       Object.keys(statusOverrideById).forEach((id) => ids.add(id))
       Object.keys(notesOverrideById).forEach((id) => ids.add(id))
+      Object.keys(nameOverrideById).forEach((id) => ids.add(id))
       Object.keys(dateOverrideById).forEach((id) => ids.add(id))
 
       const ops = Array.from(ids).map(async (id) => {
-        const update: { status?: LeadStatus; notes?: string; created_at?: string } = {}
+        const update: { status?: LeadStatus; notes?: string; name?: string; created_at?: string } = {}
         if (statusOverrideById[id]) update.status = statusOverrideById[id]
         if (Object.prototype.hasOwnProperty.call(notesOverrideById, id)) update.notes = notesOverrideById[id]
+        if (Object.prototype.hasOwnProperty.call(nameOverrideById, id)) update.name = nameOverrideById[id]
         if (dateOverrideById[id]) update.created_at = dateOverrideById[id]
         if (Object.keys(update).length === 0) return
         const { error } = await supabase.from('leads').update(update).eq('id', id)
@@ -421,6 +494,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         return next
       })
 
+      setBaseNameById((prev) => {
+        const next = { ...prev }
+        for (const [id, nm] of Object.entries(nameOverrideById)) next[id] = nm
+        return next
+      })
+
       setBaseDateById((prev) => {
         const next = { ...prev }
         for (const [id, iso] of Object.entries(dateOverrideById)) next[id] = iso
@@ -429,6 +508,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
       setStatusOverrideById({})
       setNotesOverrideById({})
+      setNameOverrideById({})
       setDateOverrideById({})
 
       try {
@@ -675,7 +755,17 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
 
         <div className="leads-savebar">
           <div className="leads-savebar-left">
-            {isDirty ? <span className="leads-unsaved">Cambios sin guardar</span> : <span className="leads-saved">Todo guardado</span>}
+            {isSaving ? (
+              <span className="leads-unsaved">Guardando...</span>
+            ) : isDirty ? (
+              autosaveSecondsLeft > 0 ? (
+                <span className="leads-unsaved">Guardando en {autosaveSecondsLeft}s</span>
+              ) : (
+                <span className="leads-unsaved">Cambios sin guardar</span>
+              )
+            ) : (
+              <span className="leads-saved">Todo guardado</span>
+            )}
             {saveError ? <span className="leads-save-error">{saveError}</span> : null}
           </div>
           <button className="leads-save-btn" type="button" onClick={saveAll} disabled={isSaving}>
@@ -718,6 +808,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     const statusValue = statusOverrideById[l.id] || baseStatusById[l.id] || (((l.status || 'new') as LeadStatus) || 'new')
                     const statusColor = statusColorByValue(statusValue)
                     const notesValue = notesOverrideById[l.id] ?? baseNotesById[l.id] ?? (l.notes || '')
+                    const nameValue = nameOverrideById[l.id] ?? baseNameById[l.id] ?? normalize(l.name)
                     const entries = notesToEntries(notesValue)
                     const createdAtValue = dateOverrideById[l.id] || baseDateById[l.id] || l.created_at
                     return (
@@ -777,7 +868,51 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                           </div>
                         </div>
 
-                        <div className="leads-td leads-td-name">{leadTitle(l)}</div>
+                        <div className="leads-td leads-td-name" onClick={(e) => e.stopPropagation()}>
+                          {nameEditForId === l.id ? (
+                            <input
+                              className="leads-input"
+                              value={nameEditValue}
+                              autoFocus
+                              onChange={(e) => {
+                                setNameEditValue(e.target.value)
+                                setNameOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault()
+                                  setNameEditForId(null)
+                                }
+                                if (e.key === 'Escape') {
+                                  e.preventDefault()
+                                  const base = baseNameById[l.id] ?? normalize(l.name)
+                                  setNameOverrideById((prev) => {
+                                    const next = { ...prev }
+                                    delete next[l.id]
+                                    return next
+                                  })
+                                  setNameEditValue(base)
+                                  setNameEditForId(null)
+                                }
+                              }}
+                              onBlur={() => {
+                                setNameEditForId(null)
+                              }}
+                              placeholder="Nombre"
+                            />
+                          ) : (
+                            <button
+                              type="button"
+                              className="leads-name-btn"
+                              onClick={() => {
+                                setNameEditForId(l.id)
+                                setNameEditValue(nameValue)
+                              }}
+                            >
+                              {nameValue || leadTitle(l)}
+                            </button>
+                          )}
+                        </div>
                         <div className="leads-td">{l.phone || '-'}</div>
 
                         <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
@@ -802,7 +937,6 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                             next.push({ ts: stamp, author: currentAuthorName || undefined, text: '' })
                                             const nextNotes = entriesToNotes(next)
                                             setNotesOverrideById((prev) => ({ ...prev, [l.id]: nextNotes }))
-                                            void persistNotesNow(l.id, nextNotes)
                                           }}
                                         >
                                           +
@@ -816,7 +950,6 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                           next.splice(i, 1)
                                           const nextNotes = entriesToNotes(next)
                                           setNotesOverrideById((prev) => ({ ...prev, [l.id]: nextNotes }))
-                                          void persistNotesNow(l.id, nextNotes)
                                         }}
                                       >
                                         ×
@@ -1036,8 +1169,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                 <div className="leads-detail-card">
                   <div className="leads-detail-top">
                     <div>
-                      <div className="leads-detail-title">{leadTitle(selected)}</div>
-                      <div className="leads-detail-subtitle">{formatDate(selected.created_at)}</div>
+                      <div className="leads-detail-title">
+                        {nameOverrideById[selected.id] ?? baseNameById[selected.id] ?? leadTitle(selected)}
+                      </div>
+                      <div className="leads-detail-subtitle">
+                        {formatDate(dateOverrideById[selected.id] || baseDateById[selected.id] || selected.created_at)}
+                      </div>
                     </div>
                     <div className="leads-detail-actions">
                       <button
@@ -1080,7 +1217,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     </div>
                     <div className="leads-kv-item">
                       <div className="leads-kv-label">Estado</div>
-                      <div className="leads-kv-value">{selected.status || '-'}</div>
+                      <div className="leads-kv-value">
+                        {statusOverrideById[selected.id] || baseStatusById[selected.id] || selected.status || '-'}
+                      </div>
                     </div>
                     <div className="leads-kv-item leads-kv-item-full">
                       <div className="leads-kv-label">Dolor del cliente</div>
