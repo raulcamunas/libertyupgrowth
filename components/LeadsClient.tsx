@@ -123,6 +123,40 @@ function entriesToNotes(entries: NoteEntry[]): string {
     .join('\n\n')
 }
 
+function AutoResizeTextarea(
+  props: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { value: string }
+) {
+  const ref = useRef<HTMLTextAreaElement | null>(null)
+
+  const resize = () => {
+    const el = ref.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight}px`
+  }
+
+  useEffect(() => {
+    resize()
+  }, [props.value])
+
+  return (
+    <textarea
+      {...props}
+      ref={(el) => {
+        ref.current = el
+        if (el) {
+          el.style.height = 'auto'
+          el.style.height = `${el.scrollHeight}px`
+        }
+      }}
+      onInput={(e) => {
+        resize()
+        props.onInput?.(e)
+      }}
+    />
+  )
+}
+
 function nowStampEs() {
   try {
     const d = new Date()
@@ -790,7 +824,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                                     </div>
                                   </div>
                                 ) : null}
-                                <textarea
+                                <AutoResizeTextarea
                                   className="leads-note-textarea"
                                   value={en.text}
                                   placeholder="Escribe..."
