@@ -92,18 +92,17 @@ function leadSubtitle(l: LeadRow) {
 type NoteEntry = { ts: string; text: string; author?: string }
 
 function notesToEntries(raw: string): NoteEntry[] {
-  const cleaned = (raw || '').trim()
+  const cleaned = (raw || '').replace(/^\s+/, '')
   if (!cleaned) return []
   const blocks = cleaned
     .split(/\n\s*\n/g)
-    .map((b) => b.trim())
-    .filter(Boolean)
+    .filter((b) => b.length > 0)
 
   const out: NoteEntry[] = []
   for (const b of blocks) {
-    const m = b.match(/^\[([^\]|]+?)(?:\s*\|\s*([^\]]+))?\]\s*[\n\r]*([\s\S]*)$/)
+    const m = b.match(/^\[([^\]|]+?)(?:\s*\|\s*([^\]]+))?\]\s*\n?([\s\S]*)$/)
     if (m) {
-      out.push({ ts: (m[1] || '').trim(), author: (m[2] || '').trim() || undefined, text: (m[3] || '').trim() })
+      out.push({ ts: (m[1] || '').trim(), author: (m[2] || '').trim() || undefined, text: m[3] || '' })
     } else {
       out.push({ ts: '', text: b })
     }
@@ -114,15 +113,14 @@ function notesToEntries(raw: string): NoteEntry[] {
 function entriesToNotes(entries: NoteEntry[]): string {
   return entries
     .map((e) => {
-      const text = (e.text || '').trimEnd()
+      const text = e.text || ''
       if (!text && !e.ts) return ''
       if (!e.ts) return text
       const head = e.author ? `[${e.ts} | ${e.author}]` : `[${e.ts}]`
-      return `${head}\n${text}`.trimEnd()
+      return `${head}\n${text}`
     })
-    .filter(Boolean)
+    .filter((s) => s.length > 0)
     .join('\n\n')
-    .trim()
 }
 
 function nowStampEs() {
