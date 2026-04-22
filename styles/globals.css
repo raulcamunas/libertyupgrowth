@@ -8047,6 +8047,21 @@
             text-decoration: underline;
         }
 
+        .leads-phone-btn {
+            width: 100%;
+            text-align: left;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .leads-phone-btn:hover {
+            text-decoration: underline;
+        }
+
         .leads-td-status {
             display: flex;
             justify-content: flex-start;

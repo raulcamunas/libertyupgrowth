@@ -195,6 +195,11 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   const [nameEditForId, setNameEditForId] = useState<string | null>(null)
   const [nameEditValue, setNameEditValue] = useState<string>('')
 
+  const [phoneOverrideById, setPhoneOverrideById] = useState<Record<string, string>>({})
+  const [basePhoneById, setBasePhoneById] = useState<Record<string, string>>({})
+  const [phoneEditForId, setPhoneEditForId] = useState<string | null>(null)
+  const [phoneEditValue, setPhoneEditValue] = useState<string>('')
+
   const [dateOverrideById, setDateOverrideById] = useState<Record<string, string>>({})
   const [baseDateById, setBaseDateById] = useState<Record<string, string>>({})
   const [dateEditForId, setDateEditForId] = useState<string | null>(null)
@@ -254,6 +259,14 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       const next = { ...prev }
       for (const l of leads) {
         if (!Object.prototype.hasOwnProperty.call(next, l.id)) next[l.id] = normalize(l.name)
+      }
+      return next
+    })
+
+    setBasePhoneById((prev) => {
+      const next = { ...prev }
+      for (const l of leads) {
+        if (!Object.prototype.hasOwnProperty.call(next, l.id)) next[l.id] = normalize(l.phone)
       }
       return next
     })
@@ -376,9 +389,10 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       Object.keys(statusOverrideById).length > 0 ||
       Object.keys(notesOverrideById).length > 0 ||
       Object.keys(nameOverrideById).length > 0 ||
+      Object.keys(phoneOverrideById).length > 0 ||
       Object.keys(dateOverrideById).length > 0
     )
-  }, [notesOverrideById, statusOverrideById, nameOverrideById, dateOverrideById])
+  }, [notesOverrideById, statusOverrideById, nameOverrideById, phoneOverrideById, dateOverrideById])
 
   const clearAutosaveTimers = () => {
     if (autosaveTimeoutRef.current) {
@@ -425,7 +439,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
   useEffect(() => {
     scheduleAutosave()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusOverrideById, notesOverrideById, nameOverrideById, dateOverrideById])
+  }, [statusOverrideById, notesOverrideById, nameOverrideById, phoneOverrideById, dateOverrideById])
 
   useEffect(() => {
     if (!isDirty) clearAutosaveTimers()
@@ -467,13 +481,15 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       Object.keys(statusOverrideById).forEach((id) => ids.add(id))
       Object.keys(notesOverrideById).forEach((id) => ids.add(id))
       Object.keys(nameOverrideById).forEach((id) => ids.add(id))
+      Object.keys(phoneOverrideById).forEach((id) => ids.add(id))
       Object.keys(dateOverrideById).forEach((id) => ids.add(id))
 
       const ops = Array.from(ids).map(async (id) => {
-        const update: { status?: LeadStatus; notes?: string; name?: string; created_at?: string } = {}
+        const update: { status?: LeadStatus; notes?: string; name?: string; phone?: string; created_at?: string } = {}
         if (statusOverrideById[id]) update.status = statusOverrideById[id]
         if (Object.prototype.hasOwnProperty.call(notesOverrideById, id)) update.notes = notesOverrideById[id]
         if (Object.prototype.hasOwnProperty.call(nameOverrideById, id)) update.name = nameOverrideById[id]
+        if (Object.prototype.hasOwnProperty.call(phoneOverrideById, id)) update.phone = phoneOverrideById[id]
         if (dateOverrideById[id]) update.created_at = dateOverrideById[id]
         if (Object.keys(update).length === 0) return
         const { error } = await supabase.from('leads').update(update).eq('id', id)
@@ -500,6 +516,12 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
         return next
       })
 
+      setBasePhoneById((prev) => {
+        const next = { ...prev }
+        for (const [id, ph] of Object.entries(phoneOverrideById)) next[id] = ph
+        return next
+      })
+
       setBaseDateById((prev) => {
         const next = { ...prev }
         for (const [id, iso] of Object.entries(dateOverrideById)) next[id] = iso
@@ -509,6 +531,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
       setStatusOverrideById({})
       setNotesOverrideById({})
       setNameOverrideById({})
+      setPhoneOverrideById({})
       setDateOverrideById({})
 
       try {
@@ -809,6 +832,7 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     const statusColor = statusColorByValue(statusValue)
                     const notesValue = notesOverrideById[l.id] ?? baseNotesById[l.id] ?? (l.notes || '')
                     const nameValue = nameOverrideById[l.id] ?? baseNameById[l.id] ?? normalize(l.name)
+                    const phoneValue = phoneOverrideById[l.id] ?? basePhoneById[l.id] ?? normalize(l.phone)
                     const entries = notesToEntries(notesValue)
                     const createdAtValue = dateOverrideById[l.id] || baseDateById[l.id] || l.created_at
                     return (
@@ -913,7 +937,51 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                             </button>
                           )}
                         </div>
-                        <div className="leads-td">{l.phone || '-'}</div>
+                        <div className="leads-td" onClick={(e) => e.stopPropagation()}>
+                          {phoneEditForId === l.id ? (
+                            <input
+                              className="leads-input"
+                              value={phoneEditValue}
+                              autoFocus
+                              onChange={(e) => {
+                                setPhoneEditValue(e.target.value)
+                                setPhoneOverrideById((prev) => ({ ...prev, [l.id]: e.target.value }))
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault()
+                                  setPhoneEditForId(null)
+                                }
+                                if (e.key === 'Escape') {
+                                  e.preventDefault()
+                                  const base = basePhoneById[l.id] ?? normalize(l.phone)
+                                  setPhoneOverrideById((prev) => {
+                                    const next = { ...prev }
+                                    delete next[l.id]
+                                    return next
+                                  })
+                                  setPhoneEditValue(base)
+                                  setPhoneEditForId(null)
+                                }
+                              }}
+                              onBlur={() => {
+                                setPhoneEditForId(null)
+                              }}
+                              placeholder="Teléfono"
+                            />
+                          ) : (
+                            <button
+                              type="button"
+                              className="leads-phone-btn"
+                              onClick={() => {
+                                setPhoneEditForId(l.id)
+                                setPhoneEditValue(phoneValue)
+                              }}
+                            >
+                              {phoneValue || '-'}
+                            </button>
+                          )}
+                        </div>
 
                         <div className="leads-td leads-td-notes" onClick={(e) => e.stopPropagation()}>
                           <div className="leads-notes-entries">
@@ -1209,7 +1277,9 @@ export default function LeadsClient({ leads }: { leads: LeadRow[] }) {
                     </div>
                     <div className="leads-kv-item">
                       <div className="leads-kv-label">Teléfono</div>
-                      <div className="leads-kv-value">{selected.phone || '-'}</div>
+                      <div className="leads-kv-value">
+                        {phoneOverrideById[selected.id] ?? basePhoneById[selected.id] ?? selected.phone || '-'}
+                      </div>
                     </div>
                     <div className="leads-kv-item">
                       <div className="leads-kv-label">Fuente</div>
